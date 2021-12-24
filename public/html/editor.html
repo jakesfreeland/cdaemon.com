@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Blog Name - Editor</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="/public/styles/editor.css">
+		<link rel="stylesheet" href="/public/fonts/fontawesome-free-5.15.3-web/css/all.min.css">
+		<script type="text/javascript" src="/public/scripts/navmenu-toggle.js"></script>
+		<script type="text/javascript" src="/public/scripts/jquery-3.6.0.min.js"></script>
+		<script>
+			$(function(){ $("#included-header").load("/public/html/blog/templates/header.html"); });
+			$(function(){ $("#included-footer").load("/public/html/blog/templates/footer.html"); });
+		</script>
+	</head>
+
+	<body>
+		<main>
+			<!-- <header id="included-header"></header> -->
+
+			<section class="content" id="content">
+        <div class="banner">
+          <input type="file" accept="image/*" id="banner-upload" hidden>
+          <label for="banner-upload" class="banner-upload-btn"><img src="img/upload.png" alt="upload banner"></label>
+        </div>
+
+        <div class="blog">
+          <textarea type="text" class="title" placeholder="Title"></textarea>
+          <textarea type="text" class="body" placeholder="Body"></textarea>
+        </div>
+
+        <div class="blog-options">
+            <button class="btn dark publish-btn">publish</button>
+            <input type="file" accept="image/*" id="image-upload" hidden>
+            <label for="image-upload" class="btn grey upload-btn">Upload Image</label>
+        </div>
+
+			</section>
+
+			<!-- <footer id="included-footer"></footer> -->
+		</main>
+	</body>
+</html>

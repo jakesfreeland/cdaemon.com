@@ -1,0 +1,303 @@
+/*  
+    blog.css
+    Created by Jake Freeland (jakesfreeland@gmail.com)
+    6/20/2021  
+*/
+
+/* Fonts */
+@font-face {
+    font-family: "opensans-regular";
+    src: url(/public/fonts/OpenSans/opensans-regular.ttf);
+}
+
+@font-face {
+    font-family: "opensans-italic";
+    src: url(/public/fonts/OpenSans/opensans-italic.ttf);
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "opensans-semibold";
+    src: url(/public/fonts/OpenSans/opensans-semibold.ttf);
+}
+
+@font-face {
+    font-family: "opensans-bold";
+    src: url(/public/fonts/OpenSans/opensans-bold.ttf);
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "opensans-extrabold";
+    src: url(/public/fonts/OpenSans/opensans-extrabold.ttf);
+}
+
+/* Global */
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "opensans-regular";
+}
+
+html, body {
+    height: 100%;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+h1 {
+    font-size: 36px;
+    font-family: "opensans-bold";
+    margin-bottom: 5px;
+}
+
+h2 {
+    font-size: 24px;
+    font-family: "opensans-semibold";
+    margin: 20px 0px 2px 0px;
+}
+
+h3 {
+    font-size: 22px;
+    font-family: "opensans-semibold";
+}
+
+h4 {
+    font-size: 18px;
+    font-family: "opensans-semibold";
+    margin-bottom: 4px;
+}
+
+h5 {
+    font-size: 14px;
+    font-family: "opensans-semibold";
+    margin-bottom: 4px;
+}
+
+p {
+    font-size: 16px;
+}
+
+a {
+    font-family: inherit;
+    color:rgb(90, 90, 90);
+}
+
+hr.rounded {
+    border: 1px solid #1a1a1a;
+    border-radius: 5px;
+    margin: 5px 0px 8px 0px;
+}
+
+/* Header */
+header {
+    width: 100%;
+    background-color: #1a1a1a;
+    flex: 0 1 auto;
+}
+
+    /* Navigation */
+    nav {
+        padding: 30px 2%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+        .nav-logo h1 {
+            color: #fff;
+        }
+
+        .nav-menu {
+            display: none;
+        }
+
+        .nav-links ul li {
+            list-style: none;
+            display: inline-block;
+            margin: 0px 12px;
+        }
+
+            .nav-links ul li::after {
+                content: '';
+                width: 0%;
+                height: 2px;
+                background: #fff;
+                display: block;
+                margin: auto;
+                transition: 0.5s;
+            }
+
+                .nav-links ul li:hover::after {
+                    width: 100%;
+                }
+
+                .nav-links ul li a {
+                    text-decoration: none;
+                    color: #fff;
+                    font-size: 14px;
+                    font-family: "opensans-bold", sans-serif;
+                }
+
+/* Content */
+.content {
+    margin: 20px 20%;
+    flex: 1 1 auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+    .blog-main {
+        min-width: 600px;
+    }
+
+        .featured-post {
+            display: flex;
+            background-color:#1a1a1a;
+            height: 150px;
+            margin: 5px 0px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.4)
+        }
+
+            .featured-left {
+                width: 150px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+                .featured-left img {
+                    height: 90%;
+                    width: 90%;
+                    object-fit: cover;
+                }
+
+            .featured-right {
+                align-self: center;
+                padding: 20px;
+                color: #fff;
+            }
+
+        .blog-posts ul {
+            list-style-position: inside;
+        }
+
+        .blog-posts a {
+            color:rgb(30, 30, 30);
+        }
+
+
+    .blog-sidebar {
+        display: flex;
+        flex-direction: column;
+        margin: 26px 0px 20px 60px;
+        min-width: 200px;
+    }
+
+        .post-months ul {
+            list-style: none;
+        }
+
+        .post-months a {
+            color:rgb(30, 30, 30);
+        }
+
+    .support ul {
+        list-style-position: inside;
+    }
+
+/* Footer */
+footer {
+    background-color:#111111;
+    margin: auto;
+    text-align: center;
+    width: 100%;
+    flex: 0 1 auto;
+}
+
+    footer p {
+        color:rgb(90, 90, 90);
+        font-size: 14px;
+        line-height: 22px;
+        margin: 10px;
+    }
+
+    footer a {
+        text-decoration: none;
+    }
+
+    footer a:hover {
+        text-decoration: underline;
+    }
+
+@media(max-width: 1000px) {
+    /* Navigation */
+    nav {
+        flex-direction: column;
+        align-items: start;
+        background-color: transparent;
+        padding: 30px 4%;
+    }
+
+        .nav-mobile {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .nav-menu {
+            display: block;
+            color: #fff;
+            font-size: 28px;
+            background-color: transparent;
+            border: none;
+        }
+
+        .nav-links {
+            display: none;
+            margin: 20px 0px;
+        }
+
+            .nav-links ul li {
+                display: block;
+                margin: 10px 0px;
+            }
+
+    /* Content */
+    .content {
+        margin: 20px 10%;
+        flex-direction: column;
+    }
+
+    .blog-main {
+        min-width: auto;
+    }
+
+        .featured-post {
+            height: 120px;
+        }
+
+            .featured-left {
+                width: 100px;
+            }
+
+    .blog-sidebar {
+        margin: 0px;
+    }
+
+        .post-months h4 {
+            font-size: 24px;
+            padding: 20px 0px 2px 0px;
+        }
+
+        .post-months ul {
+            list-style: disc;
+            list-style-position: inside;
+        }
+}
