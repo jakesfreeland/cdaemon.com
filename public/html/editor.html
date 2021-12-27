@@ -1,36 +1,36 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Blog Title</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" href="/styles/post.css">
-		<link rel="stylesheet" href="/fonts/fontawesome-free-5.15.3-web/css/all.min.css">
-		<script src="/scripts/navmenu-toggle.js"></script>
-		<script src="/scripts/jquery-3.6.0.min.js"></script>
-		<script>
-			$(function(){ $("#included-header").load("/html/templates/header.html"); });
-			$(function(){ $("#included-footer").load("/html/templates/footer.html"); });
-		</script>
-	</head>
+  <head>
+    <title>Blog Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/styles/post.css">
+    <link rel="stylesheet" href="/fonts/fontawesome-free-5.15.3-web/css/all.min.css">
+    <script src="/scripts/navmenu-toggle.js"></script>
+    <script src="/scripts/jquery-3.6.0.min.js"></script>
+    <script>
+      $(function(){ $("#included-header").load("/html/templates/header.html"); });
+      $(function(){ $("#included-footer").load("/html/templates/footer.html"); });
+    </script>
+  </head>
 
-	<body>
-		<header id="included-header"></header>
+  <body>
+    <header id="included-header"></header>
 
-		<main>
-			<div class="blog-post">
-				<input class="title" placeholder="Title" maxlength="128" autofocus required></input>
-				<textarea class="body" placeholder="Body" maxlength="20000" spellcheck="true" required></textarea>
-			</div>
+    <main>
+      <div class="blog-post">
+        <input class="title" placeholder="Title" maxlength="128" autofocus required></input>
+        <textarea class="body" placeholder="Body" maxlength="20000" spellcheck="true" required></textarea>
+      </div>
 
-			<div class="post-options">
-					<button class="publish-btn">publish</button>
-					<label for="image-upload">Upload Image</label>
-					<input id="image-upload" type="file" accept="image/*" hidden>
-			</div>
-		</main>
+      <div class="post-options">
+        <button class="publish-btn">publish</button>
+        <label for="image-upload">Upload Image</label>
+        <input id="image-upload" type="file" accept="image/*" hidden>
+      </div>
+    </main>
 
-		<footer id="included-footer"></footer>
+    <footer id="included-footer"></footer>
 
-		<script src="/scripts/editor.js"></script>
-	</body>
+    <script src="/scripts/editor.js"></script>
+  </body>
 </html>
