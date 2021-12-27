@@ -1,7 +1,7 @@
 /*  
-    blog.css
+    post.css
     Created by Jake Freeland (jakesfreeland@gmail.com)
-    6/20/2021  
+    12/26/2021  
 */
 
 /* Fonts */
@@ -149,67 +149,7 @@ header {
 main {
     margin: 20px 20%;
     flex: 1 1 auto;
-    display: flex;
-    justify-content: space-between;
 }
-
-    .content {
-        min-width: 600px;
-    }
-
-        .featured-post {
-            display: flex;
-            background-color:#1a1a1a;
-            height: 150px;
-            margin: 5px 0px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.4)
-        }
-
-            .featured-left {
-                width: 150px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-                .featured-left img {
-                    height: 90%;
-                    width: 90%;
-                    object-fit: cover;
-                }
-
-            .featured-right {
-                align-self: center;
-                padding: 20px;
-                color: #fff;
-            }
-
-        .all-posts ul {
-            list-style-position: inside;
-        }
-
-        .all-posts a {
-            color:rgb(30, 30, 30);
-        }
-
-        .support ul {
-            list-style-position: inside;
-        }
-
-    .sidebar {
-        display: flex;
-        flex-direction: column;
-        margin: 26px 0px 20px 60px;
-        min-width: 200px;
-    }
-
-        .archive ul {
-            list-style: none;
-        }
-
-        .archive a {
-            color:rgb(30, 30, 30);
-        }
 
 /* Footer */
 footer {
@@ -272,33 +212,5 @@ footer {
     /* Content */
     main {
         margin: 20px 10%;
-        flex-direction: column;
-        justify-content: normal;
     }
-
-    .content {
-        min-width: auto;
-    }
-
-        .featured-post {
-            height: 120px;
-        }
-
-            .featured-left {
-                width: 100px;
-            }
-
-    .sidebar {
-        margin: 0px;
-    }
-
-        .archive h4 {
-            font-size: 24px;
-            padding: 20px 0px 2px 0px;
-        }
-
-        .archive ul {
-            list-style: disc;
-            list-style-position: inside;
-        }
-}
+  }

@@ -1,0 +1,28 @@
+{
+  "name": "blog.technologyfriends.net",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "devStart": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jakesfreeland/blog.technologyfriends.net.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jakesfreeland/blog.technologyfriends.net/issues"
+  },
+  "homepage": "https://github.com/jakesfreeland/blog.technologyfriends.net#readme",
+  "dependencies": {
+    "express": "^4.17.2",
+    "express-fileupload": "^1.2.1",
+    "mariadb": "^2.5.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
