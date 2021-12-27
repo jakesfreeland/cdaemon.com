@@ -12,14 +12,13 @@ publishBtn.addEventListener("click", () => {
   relayPost(id, titleField.value, bodyField.value);
 })
 
-function getID() {
+async function getID() {
   let id = ""
   for (var i=0; i<8; i++) {
     id += "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
     .charAt(Math.floor(Math.random() * 62));
   }
-  let ids;
-  fetch("/posts/id").then(data => data.json()).then(json => { ids = json; })
+  let ids = await ((await fetch("/posts/id")).json());
 
   if (ids.some(e => e.id === `${id}`)) {
     return getID();
