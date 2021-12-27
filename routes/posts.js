@@ -19,9 +19,10 @@ router.route('/new')
   if (req.body.id &&
       req.body.date &&
       req.body.title &&
-      req.body.body) {
+      req.body.body &&
+      req.body.tag) {
           console.log("Request recieved");
-          sendPost(req.body.id, req.body.date, req.body.title, req.body.body);
+          sendPost(req.body.id, req.body.date, req.body.title, req.body.body, req.body.tag);
   } else {
       console.log("Missing parameter");
   }
@@ -69,11 +70,11 @@ const pool = mariadb.createPool({
   connectionLimit: 5
 })
 
-async function sendPost(id, date, title, body) {
+async function sendPost(id, date, title, body, tag) {
   let conn;
   try {
     conn = await pool.getConnection();
-    await conn.query(`INSERT INTO blog_posts.post (id, date, title, body) VALUES ('${id}', '${date}', '${title}', '${body}')`);
+    await conn.query(`INSERT INTO blog_posts.post (id, date, title, body, tag) VALUES ('${id}', '${date}', '${title}', '${body}', '${tag}')`);
   } catch(err) {
     console.log(err);
   } finally {

@@ -1,5 +1,6 @@
 const titleField = document.querySelector(".title");
 const bodyField = document.querySelector(".body");
+const tagField = document.querySelector(".tag");
 let id = createID();
 let date = createDate();
 
@@ -10,7 +11,7 @@ uploadInput.addEventListener("change", () => {
 
 const publishBtn = document.querySelector(".publish-btn");
 publishBtn.addEventListener("click", () => {
-  relayPost(id, date, titleField.value, bodyField.value);
+  relayPost(id, date, titleField.value, bodyField.value, tagField.value);
 })
 
 async function createID() {
@@ -58,7 +59,7 @@ async function uploadImage(id, uploadInput) {
   }
 }
 
-async function relayPost(id, date, title, body) {
+async function relayPost(id, date, title, body, tag) {
   id = await id;
   date = await date;
   const formData = new FormData();
@@ -66,6 +67,7 @@ async function relayPost(id, date, title, body) {
   formData.append("date", date);
   formData.append("title", title);
   formData.append("body", body);
+  formData.append("tag", tag)
 
   fetch("/posts/new", {
     method: "POST",
