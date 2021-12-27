@@ -13,13 +13,13 @@ publishBtn.addEventListener("click", () => {
 })
 
 async function getID() {
-  let id = ""
+  let id = "";
+  const charPool = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   for (var i=0; i<8; i++) {
-    id += "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-    .charAt(Math.floor(Math.random() * 62));
+    id += charPool.charAt(Math.floor(Math.random() * 62));
   }
-  let ids = await ((await fetch("/posts/id")).json());
 
+  let ids = await ((await fetch("/posts/id")).json());
   if (ids.some(e => e.id === `${id}`)) {
     return getID();
   } else {
@@ -31,6 +31,7 @@ async function uploadImage(id, uploadInput) {
   const [file] = uploadInput.files;
   if (file.type.includes("image")) {
     const formData = new FormData();
+    id = await id;
     formData.append("id", id);
     formData.append("image", file);
 
@@ -45,6 +46,7 @@ async function uploadImage(id, uploadInput) {
 }
 
 async function relayPost(id, title, body) {
+  id = await id;
   const formData = new FormData();
   formData.append("id", id);
   formData.append("title", title);

@@ -43,7 +43,7 @@ router.route("/:id")
 })
 
 router.post("/images", (req, res) => {
-  let id = req.query.id;
+  let id = req.body.id;
   let file = req.files.image;
   let imageName = file.name;
   let imagePath = path.resolve(__dirname, `../public/images/blog/${id}`);
@@ -52,9 +52,12 @@ router.post("/images", (req, res) => {
     fs.mkdirSync(imagePath);
   }
 
-  fs.rename(file, `${imagePath}/${imageName}`, (err) => {
-    if (err) throw err;
-    console.log("complete");
+  file.mv(imagePath, (err, result) => {
+    if (err) {
+      throw err;
+    } else {
+      res.json(imagePath);
+    }
   })
 })
 
