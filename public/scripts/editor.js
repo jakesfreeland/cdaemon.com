@@ -1,6 +1,6 @@
 const titleField = document.querySelector(".title");
 const bodyField = document.querySelector(".body");
-let id = getID();
+let id = createID();
 
 const uploadInput = document.querySelector("#image-upload");
 uploadInput.addEventListener("change", () => {
@@ -12,7 +12,7 @@ publishBtn.addEventListener("click", () => {
   relayPost(id, titleField.value, bodyField.value);
 })
 
-async function getID() {
+async function createID() {
   let id = "";
   const charPool = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   for (var i=0; i<8; i++) {
@@ -21,7 +21,7 @@ async function getID() {
 
   let ids = await ((await fetch("/posts/id")).json());
   if (ids.some(e => e.id === `${id}`)) {
-    return getID();
+    return createID();
   } else {
     return id;
   }

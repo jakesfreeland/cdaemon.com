@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
+const path = require("path");
 
-router.get('/', (req, res) => {
-  res.send("users page");
+router.get('/signup', (req, res) => {
+  res.sendFile(path.resolve(__dirname, "../public/html/signup.html"));
 })
 
 router.route("/:id")
