@@ -2,8 +2,8 @@ const titleField = document.querySelector(".title");
 const bodyField = document.querySelector(".body");
 const tagField = document.querySelector(".tag");
 const authorField = document.querySelector(".author");
-let id = createID();
-let date = createDate();
+const id = createID();
+const date = createDate();
 
 const uploadInput = document.querySelector("#image-upload");
 uploadInput.addEventListener("change", () => {

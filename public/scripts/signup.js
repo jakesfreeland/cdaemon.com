@@ -6,6 +6,7 @@ signupBtn.addEventListener("click", () => {
   createUser(username.value, password.value);
 })
 
+
 async function createUser(username, password) {
   const formData = new FormData();
   formData.append("username", username);
@@ -14,5 +15,5 @@ async function createUser(username, password) {
   fetch("/users/signup", {
     method: "POST",
     body: formData
-  }).catch(console.log)
+  }).catch(console.log);
 }

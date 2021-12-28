@@ -75,8 +75,8 @@ async function sendPost(id, date, title, body, tag, author) {
   let conn;
   try {
     conn = await pool.getConnection();
-    await conn.query(`INSERT INTO blog_posts.post (id, date, title, body, tag, author) VALUES ('${id}', '${date}', '${title}', '${body}', '${tag}', '${author}')`);
-  } catch(err) {
+    conn.query(`INSERT INTO blog_posts.post (id, date, title, body, tag, author) VALUES ('${id}', '${date}', '${title}', '${body}', '${tag}', '${author}')`);
+  } catch (err) {
     console.log(err);
   } finally {
     if (conn) conn.close();
