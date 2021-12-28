@@ -1,13 +1,9 @@
 const titleField = document.querySelector(".title");
 const bodyField = document.querySelector(".body");
-<<<<<<< HEAD
-let id = createID();
-=======
 const tagField = document.querySelector(".tag");
 const authorField = document.querySelector(".author");
 let id = createID();
 let date = createDate();
->>>>>>> d0e8e49adf5e2749f7b1ac8a93a84f313d21ce6f
 
 const uploadInput = document.querySelector("#image-upload");
 uploadInput.addEventListener("change", () => {
@@ -78,6 +74,5 @@ async function relayPost(id, date, title, body, tag, author) {
   fetch("/posts/new", {
     method: "POST",
     body: formData
-  }).then(res => res.json())
-  .catch(console.log)
+  }).catch(console.log)
 }
