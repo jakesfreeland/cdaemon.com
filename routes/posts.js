@@ -20,7 +20,8 @@ router.route('/new')
       req.body.date &&
       req.body.title &&
       req.body.body &&
-      req.body.tag) {
+      req.body.tag &&
+      req.body.author) {
           console.log("Request recieved");
           sendPost(req.body.id, req.body.date, req.body.title, req.body.body, req.body.tag);
   } else {
@@ -70,11 +71,11 @@ const pool = mariadb.createPool({
   connectionLimit: 5
 })
 
-async function sendPost(id, date, title, body, tag) {
+async function sendPost(id, date, title, body, tag, author) {
   let conn;
   try {
     conn = await pool.getConnection();
-    await conn.query(`INSERT INTO blog_posts.post (id, date, title, body, tag) VALUES ('${id}', '${date}', '${title}', '${body}', '${tag}')`);
+    await conn.query(`INSERT INTO blog_posts.post (id, date, title, body, tag, author) VALUES ('${id}', '${date}', '${title}', '${body}', '${tag}', '${author}')`);
   } catch(err) {
     console.log(err);
   } finally {
