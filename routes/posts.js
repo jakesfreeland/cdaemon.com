@@ -3,7 +3,7 @@ const router = express.Router();
 const fileupload = require("express-fileupload");
 const path = require("path");
 const fs = require("fs");
-const mariadb = require("mariadb");
+const db = require("../user_modules/db.cjs");
 
 router.use(fileupload());
 
@@ -23,7 +23,9 @@ router.route('/new')
       req.body.tag &&
       req.body.author) {
           console.log("Request recieved");
-          sendPost(req.body.id, req.body.date, req.body.title, req.body.body, req.body.tag);
+          db.sendData("blog_posts", "post",
+                      ["id", "date", "title", "body", "tag", "author"],
+                      [req.body.id, req.body.date, req.body.title, req.body.body, req.body.tag]);
   } else {
       console.log("Missing parameter");
   }
@@ -31,7 +33,8 @@ router.route('/new')
 
 router.get("/id", (req, res) => {
     console.log("Getting id");
-    getID().then(data => res.send(data))
+    db.getColumnData("blog_posts", "post", "id")
+    .then(data => res.send(data));
 })
 
 router.route("/:id")
@@ -63,36 +66,5 @@ router.post("/images", (req, res) => {
     }
   })
 })
-
-const pool = mariadb.createPool({
-  host: "techfriends-blog.ckmannigxkgw.us-east-2.rds.amazonaws.com",
-  user: "admin",
-  password: "3R7zzN5dRBbfh9BrZeFP",
-  connectionLimit: 5
-})
-
-async function sendPost(id, date, title, body, tag, author) {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    conn.query(`INSERT INTO blog_posts.post (id, date, title, body, tag, author) VALUES ('${id}', '${date}', '${title}', '${body}', '${tag}', '${author}')`);
-  } catch (err) {
-    console.log(err);
-  } finally {
-    if (conn) conn.close();
-  }
-}
-
-async function getID() {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    return await conn.query("SELECT id FROM blog_posts.post")
-  } catch (err) {
-    console.log(err);
-  } finally {
-    if (conn) conn.close();
-  }
-}
 
 module.exports = router;
