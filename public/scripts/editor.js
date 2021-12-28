@@ -1,6 +1,13 @@
 const titleField = document.querySelector(".title");
 const bodyField = document.querySelector(".body");
+<<<<<<< HEAD
 let id = createID();
+=======
+const tagField = document.querySelector(".tag");
+const authorField = document.querySelector(".author");
+let id = createID();
+let date = createDate();
+>>>>>>> d0e8e49adf5e2749f7b1ac8a93a84f313d21ce6f
 
 const uploadInput = document.querySelector("#image-upload");
 uploadInput.addEventListener("change", () => {
@@ -9,7 +16,7 @@ uploadInput.addEventListener("change", () => {
 
 const publishBtn = document.querySelector(".publish-btn");
 publishBtn.addEventListener("click", () => {
-  relayPost(id, titleField.value, bodyField.value);
+  relayPost(id, date, titleField.value, bodyField.value, tagField.value, authorField.value);
 })
 
 async function createID() {
@@ -25,6 +32,18 @@ async function createID() {
   } else {
     return id;
   }
+}
+
+async function createDate() {
+  y = new Date().getFullYear();
+  m = new Date().getMonth() + 1; // add 1 because month starts at 0
+  d = new Date().getDay();
+  let padding = '';
+  if (d < 10) {
+    pad = '0';
+  }
+  const date = y.toString() + '-' + m.toString() + '-' + pad + d.toString();
+  return date;
 }
 
 async function uploadImage(id, uploadInput) {
@@ -45,12 +64,16 @@ async function uploadImage(id, uploadInput) {
   }
 }
 
-async function relayPost(id, title, body) {
+async function relayPost(id, date, title, body, tag, author) {
   id = await id;
+  date = await date;
   const formData = new FormData();
   formData.append("id", id);
+  formData.append("date", date);
   formData.append("title", title);
   formData.append("body", body);
+  formData.append("tag", tag);
+  formData.append("author", author);
 
   fetch("/posts/new", {
     method: "POST",
