@@ -9,6 +9,7 @@ function createID() {
   for (var i=0; i<8; i++) {
     id += charPool.charAt(Math.floor(Math.random() * 62));
   }
+  return id;
 
   // fix this
   // fetch("/posts/id")
