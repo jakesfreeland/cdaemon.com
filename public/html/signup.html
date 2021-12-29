@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Blog Title</title>
+    <title>Tech Friends Blog - Sign Up</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/styles/style.css">
     <link rel="stylesheet" href="/fonts/fontawesome-free-5.15.3-web/css/all.min.css">
@@ -17,18 +17,18 @@
     <header id="included-header"></header>
 
     <main>
-      <div class="user-info">
-        <input class="username" placeholder="Username" maxlength="32" autofocus required></input>
-        <input class="password" placeholder="Password" maxlength="256" required></input>
-      </div>
+      <form action="/users/signup" method="post">
+        <div class="user-info">
+          <input name="username" class="username" placeholder="Username" maxlength="32" autofocus required></input>
+          <input name="password" class="password" placeholder="Password" maxlength="256" required></input>
+        </div>
 
-      <div class="post-options">
-        <button class="signup-btn">Sign Up</button>
-      </div>
+        <div class="post-options">
+          <button>Sign Up</button>
+        </div>
+      </form>
     </main>
 
     <footer id="included-footer"></footer>
-
-    <script src="/scripts/signup.js"></script>
   </body>
 </html>

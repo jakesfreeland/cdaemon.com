@@ -17,18 +17,22 @@
     <header id="included-header"></header>
 
     <main>
-      <div class="blog-post">
-        <input class="title" placeholder="Title" maxlength="128" autofocus required></input>
-        <textarea class="body" placeholder="Body" maxlength="20000" spellcheck="true" required></textarea>
-        <input class="tag" placeholder="Tag" maxlength="128" spellcheck="true" required></textarea>
-        <input class="author" placeholder="Author" maxlength="128" spellcheck="true" required></input>
-      </div>
+      <form action="/posts/new" method="post">
+        <div class="blog-post">
+          <input name="id" class="id" hidden>
+          <input name="date" class="date" hidden>
+          <input name="title" class="title" placeholder="Title" maxlength="128" autofocus required>
+          <textarea name="body" class="body" placeholder="Body" maxlength="20000" spellcheck="true" required></textarea>
+          <input name="author" class="author" placeholder="Author" maxlength="32" spellcheck="true" required>
+          <input name="tags" class="tags" placeholder="Tags" maxlength="64" spellcheck="true" required>
+        </div>
 
-      <div class="post-options">
-        <button class="publish-btn">publish</button>
-        <label for="image-upload">Upload Image</label>
-        <input id="image-upload" type="file" accept="image/*" hidden>
-      </div>
+        <div class="post-options">
+          <button class="publish-btn">publish</button>
+          <label for="image-upload">Upload Image</label>
+          <input id="image-upload" type="file" accept="image/*" hidden>
+        </div>
+      </form>
     </main>
 
     <footer id="included-footer"></footer>

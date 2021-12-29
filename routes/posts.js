@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const fileupload = require("express-fileupload");
+const multer = require("multer");
+const bodyParser = require("body-parser");
 const path = require("path");
-const fs = require("fs");
 const db = require("../user_modules/db.cjs");
 
-router.use(fileupload());
+router.use(bodyParser.urlencoded({ extended: false }))
 
 router.get('/', (req, res) => {
   res.sendFile(path.resolve(__dirname, "../public/html/posts.html"));
@@ -16,19 +16,28 @@ router.route('/new')
   res.sendFile(path.resolve(__dirname, "../public/html/editor.html"));
 })
 .post((req, res) => {
+  console.log(req.body)
   if (req.body.id &&
       req.body.date &&
       req.body.title &&
       req.body.body &&
-      req.body.tag &&
+      req.body.tags &&
       req.body.author) {
           console.log("Request recieved");
           db.sendData("blog_posts", "post",
-                      ["id", "date", "title", "body", "tag", "author"],
-                      [req.body.id, req.body.date, req.body.title, req.body.body, req.body.tag]);
+                      ["id", "date", "title", "body", "tags", "author"],
+                      [req.body.id, req.body.date, req.body.title, req.body.body, req.body.tags, req.body.author]);
   } else {
       console.log("Missing parameter");
   }
+  res.redirect("/");
+})
+
+router.post("/images", (req, res) => {
+  let id = req.body.id;
+  let file = req.files.image;
+  let imageName = file.name;
+  let imagePath = path.resolve(__dirname, `../public/images/blog/${id}`);
 })
 
 router.get("/id", (req, res) => {
@@ -41,30 +50,8 @@ router.route("/:id")
 .get((req, res) => {
   res.send(`Get post with ID ${req.params.id}`);
 })
-.put((req, res) => {
-  res.send(`modify post with ID ${req.params.id}`);
-})
 .delete((req, res) => {
   res.send(`delete post with ID ${req.params.id}`);
-})
-
-router.post("/images", (req, res) => {
-  let id = req.body.id;
-  let file = req.files.image;
-  let imageName = file.name;
-  let imagePath = path.resolve(__dirname, `../public/images/blog/${id}`);
-
-  if (!fs.existsSync(imagePath)) {
-    fs.mkdirSync(imagePath);
-  }
-
-  file.mv(imagePath, (err, result) => {
-    if (err) {
-      throw err;
-    } else {
-      res.json(imagePath);
-    }
-  })
 })
 
 module.exports = router;
