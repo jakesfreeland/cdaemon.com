@@ -16,7 +16,6 @@ router.route('/new')
   res.sendFile(path.resolve(__dirname, "../public/html/editor.html"));
 })
 .post((req, res) => {
-  console.log(req.body)
   if (req.body.id &&
       req.body.date &&
       req.body.title &&
@@ -41,7 +40,7 @@ router.post("/images", (req, res) => {
 })
 
 router.get("/id", (req, res) => {
-    console.log("Getting id");
+    console.log("Getting present ids");
     db.getColumnData("blog_posts", "post", "id")
     .then(data => res.send(data));
 })
