@@ -4,6 +4,7 @@ const multer = require("multer");
 const bodyParser = require("body-parser");
 const path = require("path");
 const db = require("../user_modules/db.cjs");
+const upload = multer({ dest: path.resolve(__dirname, "../public/images") });
 
 router.use(bodyParser.urlencoded({ extended: false }))
 
@@ -37,6 +38,8 @@ router.post("/images", (req, res) => {
   let file = req.files.image;
   let imageName = file.name;
   let imagePath = path.resolve(__dirname, `../public/images/blog/${id}`);
+
+  console.log("ok");
 })
 
 router.get("/id", (req, res) => {

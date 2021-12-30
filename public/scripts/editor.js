@@ -2,26 +2,26 @@ const idField = document.querySelector(".id");
 const dateField = document.querySelector(".date");
 const uploadInput = document.querySelector("#image-upload");
 
-id = idField.value = createID();
+let id;
+createID();
+
 function createID() {
-  let id = "";
+  let idGen = "";
   const charPool = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   for (var i=0; i<8; i++) {
-    id += charPool.charAt(Math.floor(Math.random() * 62));
+    idGen += charPool.charAt(Math.floor(Math.random() * 62));
   }
-  return id;
 
-  // fix this
-  // fetch("/posts/id")
-  // .get(data => data.json())
-  // .get(ids => {
-  //   if (ids.some(e => e.id === `${id}`)) {
-  //     return createID();
-  //   } else {
-  //     return id;
-  //   }
-  // })
-  // .catch(err => console.error(err));
+  fetch("/posts/id")
+  .then(data => data.json())
+  .then(ids => {
+    if (ids.some(e => e.idGen === `${idGen}`)) {
+      createID();
+    } else {
+      id = idField.value = idGen;
+    }
+  })
+  .catch(err => console.error(err));
 }
 
 dateField.value = createDate();
@@ -37,22 +37,21 @@ function createDate() {
   return date;
 }
 
-// WORK ON NEXT --- UPLOADING IMAGES USING MULTER
-// uploadInput.addEventListener("change", uploadImage(id, uploadInput));
-// async function uploadImage(id, uploadInput) {
-//   const [file] = uploadInput.files;
-//   if (file.type.includes("image")) {
-//     const formData = new FormData();
-//     id = await id;
-//     formData.append("id", id);
-//     formData.append("image", file);
+uploadInput.addEventListener("change", () => {
+  uploadImage(id, uploadInput.files);
+});
+async function uploadImage(id, file) {
+  [file] = file;
+  if (file.type.includes("image")) {
+    const formData = new FormData();
+    formData.append("id", id);
+    formData.append("image", file);
 
-//     fetch("/posts/images", {
-//       method: "POST",
-//       body: formData
-//     }).then(res => res.json())
-//     .catch(console.log);
-//   } else {
-//     alert("Oops! That file is not an image. Upload an image instead.");
-//   }
-// }
+    fetch("/posts/images", {
+      method: "POST",
+      body: formData
+    }).catch(console.log);
+  } else {
+    alert("Oops! That file is not an image. Upload an image instead.");
+  }
+}
