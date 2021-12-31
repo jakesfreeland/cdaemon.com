@@ -39,19 +39,19 @@ function createDate() {
 
 uploadInput.addEventListener("change", () => {
   uploadImage(id, uploadInput.files);
-});
+})
 async function uploadImage(id, file) {
-  [file] = file;
-  if (file.type.includes("image")) {
+  if (file[0].type.includes("image")) {
     const formData = new FormData();
     formData.append("id", id);
-    formData.append("image", file);
+    formData.append("img", file[0]);
 
     fetch("/posts/images", {
       method: "POST",
       body: formData
-    }).catch(console.log);
+    }).then(res => res.json())
+    .catch(console.log);
   } else {
-    alert("Oops! That file is not an image. Upload an image instead.");
+    alert("Oops! The file you uploaded was not an image. Upload an image instead.");
   }
 }

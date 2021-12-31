@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const multer = require("multer");
 const bodyParser = require("body-parser");
+const fileupload = require("express-fileupload");
+const fs = require("fs");
 const path = require("path");
 const db = require("../user_modules/db.cjs");
-const upload = multer({ dest: path.resolve(__dirname, "../public/images") });
 
-router.use(bodyParser.urlencoded({ extended: false }))
+router.use(bodyParser.urlencoded({ extended: false }));
+router.use(fileupload());
 
 router.get('/', (req, res) => {
   res.sendFile(path.resolve(__dirname, "../public/html/posts.html"));
@@ -34,12 +35,21 @@ router.route('/new')
 })
 
 router.post("/images", (req, res) => {
+  let img = req.files.img;
   let id = req.body.id;
-  let file = req.files.image;
-  let imageName = file.name;
-  let imagePath = path.resolve(__dirname, `../public/images/blog/${id}`);
+  let imgPath = path.resolve(__dirname, `../public/images/blog/${id}/`);
 
-  console.log("ok");
+  if (!fs.existsSync(imgPath)) {
+    fs.mkdirSync(imgPath);
+  }
+
+  img.mv((imgPath + '/' + img.name), (err) => {
+    if (err) {
+      throw err;
+    } else {
+      res.json(`images/${id}/${img.name}`);
+    }
+  })
 })
 
 router.get("/id", (req, res) => {
