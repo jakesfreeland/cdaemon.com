@@ -15,6 +15,8 @@ function createID() {
   fetch("/posts/id")
   .then(data => data.json())
   .then(ids => {
+    // THIS NEEDS FIXING!!! THE ids ARRAY CONTAINS A SINGULAR JSON OBJECT
+    // THAT JSON OBJECT NEEDS TO BE CHECKED FOR DUPLICATE IDS!!!
     if (ids.some(e => e.idGen === `${idGen}`)) {
       createID();
     } else {

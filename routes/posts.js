@@ -22,16 +22,16 @@ router.route('/new')
       req.body.date &&
       req.body.title &&
       req.body.body &&
-      req.body.tags &&
-      req.body.author) {
-          console.log("Request recieved");
+      req.body.author &&
+      req.body.tags) {
+          console.log("Post request recieved");
           db.sendData("blog_posts", "post",
                       ["id", "date", "title", "body", "tags", "author"],
                       [req.body.id, req.body.date, req.body.title, req.body.body, req.body.tags, req.body.author]);
   } else {
       console.log("Missing parameter");
   }
-  res.redirect("/");
+  res.redirect(`/posts/${req.body.id}`);
 })
 
 router.post("/images", (req, res) => {
@@ -60,7 +60,22 @@ router.get("/id", (req, res) => {
 
 router.route("/:id")
 .get((req, res) => {
-  res.send(`Get post with ID ${req.params.id}`);
+  db.getPostData("blog_posts", "post", "id", `${req.params.id}`)
+  .then(data => {
+    const date = data[0].date;
+    const title = data[0].title;
+    const body = data[0].body;
+    const author = data[0].author;
+    const tags = data[0].tags;
+
+    res.render("posts/post", {
+      date: date,
+      title: title,
+      body: body,
+      author: author,
+      tags: tags
+    });
+  })
 })
 .delete((req, res) => {
   res.send(`delete post with ID ${req.params.id}`);

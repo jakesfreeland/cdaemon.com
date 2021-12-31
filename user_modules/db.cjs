@@ -34,5 +34,16 @@ module.exports = {
     } finally {
       if (conn) conn.close();
     }
+  },
+
+  getPostData: async function getPostData(database, table, column, value) {
+    try {
+      conn = await pool.getConnection();
+      return await conn.query(`SELECT * FROM ${database}.${table} WHERE ${column}="${value}"`);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      if (conn) conn.close();
+    }
   }
 }
