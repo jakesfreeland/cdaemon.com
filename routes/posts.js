@@ -10,7 +10,7 @@ router.use(bodyParser.urlencoded({ extended: false }));
 router.use(fileupload());
 
 router.get('/', (req, res) => {
-  res.render("posts/posts");
+  res.render("posts/posts.ejs");
 })
 
 router.route('/new')
@@ -68,7 +68,7 @@ router.route("/:id")
     const author = data[0].author;
     const tags = data[0].tags;
 
-    res.render("posts/post", {
+    res.render("posts/post.ejs", {
       date: date,
       title: title,
       body: body,
@@ -76,7 +76,20 @@ router.route("/:id")
       tags: tags
     });
   })
-  .catch(err => res.sendStatus(404))
+  .catch(err => {
+    res.status(404);
+    res.format({
+      html: () => {
+        res.render("http/404.ejs", { url: req.url });
+      },
+      json: () => {
+        res.json({ error: 'Page not found' });
+      },
+      default: () => {
+        res.type('txt').send('Page not found');
+      }
+    });
+  })
 })
 .delete((req, res) => {
   res.send(`delete post with ID ${req.params.id}`);
