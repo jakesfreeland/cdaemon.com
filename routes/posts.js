@@ -5,6 +5,7 @@ const fileupload = require("express-fileupload");
 const fs = require("fs");
 const path = require("path");
 const db = require("../user_modules/db.cjs");
+const { cache } = require("ejs");
 
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(fileupload());
@@ -22,8 +23,7 @@ router.route('/new')
       req.body.date &&
       req.body.title &&
       req.body.body &&
-      req.body.author &&
-      req.body.tags) {
+      req.body.author) {
           console.log("Post request recieved");
           db.sendData("blog_posts", "post",
                       ["id", "date", "title", "body", "tags", "author"],
@@ -62,11 +62,11 @@ router.route("/:id")
 .get((req, res) => {
   db.getPostData("blog_posts", "post", "id", `${req.params.id}`)
   .then(data => {
-    const date = data[0].date;
-    const title = data[0].title;
-    const body = data[0].body;
-    const author = data[0].author;
-    const tags = data[0].tags;
+    let date = data[0].date;
+    let title = data[0].title;
+    let body = data[0].body;
+    let author = data[0].author;
+    let tags = data[0].tags;
 
     res.render("posts/post.ejs", {
       date: date,
@@ -80,7 +80,7 @@ router.route("/:id")
     res.status(404);
     res.format({
       html: () => {
-        res.render("http/404.ejs", { url: req.url });
+        res.render("http/404.ejs", { url: `Post with id ${req.url}` });
       },
       json: () => {
         res.json({ error: 'Page not found' });
