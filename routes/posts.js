@@ -10,7 +10,7 @@ router.use(bodyParser.urlencoded({ extended: false }));
 router.use(fileupload());
 
 router.get('/', (req, res) => {
-  res.sendFile(path.resolve(__dirname, "../public/html/posts.html"));
+  res.render("posts/posts");
 })
 
 router.route('/new')
@@ -76,6 +76,7 @@ router.route("/:id")
       tags: tags
     });
   })
+  .catch(err => res.sendStatus(404))
 })
 .delete((req, res) => {
   res.send(`delete post with ID ${req.params.id}`);
