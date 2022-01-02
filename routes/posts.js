@@ -27,11 +27,12 @@ router.route('/new')
           console.log("Post request recieved");
           db.sendData("blog_posts", "post",
                       ["id", "date", "title", "body", "tags", "author"],
-                      [req.body.id, req.body.date, req.body.title, req.body.body, req.body.tags, req.body.author]);
+                      [req.body.id, req.body.date, req.body.title, req.body.body, req.body.tags, req.body.author],
+                      replace = true);
+          res.redirect(`/posts/${req.body.id}`);
   } else {
       console.log("Missing parameter");
   }
-  res.redirect(`/posts/${req.body.id}`);
 })
 
 router.post("/images", (req, res) => {

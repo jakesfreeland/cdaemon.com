@@ -24,17 +24,10 @@ function createID() {
   .catch(err => console.error(err));
 }
 
-dateField.value = createDate();
-function createDate() {
-  y = new Date().getFullYear();
-  m = new Date().getMonth() + 1; // add 1 because month starts at 0
-  d = new Date().getDay();
-  let pad;
-  if (d < 10) {
-    pad = '0';
-  }
-  const date = y.toString() + '-' + m.toString() + '-' + pad + d.toString();
-  return date;
+dateField.value = getDate();
+function getDate() {
+  const tzOffset = (new Date()).getTimezoneOffset() * 60000;
+  return (new Date(Date.now() - tzOffset)).toISOString().slice(0, 10);
 }
 
 uploadInput.addEventListener("change", () => {

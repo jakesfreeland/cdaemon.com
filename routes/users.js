@@ -2,10 +2,15 @@ const express = require("express");
 const router = express.Router();
 const bodyParser = require("body-parser");
 const path = require("path");
+const cookieSession = require("cookie-session");
 const db = require("../user_modules/db.cjs");
 
 router.use(bodyParser.urlencoded({ extended: true }))
-router.use(bodyParser.json());
+router.use(cookieSession({
+  name: "session",
+  keys: ["JtNogXp57n4rpn", "wA6oNN59UKhdFc", "XLLAmVMs9PFHkR"],
+  maxAge: 24 * 60 * 60 * 1000
+}));
 
 router.route("/signup")
 .get((req, res) => {

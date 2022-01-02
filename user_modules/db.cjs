@@ -8,7 +8,7 @@ let pool = mariadb.createPool({
 });
 
 module.exports = {
-  sendData: async function sendData(database, table, columns, data) {
+  sendData: async function sendData(database, table, columns, data, replace = false) {
     columns = columns.join(", ");
     for (var i=0; i<data.length; ++i) {
       data[i] = `'${data[i]}'`;
@@ -17,7 +17,12 @@ module.exports = {
 
     try {
       conn = await pool.getConnection();
-      conn.query(`REPLACE INTO ${database}.${table} (${columns}) VALUES (${data})`);
+      if (replace == false) {
+        conn.query(`INSERT INTO ${database}.${table} (${columns}) VALUES (${data})`)
+        .catch(err => console.log(err));
+      } else {
+        conn.query(`REPLACE INTO ${database}.${table} (${columns}) VALUES (${data})`);
+      }
     } catch (err) {
       console.log(err);
     } finally {
