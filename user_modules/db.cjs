@@ -8,7 +8,7 @@ let pool = mariadb.createPool({
 });
 
 module.exports = {
-  sendData: async function sendData(database, table, columns, data, replace = false) {
+  sendData: async function sendData(database, table, columns, data, replace=false) {
     columns = columns.join(", ");
     for (var i=0; i<data.length; ++i) {
       data[i] = `'${data[i]}'`;
@@ -16,7 +16,7 @@ module.exports = {
     data = data.join(", ");
 
     try {
-      conn = await pool.getConnection();
+      var conn = await pool.getConnection();
       if (replace == false) {
         conn.query(`INSERT INTO ${database}.${table} (${columns}) VALUES (${data})`)
         .catch(err => console.log(err));
@@ -30,9 +30,20 @@ module.exports = {
     }
   },
 
-  getColumnData: async function getColumnData(database, table, column) {
+  getData: async function getData(database, table) {
     try {
       conn = await pool.getConnection();
+      return await conn.query(`SELECT * FROM ${database}.${table}`);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      if (conn) conn.close();
+    }
+  },
+
+  getColumnData: async function getColumnData(database, table, column) {
+    try {
+      var conn = await pool.getConnection();
       return await conn.query(`SELECT ${column} FROM ${database}.${table}`);
     } catch (err) {
       console.log(err);
@@ -41,9 +52,9 @@ module.exports = {
     }
   },
 
-  getPostData: async function getPostData(database, table, column, value) {
+  getValueData: async function getValueData(database, table, column, value) {
     try {
-      conn = await pool.getConnection();
+      var conn = await pool.getConnection();
       return await conn.query(`SELECT * FROM ${database}.${table} WHERE ${column}="${value}"`);
     } catch (err) {
       console.log(err);

@@ -61,13 +61,13 @@ router.get("/id", (req, res) => {
 
 router.route("/:id")
 .get((req, res) => {
-  db.getPostData("blog_posts", "post", "id", `${req.params.id}`)
+  db.getValueData("blog_posts", "post", "id", `${req.params.id}`)
   .then(data => {
-    let date = data[0].date;
-    let title = data[0].title;
-    let body = data[0].body;
-    let author = data[0].author;
-    let tags = data[0].tags;
+    const date = data[0].date;
+    const title = data[0].title;
+    const body = data[0].body;
+    const author = data[0].author;
+    const tags = data[0].tags;
 
     res.render("posts/post.ejs", {
       date: date,

@@ -26,8 +26,9 @@ function createID() {
 
 dateField.value = getDate();
 function getDate() {
-  const tzOffset = (new Date()).getTimezoneOffset() * 60000;
-  return (new Date(Date.now() - tzOffset)).toISOString().slice(0, 10);
+  const tzOffset = new Date().getTimezoneOffset() * 60000;
+  const tzDate = new Date(Date.now() - tzOffset).toISOString().slice(0, 10);
+  return tzDate;
 }
 
 uploadInput.addEventListener("change", () => {

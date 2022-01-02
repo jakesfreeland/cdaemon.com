@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const bodyParser = require("body-parser");
-const path = require("path");
 const cookieSession = require("cookie-session");
+const crypto = require("crypto").webcrypto;
+const path = require("path");
 const db = require("../user_modules/db.cjs");
 
 router.use(bodyParser.urlencoded({ extended: true }))
@@ -18,11 +19,15 @@ router.route("/signup")
 })
 .post((req, res) => {
   if (req.body.username &&
-      req.body.password) {
-        console.log("Signup recieved");
-        db.sendData("users", "user", 
-                    ["username", "password"],
-                    [req.body.username, req.body.password]);
+      req.body.password &&
+      req.body.salt) {
+        hashData(req.body.password, req.body.salt)
+        .then(digest => {
+          console.log("Signup recieved");
+          db.sendData("users", "user",
+                      ["username", "password"],
+                      [req.body.username, digest]);
+        });
   } else {
     console.log("Missing parameter");
   }
@@ -37,6 +42,7 @@ router.route("/login")
   if (req.body.username &&
       req.body.password) {
         console.log("Login recieved");
+        
   }
 })
 
@@ -44,5 +50,16 @@ router.route("/:username")
 .get((req, res) => {
   res.send(`Get user with ID ${req.params.username}`);
 })
+
+async function hashData(data, salt=undefined) {
+  if (salt != undefined) {
+    data = data + salt;
+  }
+  const encData = new TextEncoder().encode(data);
+  const hashBuf = await crypto.subtle.digest("SHA-384", encData);
+  const hashArr = Array.from(new Uint8Array(hashBuf));
+  const hashHex = hashArr.map(b => b.toString(16).padStart(2, '0')).join('');
+  return hashHex;
+}
 
 module.exports = router;
