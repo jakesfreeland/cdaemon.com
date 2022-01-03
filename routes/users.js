@@ -19,14 +19,13 @@ router.route("/signup")
 })
 .post((req, res) => {
   if (req.body.username &&
-      req.body.password &&
-      req.body.salt) {
-        hashData(req.body.password, req.body.salt)
+      req.body.password) {
+        const salt = genSalt();
+        hashData(req.body.password, salt)
         .then(digest => {
-          console.log("Signup recieved");
           db.sendData("users", "user",
-                      ["username", "password"],
-                      [req.body.username, digest]);
+                      ["username", "password", "salt"],
+                      [req.body.username, digest, salt]);
         });
   } else {
     console.log("Missing parameter");
@@ -50,6 +49,11 @@ router.route("/:username")
 .get((req, res) => {
   res.send(`Get user with ID ${req.params.username}`);
 })
+
+function genSalt() {
+  const salt = Math.floor(Math.random() * 99999)
+  return salt;
+}
 
 async function hashData(data, salt=undefined) {
   if (salt != undefined) {

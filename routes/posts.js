@@ -94,7 +94,7 @@ function getID() {
   let idGen = "";
   const charPool = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   for (var i=0; i<8; i++) {
-    // select pseudo-random position in charPool
+    // concatenate pseudo-random position in charPool
     idGen += charPool.charAt(Math.floor(Math.random() * 62));
   }
 
