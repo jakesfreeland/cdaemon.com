@@ -5,7 +5,8 @@ const fileupload = require("express-fileupload");
 const fs = require("fs");
 const path = require("path");
 const db = require("../user_modules/db.cjs");
-const { cache } = require("ejs");
+
+let id; // ID is renewed on every GET request to "/new"
 
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(fileupload());
@@ -14,22 +15,22 @@ router.get('/', (req, res) => {
   res.render("posts/posts.ejs");
 })
 
-router.route('/new')
+router.route("/new")
 .get((req, res) => {
   res.sendFile(path.resolve(__dirname, "../public/html/editor.html"));
+  getID(); // ID is refreshed
 })
 .post((req, res) => {
-  if (req.body.id &&
-      req.body.date &&
-      req.body.title &&
+  if (req.body.title &&
       req.body.body &&
       req.body.author) {
-          console.log("Post request recieved");
+          const date = getDate();
           db.sendData("blog_posts", "post",
                       ["id", "date", "title", "body", "tags", "author"],
-                      [req.body.id, req.body.date, req.body.title, req.body.body, req.body.tags, req.body.author],
-                      replace = true);
-          res.redirect(`/posts/${req.body.id}`);
+                      [id, date, req.body.title, req.body.body, req.body.tags, req.body.author],
+                      replace = true)
+          .then(post => res.redirect(`/posts/${id}`))
+          .catch(err => console.log(err));
   } else {
       console.log("Missing parameter");
   }
@@ -37,7 +38,6 @@ router.route('/new')
 
 router.post("/images", (req, res) => {
   let img = req.files.img;
-  let id = req.body.id;
   let imgPath = path.resolve(__dirname, `../public/images/blog/${id}/`);
 
   if (!fs.existsSync(imgPath)) {
@@ -51,12 +51,6 @@ router.post("/images", (req, res) => {
       res.json(`images/${id}/${img.name}`);
     }
   })
-})
-
-router.get("/id", (req, res) => {
-    console.log("Getting present ids");
-    db.getColumnData("blog_posts", "post", "id")
-    .then(data => res.send(data));
 })
 
 router.route("/:id")
@@ -95,5 +89,31 @@ router.route("/:id")
 .delete((req, res) => {
   res.send(`delete post with ID ${req.params.id}`);
 })
+
+function getID() {
+  let idGen = "";
+  const charPool = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  for (var i=0; i<8; i++) {
+    // select pseudo-random position in charPool
+    idGen += charPool.charAt(Math.floor(Math.random() * 62));
+  }
+
+  db.getColumnData("blog_posts", "post", "id")
+  .then(ids => {
+    // check if ID already exists
+    if (ids.some(e => e.id === idGen)) {
+      getID();
+    } else {
+      // assign ID
+      id = idGen;
+    }
+  });
+}
+
+function getDate() {
+  // grab UTC date and convert to ISO format
+  const date = new Date().toISOString().slice(0, 10);
+  return date;
+}
 
 module.exports = router;
