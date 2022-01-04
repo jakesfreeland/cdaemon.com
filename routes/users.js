@@ -41,10 +41,43 @@ router.route("/login")
 })
 // in the case of a post request
 .post((req, res) => {
-  if (req.body.username &&
-      req.body.password) {
-        console.log("Login recieved");
-        
+
+  // check if user has a valid login cookie
+
+  if (req.body.username && req.body.password) {
+    console.log("Login recieved");
+
+    db.getValueData("users", "user", "username", `${req.body.username}`)
+    .then(data => {
+      const username = data[0].username;
+      const digest = data[0].password;
+      const salt = data[0].salt;
+
+      if (hashData(req.body.password, salt) == digest) {
+        console.log("Authentication successful");
+        res.redirect(`/users/${req.body.username}`);
+
+        // create cookie
+      }
+
+      else {
+        console.log("Authentication failed");
+      }
+    })
+    .catch(err => {
+     res.status(404);
+     res.format({
+       html: () => {
+         res.render("http/404.ejs", { url: `Username ${req.body.username}` });
+       },
+       json: () => {
+         res.json({ error: 'Username not found' });
+       },
+       default: () => {
+        res.type('txt').send('Username not found');
+      }
+    });
+  })
   }
 })
 
