@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Blog Title</title>
+    <title>Blog - Editor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/styles/post.css">
     <link rel="stylesheet" href="/fonts/fontawesome-free-5.15.3-web/css/all.min.css">
+    <link rel="stylesheet" href="/styles/pell.css">
     <script src="/scripts/navmenu-toggle.js"></script>
     <script src="/scripts/jquery-3.6.0.min.js"></script>
     <script>
@@ -21,6 +22,12 @@
         <div class="blog-post">
           <input name="title" class="title" placeholder="Title" maxlength="128" autofocus required />
           <textarea name="body" class="body" placeholder="Body" maxlength="20000" spellcheck="true" required></textarea>
+
+          <div id="editor" class="pell"></div>
+          <div>
+            <div id="html-output"></div>
+          </div>
+
           <input name="author" class="author" placeholder="Author" maxlength="32" spellcheck="true" required />
           <input name="tags" class="tags" placeholder="Tags" maxlength="64" spellcheck="true" />
         </div>
@@ -34,5 +41,7 @@
     </main>
 
     <footer id="included-footer"></footer>
+
+    <script src="/scripts/editor.js" type="module"></script>
   </body>
 </html>
