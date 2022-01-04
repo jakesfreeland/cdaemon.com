@@ -49,9 +49,9 @@ router.route("/login")
       const salt = data[0].salt;
       return hashData(req.body.password, salt);
     })
-    .then(hash => {
-      const digest = data[0].password;
-      if (hash == digest) {
+    .then(fresh_digest => {
+      const stored_digest = data[0].password;
+      if (fresh_digest == stored_digest) {
         console.log("success");
         res.redirect(`/users/${req.body.username}`);
       } else {
