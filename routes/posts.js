@@ -6,8 +6,6 @@ const fs = require("fs");
 const path = require("path");
 const db = require("../user_modules/db.cjs");
 
-let id; // ID is renewed on every GET request to "/new"
-
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(fileupload());
 
@@ -18,39 +16,22 @@ router.get('/', (req, res) => {
 router.route("/new")
 .get((req, res) => {
   res.sendFile(path.resolve(__dirname, "../public/html/editor.html"));
-  getID(); // ID is refreshed
 })
 .post((req, res) => {
-  if (req.body.title &&
-      req.body.body &&
-      req.body.author) {
-          const date = getDate();
-          db.sendData("blog_posts", "post",
-                      ["id", "date", "title", "body", "tags", "author"],
-                      [id, date, req.body.title, req.body.body, req.body.tags, req.body.author],
-                      replace = true)
-          .then(post => res.redirect(`/posts/${id}`))
-          .catch(err => console.log(err));
+  if (req.body.title && req.body.body && req.body.author) {
+    uploadPost(req.body.title, req.body.body, req.body.author, req.body.tags)
+    .then(id => {
+      // THIS NEEDS WORK
+      if (req.files.img) {
+        uploadMedia(req.files.img, id)
+      }
+      return id;
+    })
+    .then(id => res.redirect(`/posts/${id}`))
+    .catch(err => console.log(err));
   } else {
-      console.log("Missing parameter");
+    console.log("Missing parameter");
   }
-})
-
-router.post("/images", (req, res) => {
-  let img = req.files.img;
-  let imgPath = path.resolve(__dirname, `../public/images/blog/${id}/`);
-
-  if (!fs.existsSync(imgPath)) {
-    fs.mkdirSync(imgPath);
-  }
-
-  img.mv((imgPath + '/' + img.name), (err) => {
-    if (err) {
-      throw err;
-    } else {
-      res.json(`images/${id}/${img.name}`);
-    }
-  })
 })
 
 router.route("/:id")
@@ -90,7 +71,33 @@ router.route("/:id")
   res.send(`delete post with ID ${req.params.id}`);
 })
 
-function getID() {
+async function uploadPost(title, body, author, tags) {
+  const id = await getID();
+  const date = await getDate();
+  await db.sendData("blog_posts", "post",
+    ["id", "date", "title", "body", "author", "tags"],
+    [id, date, title, body, author, tags],
+    replace = true);
+  return id;
+}
+
+async function uploadMedia(img, id) {
+  let imgPath = path.resolve(__dirname, `../public/images/blog/${id}/`);
+
+  if (!fs.existsSync(imgPath)) {
+    fs.mkdirSync(imgPath);
+  }
+
+  img.mv((imgPath + '/' + img.name), (err) => {
+    if (err) {
+      throw err;
+    } else {
+      res.json(`images/${id}/${img.name}`);
+    }
+  })
+}
+
+async function getID() {
   let idGen = "";
   const charPool = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   for (var i=0; i<8; i++) {
@@ -98,19 +105,16 @@ function getID() {
     idGen += charPool.charAt(Math.floor(Math.random() * 62));
   }
 
-  db.getColumnData("blog_posts", "post", "id")
-  .then(ids => {
-    // check if ID already exists
-    if (ids.some(e => e.id === idGen)) {
-      getID();
-    } else {
-      // assign ID
-      id = idGen;
-    }
-  });
+  const ids = await db.getColumnData("blog_posts", "post", "id");
+  // re-run getID() if idGen is present in database
+  if (ids.some(e => e.id === idGen)) {
+    return getID();
+  } else {
+    return idGen;
+  }
 }
 
-function getDate() {
+async function getDate() {
   // grab UTC date and convert to ISO format
   const date = new Date().toISOString().slice(0, 10);
   return date;
