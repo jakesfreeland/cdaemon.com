@@ -21,17 +21,19 @@ router.route("/signup")
   if (req.body.username &&
       req.body.password) {
         const salt = genSalt();
-        const digest = hashData(req.body.password, salt);
-        db.sendData(
-          "users", "user",
-          ["username", "password", "salt"],
-          [req.body.username, digest, salt])
-        .then(res.redirect("/"))
+        hashData(req.body.password, salt)
+        .then(digest => 
+          db.sendData(
+            "users", "user",
+            ["username", "password", "salt"],
+            [req.body.username, digest, salt])
+        )
+        .then(() => res.redirect("/"))
         .catch(err => console.log(err));
   } else {
     console.log("Missing parameter");
   }
-})
+});
 
 // when the user accesses /users/login
 router.route("/login")
@@ -41,45 +43,24 @@ router.route("/login")
 })
 // in the case of a post request
 .post((req, res) => {
-
-  // check if user has a valid login cookie
-
   if (req.body.username && req.body.password) {
-    console.log("Login recieved");
-
     db.getValueData("users", "user", "username", `${req.body.username}`)
     .then(data => {
-      const username = data[0].username;
-      const digest = data[0].password;
       const salt = data[0].salt;
-
-      if (hashData(req.body.password, salt) == digest) {
-        console.log("Authentication successful");
+      return hashData(req.body.password, salt);
+    })
+    .then(hash => {
+      const digest = data[0].password;
+      if (hash == digest) {
+        console.log("success");
         res.redirect(`/users/${req.body.username}`);
-
-        // create cookie
-      }
-
-      else {
-        console.log("Authentication failed");
+      } else {
+        console.log("failure");
       }
     })
-    .catch(err => {
-     res.status(404);
-     res.format({
-       html: () => {
-         res.render("http/404.ejs", { url: `Username ${req.body.username}` });
-       },
-       json: () => {
-         res.json({ error: 'Username not found' });
-       },
-       default: () => {
-        res.type('txt').send('Username not found');
-      }
-    });
-  })
+    .catch(err => console.log(err));
   }
-})
+});
 
 // functions used earlier
 function genSalt() {
@@ -87,12 +68,12 @@ function genSalt() {
   return salt;
 }
 
-function hashData(data, salt=undefined) {
+async function hashData(data, salt=undefined) {
   if (salt != undefined) {
     data = data + salt;
   }
   const encData = new TextEncoder().encode(data);
-  const hashBuf = crypto.subtle.digest("SHA-384", encData);
+  const hashBuf = await crypto.subtle.digest("SHA-384", encData);
   const hashArr = Array.from(new Uint8Array(hashBuf));
   const hashHex = hashArr.map(b => b.toString(16).padStart(2, '0')).join('');
   return hashHex;

@@ -18,13 +18,10 @@ module.exports = {
     try {
       var conn = await pool.getConnection();
       if (replace == false) {
-        conn.query(`INSERT INTO ${database}.${table} (${columns}) VALUES (${data})`)
-        .catch(err => console.log(err));
+        return await conn.query(`INSERT INTO ${database}.${table} (${columns}) VALUES (${data})`);
       } else {
-        conn.query(`REPLACE INTO ${database}.${table} (${columns}) VALUES (${data})`);
+        return await conn.query(`REPLACE INTO ${database}.${table} (${columns}) VALUES (${data})`);
       }
-    } catch (err) {
-      console.log(err);
     } finally {
       if (conn) conn.close();
     }
@@ -32,10 +29,8 @@ module.exports = {
 
   getData: async function getData(database, table) {
     try {
-      conn = await pool.getConnection();
+      var conn = await pool.getConnection();
       return await conn.query(`SELECT * FROM ${database}.${table}`);
-    } catch (err) {
-      console.log(err);
     } finally {
       if (conn) conn.close();
     }
@@ -45,8 +40,6 @@ module.exports = {
     try {
       var conn = await pool.getConnection();
       return await conn.query(`SELECT ${column} FROM ${database}.${table}`);
-    } catch (err) {
-      console.log(err);
     } finally {
       if (conn) conn.close();
     }
@@ -56,8 +49,6 @@ module.exports = {
     try {
       var conn = await pool.getConnection();
       return await conn.query(`SELECT * FROM ${database}.${table} WHERE ${column}="${value}"`);
-    } catch (err) {
-      console.log(err);
     } finally {
       if (conn) conn.close();
     }
