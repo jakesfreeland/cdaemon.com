@@ -59,7 +59,7 @@ function hashData(data, salt=undefined) {
     data = data + salt;
   }
   const encData = new TextEncoder().encode(data);
-  const hashBuf = await crypto.subtle.digest("SHA-384", encData);
+  const hashBuf = crypto.subtle.digest("SHA-384", encData);
   const hashArr = Array.from(new Uint8Array(hashBuf));
   const hashHex = hashArr.map(b => b.toString(16).padStart(2, '0')).join('');
   return hashHex;
