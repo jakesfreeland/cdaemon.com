@@ -49,7 +49,6 @@ router.route("/login")
 
     db.getValueData("users", "user", "username", `${req.body.username}`)
     .then(data => {
-      const username = data[0].username;
       const digest = data[0].password;
       const salt = data[0].salt;
 
