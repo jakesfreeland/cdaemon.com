@@ -6,37 +6,40 @@ const crypto = require("crypto").webcrypto;
 const path = require("path");
 const db = require("../user_modules/db.cjs");
 
+// tell the server to use bodyparser to parse incoming requests
+// this will search through submitted form data
 router.use(bodyParser.urlencoded({ extended: true }))
-router.use(cookieSession({
-  name: "session",
-  keys: ["JtNogXp57n4rpn", "wA6oNN59UKhdFc", "XLLAmVMs9PFHkR"],
-  maxAge: 24 * 60 * 60 * 1000
-}));
 
+// when the user accesses /users/signup
 router.route("/signup")
+// in the case of a get request (normal browser behavior)
 .get((req, res) => {
   res.sendFile(path.resolve(__dirname, "../public/html/signup.html"));
 })
+// in the case of a post request (submission of form)
 .post((req, res) => {
   if (req.body.username &&
       req.body.password) {
         const salt = genSalt();
-        hashData(req.body.password, salt)
-        .then(digest => {
-          db.sendData("users", "user",
-                      ["username", "password", "salt"],
-                      [req.body.username, digest, salt]);
-        });
+        const digest = hashData(req.body.password, salt);
+        db.sendData(
+          "users", "user",
+          ["username", "password", "salt"],
+          [req.body.username, digest, salt])
+        .then(res.redirect("/"))
+        .catch(err => console.log(err));
   } else {
     console.log("Missing parameter");
   }
-  res.redirect("/");
 })
 
+// when the user accesses /users/login
 router.route("/login")
+// in the case of a get request
 .get((req, res) => {
   res.sendFile(path.resolve(__dirname, "../public/html/login.html"));
 })
+// in the case of a post request
 .post((req, res) => {
   if (req.body.username &&
       req.body.password) {
@@ -45,17 +48,13 @@ router.route("/login")
   }
 })
 
-router.route("/:username")
-.get((req, res) => {
-  res.send(`Get user with ID ${req.params.username}`);
-})
-
+// functions used earlier
 function genSalt() {
   const salt = Math.floor(Math.random() * 99999)
   return salt;
 }
 
-async function hashData(data, salt=undefined) {
+function hashData(data, salt=undefined) {
   if (salt != undefined) {
     data = data + salt;
   }
@@ -66,4 +65,11 @@ async function hashData(data, salt=undefined) {
   return hashHex;
 }
 
+// TODO LATER
+// router.route("/:username")
+// .get((req, res) => {
+//   res.send(`Get user with ID ${req.params.username}`);
+// })
+
+// this line is necessary for legacy library purposes
 module.exports = router;
