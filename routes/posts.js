@@ -1,12 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const bodyParser = require("body-parser");
 const fileupload = require("express-fileupload");
 const fs = require("fs");
 const path = require("path");
 const db = require("../user_modules/db.cjs");
 
-router.use(bodyParser.urlencoded({ extended: false }));
 router.use(fileupload());
 
 router.get('/', (req, res) => {
@@ -21,13 +19,11 @@ router.route("/new")
   if (req.body.title && req.body.body && req.body.author) {
     uploadPost(req.body.title, req.body.body, req.body.author, req.body.tags)
     .then(id => {
-      // THIS NEEDS WORK
-      if (req.files.img) {
-        uploadMedia(req.files.img, id)
+      if (req.files !== null) {
+        uploadMedia(req.files.img, id);
       }
-      return id;
+      res.redirect(`/posts/${id}`);
     })
-    .then(id => res.redirect(`/posts/${id}`))
     .catch(err => console.log(err));
   } else {
     console.log("Missing parameter");
@@ -73,7 +69,7 @@ router.route("/:id")
 
 async function uploadPost(title, body, author, tags) {
   const id = await getID();
-  const date = await getDate();
+  const date = getDate();
   await db.sendData("blog_posts", "post",
     ["id", "date", "title", "body", "author", "tags"],
     [id, date, title, body, author, tags],
@@ -81,20 +77,16 @@ async function uploadPost(title, body, author, tags) {
   return id;
 }
 
-async function uploadMedia(img, id) {
+function uploadMedia(img, id) {
   let imgPath = path.resolve(__dirname, `../public/images/blog/${id}/`);
 
   if (!fs.existsSync(imgPath)) {
     fs.mkdirSync(imgPath);
   }
 
-  img.mv((imgPath + '/' + img.name), (err) => {
-    if (err) {
-      throw err;
-    } else {
-      res.json(`images/${id}/${img.name}`);
-    }
-  })
+  // mv is not async but returns promise
+  img.mv((imgPath + '/' + img.name))
+  .catch(err => console.log(err));
 }
 
 async function getID() {
@@ -114,7 +106,7 @@ async function getID() {
   }
 }
 
-async function getDate() {
+function getDate() {
   // grab UTC date and convert to ISO format
   const date = new Date().toISOString().slice(0, 10);
   return date;

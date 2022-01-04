@@ -17,7 +17,7 @@
     <header id="included-header"></header>
 
     <main>
-      <form action="/posts/new" method="post">
+      <form action="/posts/new" method="post" enctype="multipart/form-data">
         <div class="blog-post">
           <input name="title" class="title" placeholder="Title" maxlength="128" autofocus required />
           <textarea name="body" class="body" placeholder="Body" maxlength="20000" spellcheck="true" required></textarea>
@@ -28,7 +28,7 @@
         <div class="post-options">
           <button class="publish-btn">publish</button>
           <label for="image-upload">Image Icon</label>
-          <input id="image-upload" type="file" accept="image/*" hidden />
+          <input name="img" id="image-upload" type="file" accept="image/*" hidden />
         </div>
       </form>
     </main>
