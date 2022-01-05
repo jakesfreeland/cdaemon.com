@@ -46,17 +46,17 @@ router.route("/login")
   if (req.body.username && req.body.password) {
     db.getValueData("users", "user", "username", `${req.body.username}`)
     .then(data => {
-      const salt = data[0].salt;
-      return hashData(req.body.password, salt);
-    })
-    .then(fresh_digest => {
       const stored_digest = data[0].password;
-      if (fresh_digest == stored_digest) {
-        console.log("success");
-        res.redirect(`/users/${req.body.username}`);
-      } else {
-        console.log("failure");
-      }
+      const salt = data[0].salt;
+      hashData(req.body.password, salt)
+      .then(fresh_digest => {
+        if (fresh_digest === stored_digest) {
+          console.log("login success");
+          res.redirect(`/users/${req.body.username}`);
+        } else {
+          console.log("login failure");
+        }
+      })
     })
     .catch(err => console.log(err));
   }
