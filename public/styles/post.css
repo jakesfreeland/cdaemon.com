@@ -80,31 +80,50 @@ a {
 hr.rounded {
     border: 1px solid #1a1a1a;
     border-radius: 5px;
-    margin: 5px 0px 8px 0px;
+    margin: 5px 0px;
 }
 
 textarea {
     resize: none;
+    border: none;
+    outline: none;
+}
+
+input {
+    border: none;
+    outline: none;
 }
 
 main {
     margin: 20px 10%;
     flex: 1 1 auto;
-}
-
-.post-content {
     display: flex;
     flex-direction: column;
-    margin-bottom: 10px;
-    gap: 5px;
+    gap: 10px;
 }
 
 .title {
     font-size: 30px;
-    border: none;
-    outline: none;
 }
 
+.body {
+    height: 200px;
+}
+
+.post-preview {
+    background-color: gainsboro;
+    height: max-content;
+    margin: 10px 0px;
+}
+
+.preview-box {
+    padding: 10px;
+}
+
+.post-options {
+    display: flex;
+    justify-content: space-between;
+}
 
 
 @media(max-width: 1000px) {

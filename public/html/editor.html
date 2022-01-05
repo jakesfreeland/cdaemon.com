@@ -21,26 +21,38 @@
         <form action="/posts/new" method="post" enctype="multipart/form-data">
           <section class="post-content" spellcheck="true">
             <input name="title" class="title" placeholder="Title" maxlength="128" autofocus required />
+            <hr class=rounded>
             <textarea id="body-md" class="body" placeholder="Body" maxlength="20000" required></textarea>
-            <input name="author" class="author" placeholder="Author" maxlength="32" required />
+            <hr class="rounded">
             <input name="tags" class="tags" placeholder="Tags" maxlength="64" />
+            <hr class="rounded">
 
             <!-- form-submitted body HTML -->
             <textarea name="body" id="body-html" maxlength="20000" hidden></textarea>
+
+            <!-- author (ACCOUNT INTEGRATION)-->
+            <input name="author" class="author" placeholder="Author" maxlength="32" required hidden />
           </section>
 
-          <section class="preview">
-            <hr class="rounded">
-            <h1 id="title-preview"></h1>
-            <div id="body-preview"></div>
-            <p id="author-preview"></p>
-            <p id="tags-preview"></p>
+          <section class="post-preview">
+            <div class="preview-box">
+              <p>Expand Preview</p>
+              <h1 id="title-preview" hidden></h1>
+              <p id="body-preview"></p>
+              <p id="author-preview" hidden></p>
+              <p id="tags-preview" hidden></p>
+            </div>
           </section>
 
           <section class="post-options">
-            <button class="publish-btn">Publish</button>
-            <label for="image-upload"><i class="far fa-file-image"></i></label>
-            <input name="imgs" id="image-upload" type="file" accept="image/*" multiple hidden />
+            <div class="post-input">
+              <button class="publish-btn">Publish</button>
+              <label for="image-upload"><i class="far fa-file-image"></i></label>
+              <input name="imgs" id="image-upload" type="file" accept="image/*" multiple hidden />
+            </div>
+            <div class="post-author">
+              <p>Posting as Jake Freeland</p>
+            </div>
           </section>
         </form>
     </main>

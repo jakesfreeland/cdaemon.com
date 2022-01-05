@@ -16,7 +16,8 @@ router.route("/new")
   res.sendFile(path.resolve(__dirname, "../public/html/editor.html"));
 })
 .post((req, res) => {
-  if (req.body.title && req.body.body && req.body.author) {
+  if (req.body.title && req.body.body) {
+    // FIND AUTHOR FROM COOKIE
     uploadPost(req.body.title, req.body.body, req.body.author, req.body.tags)
     .then(id => {
       if (req.files !== null) {
