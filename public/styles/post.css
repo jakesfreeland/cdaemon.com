@@ -84,7 +84,6 @@ hr.rounded {
 }
 
 textarea {
-    resize: none;
     border: none;
     outline: none;
 }
@@ -102,16 +101,22 @@ main {
     gap: 10px;
 }
 
+.content * {
+    min-width: 100%;
+    max-width: 100%;
+}
+
 .title {
     font-size: 30px;
 }
 
 .body {
-    height: 200px;
+    height: 400px;
+    min-height: 20px;
 }
 
-.post-preview {
-    background-color: gainsboro;
+.preview {
+    background-color: #dcdcdc;
     height: max-content;
     margin: 10px 0px;
 }
@@ -120,7 +125,13 @@ main {
     padding: 10px;
 }
 
-.post-options {
+.expand-label {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.options {
     display: flex;
     justify-content: space-between;
 }
