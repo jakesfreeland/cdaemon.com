@@ -4,6 +4,7 @@
     <title>Blog Title</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/styles/post.css">
+    <link rel="stylesheet" href="/styles/header-footer.css">
     <link rel="stylesheet" href="/fonts/fontawesome-free-5.15.3-web/css/all.min.css">
     <script src="/scripts/navmenu-toggle.js"></script>
     <script src="/scripts/jquery-3.6.0.min.js"></script>
@@ -25,7 +26,9 @@
       <section class="content">
         <h1><%= locals.title %></h1>
         <hr class="rounded">
-        <p><%= locals.body %></p>
+        <div class="body">
+          <%- locals.body -%>
+        </div>
       </section>
 
       <section class="more">

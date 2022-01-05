@@ -1,8 +1,13 @@
-import { init } from "./pell-1.0.6.js";
+import snarkdown from "/scripts/snarkdown-2.0.0.es.js";
 
-init ({
-  element: document.getElementById("editor"),
-  onChange: html => {
-    document.getElementById("html-output").textContent = html
-  }, 
-})
+let $ = document.querySelector.bind(document);
+
+function run() {
+	let html = snarkdown($('#body-md').value);
+	$('#body-preview').innerHTML = html;
+	$('#body-html').textContent = html;
+}
+
+$('#body-md').oninput = run;
+
+run();

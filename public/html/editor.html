@@ -4,8 +4,8 @@
     <title>Blog - Editor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/styles/post.css">
+    <link rel="stylesheet" href="/styles/header-footer.css">
     <link rel="stylesheet" href="/fonts/fontawesome-free-5.15.3-web/css/all.min.css">
-    <link rel="stylesheet" href="/styles/pell.css">
     <script src="/scripts/navmenu-toggle.js"></script>
     <script src="/scripts/jquery-3.6.0.min.js"></script>
     <script>
@@ -18,26 +18,31 @@
     <header id="included-header"></header>
 
     <main>
-      <form action="/posts/new" method="post" enctype="multipart/form-data">
-        <div class="blog-post">
-          <input name="title" class="title" placeholder="Title" maxlength="128" autofocus required />
-          <textarea name="body" class="body" placeholder="Body" maxlength="20000" spellcheck="true" required></textarea>
+        <form action="/posts/new" method="post" enctype="multipart/form-data">
+          <section class="post-content" spellcheck="true">
+            <input name="title" class="title" placeholder="Title" maxlength="128" autofocus required />
+            <textarea id="body-md" class="body" placeholder="Body" maxlength="20000" required></textarea>
+            <input name="author" class="author" placeholder="Author" maxlength="32" required />
+            <input name="tags" class="tags" placeholder="Tags" maxlength="64" />
 
-          <div id="editor" class="pell"></div>
-          <div>
-            <div id="html-output"></div>
-          </div>
+            <!-- form-submitted body HTML -->
+            <textarea name="body" id="body-html" maxlength="20000" hidden></textarea>
+          </section>
 
-          <input name="author" class="author" placeholder="Author" maxlength="32" spellcheck="true" required />
-          <input name="tags" class="tags" placeholder="Tags" maxlength="64" spellcheck="true" />
-        </div>
+          <section class="preview">
+            <hr class="rounded">
+            <h1 id="title-preview"></h1>
+            <div id="body-preview"></div>
+            <p id="author-preview"></p>
+            <p id="tags-preview"></p>
+          </section>
 
-        <div class="post-options">
-          <button class="publish-btn">publish</button>
-          <label for="image-upload">Image Icon</label>
-          <input name="img" id="image-upload" type="file" accept="image/*" hidden />
-        </div>
-      </form>
+          <section class="post-options">
+            <button class="publish-btn">Publish</button>
+            <label for="image-upload"><i class="far fa-file-image"></i></label>
+            <input name="imgs" id="image-upload" type="file" accept="image/*" multiple hidden />
+          </section>
+        </form>
     </main>
 
     <footer id="included-footer"></footer>
