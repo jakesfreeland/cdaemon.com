@@ -37,26 +37,22 @@
         </section>
 
         <section class="preview">
-          <div class="preview-box">
-            <div class="preview-expand">
-              <p>Expand Preview</p>
-              <i id="expand-caret" class="fas fa-caret-down" style="display: block"></i>
-              <i id="retract-caret" class="fas fa-caret-up" style="display: none"></i>
-            </div>
-            <div class="preview-content" hidden>
-              <div class="markdown-themify">
-                <h1 id="title-preview"></h1>
-                <p id="body-preview"></p>
-                <h6 id="tags-preview"></h6>
-              </div>
-            </div>
+          <div class="preview-expand">
+            <p>Expand Preview</p>
+            <i id="expand-caret" class="fas fa-caret-down" style="display: block"></i>
+            <i id="retract-caret" class="fas fa-caret-up" style="display: none"></i>
+          </div>
+          <div class="preview-content markdown-themify" hidden>
+            <h1 id="title-preview"></h1>
+            <p id="body-preview"></p>
+            <h6 id="tags-preview"></h6>
           </div>
         </section>
 
         <section class="options">
           <div class="options-buttons">
             <button class="publish-btn" form="post-form">PUBLISH</button>
-            <label for="image-upload"><i class="far fa-file-image"></i></label>
+            <label for="image-upload"><i class="fas fa-file-image"></i></label>
             <input name="imgs" id="image-upload" type="file" accept="image/*" multiple hidden />
           </div>
           <div class="options-author">

@@ -11,7 +11,7 @@ const previewBody = document.getElementById("body-preview");
 const previewTags = document.getElementById("tags-preview");
 
 previewBox.addEventListener("click", () => {
-  if (expandPreview.style.display == "block") {
+  if (expandPreview.style.display === "block") {
     expandPreview.style.display = "none";
     retractPreview.style.display = "block";
     previewContent.hidden = false;

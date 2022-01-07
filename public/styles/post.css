@@ -15,6 +15,14 @@ body {
     flex-direction: column;
 }
 
+main {
+    margin: 20px 10%;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 hr.rounded {
     border: 1px solid #1a1a1a;
     border-radius: 5px;
@@ -25,14 +33,6 @@ textarea, input {
     border: none;
     outline: none;
     resize: vertical;
-}
-
-main {
-    margin: 20px 10%;
-    flex: 1 1 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
 }
 
 .content * {
@@ -50,7 +50,9 @@ main {
 }
 
 .tags {
-    font-size: 1em;
+    font-size: 0.85em;
+    font-weight: 600;
+    color: #57606a;
 }
 
 .preview {
@@ -58,23 +60,17 @@ main {
     margin-bottom: 10px;
 }
 
-.preview-box {
-    padding: 10px;
-}
-
 .preview-expand {
     display: flex;
     gap: 8px;
     align-items: center;
     user-select: none;
+    padding: 10px;
 }
 
 .preview-content {
-    margin: 10px 0px 5px 0px;
-}
-
-.markdown-themify {
     padding: 20px;
+    margin: 0px 10px 10px 10px;
     border-radius: 10px;
 }
 
@@ -86,14 +82,7 @@ main {
 
 .options button, .options label {
     border: none;
-    background-color: #365674;
+    background-color: #426e88;
     color: #fff;
     padding: 0.6em 0.8em;
-}
-
-@media(max-width: 1000px) {
-    /* Content */
-    main {
-        margin: 20px 10%;
-    }
 }
