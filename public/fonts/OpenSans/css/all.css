@@ -1,0 +1,40 @@
+@font-face {
+    font-family: opensans-bold;
+    src: url(../webfonts/opensans-bold.ttf);
+}
+@font-face {
+    font-family: opensans-bolditalic;
+    src: url(../webfonts/opensans-bolditalic.ttf);
+}
+@font-face {
+    font-family: opensans-extrabold;
+    src: url(../webfonts/opensans-extrabold.ttf);
+}
+@font-face {
+    font-family: opensans-extrabolditalic;
+    src: url(../webfonts/opensans-extrabolditalic.ttf);
+}
+@font-face {
+    font-family: opensans-italic;
+    src: url(../webfonts/opensans-italic.ttf);
+}
+@font-face {
+    font-family: opensans-light;
+    src: url(../webfonts/opensans-light.ttf);
+}
+@font-face {
+    font-family: opensans-lightitalic;
+    src: url(../webfonts/opensans-lightitalic.ttf);
+}
+@font-face {
+    font-family: opensans-regular;
+    src: url(../webfonts/opensans-regular.ttf);
+}
+@font-face {
+    font-family: opensans-semibold;
+    src: url(../webfonts/opensans-semibold.ttf);
+}
+@font-face {
+    font-family: opensans-semibolditalic;
+    src: url(../webfonts/opensans-semibolditalic.ttf);
+}
