@@ -1,36 +1,3 @@
-/*  
-    post.css
-    Created by Jake Freeland (jakesfreeland@gmail.com)
-    12/26/2021  
-*/
-
-/* Fonts */
-@font-face {
-    font-family: "opensans-regular";
-    src: url(/fonts/OpenSans/opensans-regular.ttf);
-}
-
-@font-face {
-    font-family: "opensans-italic";
-    src: url(/fonts/OpenSans/opensans-italic.ttf);
-}
-
-@font-face {
-    font-family: "opensans-semibold";
-    src: url(/fonts/OpenSans/opensans-semibold.ttf);
-}
-
-@font-face {
-    font-family: "opensans-bold";
-    src: url(/fonts/OpenSans/opensans-bold.ttf);
-}
-
-@font-face {
-    font-family: "opensans-extrabold";
-    src: url(/fonts/OpenSans/opensans-extrabold.ttf);
-}
-
-/* Global */
 * {
     margin: 0;
     padding: 0;
@@ -48,49 +15,16 @@ body {
     flex-direction: column;
 }
 
-h1 {
-    font-family: "opensans-bold";
-}
-
-h2 {
-    font-family: "opensans-semibold";
-}
-
-h3 {
-    font-family: "opensans-semibold";
-}
-
-h4 {
-    font-family: "opensans-semibold";
-}
-
-h5 {
-    font-family: "opensans-semibold";
-}
-
-p {
-    font-size: 16px;
-    white-space: pre-wrap;
-}
-
-a {
-    color:rgb(90, 90, 90);
-}
-
 hr.rounded {
     border: 1px solid #1a1a1a;
     border-radius: 5px;
     margin: 5px 0px;
 }
 
-textarea {
+textarea, input {
     border: none;
     outline: none;
-}
-
-input {
-    border: none;
-    outline: none;
+    resize: vertical;
 }
 
 main {
@@ -103,39 +37,59 @@ main {
 
 .content * {
     min-width: 100%;
-    max-width: 100%;
 }
 
 .title {
-    font-size: 30px;
+    font-size: 2em;
 }
 
 .body {
+    font-size: 1em;
     height: 400px;
     min-height: 20px;
 }
 
+.tags {
+    font-size: 1em;
+}
+
 .preview {
     background-color: #dcdcdc;
-    height: max-content;
-    margin: 10px 0px;
+    margin-bottom: 10px;
 }
 
 .preview-box {
     padding: 10px;
 }
 
-.expand-label {
+.preview-expand {
     display: flex;
     gap: 8px;
     align-items: center;
+    user-select: none;
+}
+
+.preview-content {
+    margin: 10px 0px 5px 0px;
+}
+
+.markdown-themify {
+    padding: 20px;
+    border-radius: 10px;
 }
 
 .options {
     display: flex;
     justify-content: space-between;
+    text-align: end;
 }
 
+.options button, .options label {
+    border: none;
+    background-color: #365674;
+    color: #fff;
+    padding: 0.6em 0.8em;
+}
 
 @media(max-width: 1000px) {
     /* Content */

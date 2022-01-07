@@ -4,10 +4,10 @@
     <title>Blog - Editor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/styles/post.css">
+    <link rel="stylesheet" href="/styles/opensans.css">
     <link rel="stylesheet" href="/styles/header-footer.css">
     <link rel="stylesheet" href="/fonts/fontawesome-free-5.15.3-web/css/all.min.css">
-    <script src="/scripts/navmenu-toggle.js"></script>
-    <script src="/scripts/editor.js"></script>
+    <link rel="stylesheet" href="/styles/markdown.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
       $(function(){ $("#included-header").load("/html/templates/header.html"); });
@@ -23,13 +23,13 @@
           <form action="/posts/new" method="post" enctype="multipart/form-data" id="post-form" autocomplete="off" spellcheck="true">
             <input name="title" class="title" placeholder="Title" maxlength="128" autofocus required />
             <hr class=rounded>
-            <textarea id="body-md" class="body" placeholder="Body" maxlength="20000" required></textarea>
+            <textarea id="body-md" class="body" placeholder="Body" required></textarea>
             <hr class="rounded">
             <input name="tags" class="tags" placeholder="Tags" maxlength="64" />
             <hr class="rounded">
 
             <!-- form-submitted body HTML -->
-            <textarea name="body" id="body-html" maxlength="20000" hidden></textarea>
+            <textarea name="body" id="body-html" hidden></textarea>
 
             <!-- author (ACCOUNT INTEGRATION)-->
             <input name="author" class="author" placeholder="Author" maxlength="32" hidden />
@@ -38,32 +38,36 @@
 
         <section class="preview">
           <div class="preview-box">
-            <div class="expand-label">
+            <div class="preview-expand">
               <p>Expand Preview</p>
-              <i class="fas fa-caret-down"></i>
-              <i class="fas fa-caret-up"></i>
+              <i id="expand-caret" class="fas fa-caret-down" style="display: block"></i>
+              <i id="retract-caret" class="fas fa-caret-up" style="display: none"></i>
             </div>
-            <h1 id="title-preview" hidden></h1>
-            <p id="body-preview"></p>
-            <p id="author-preview" hidden></p>
-            <p id="tags-preview" hidden></p>
+            <div class="preview-content" hidden>
+              <div class="markdown-themify">
+                <h1 id="title-preview"></h1>
+                <p id="body-preview"></p>
+                <h6 id="tags-preview"></h6>
+              </div>
+            </div>
           </div>
         </section>
 
         <section class="options">
-          <div class="options-bar">
-            <button class="publish-btn" form="post-form">Publish</button>
+          <div class="options-buttons">
+            <button class="publish-btn" form="post-form">PUBLISH</button>
             <label for="image-upload"><i class="far fa-file-image"></i></label>
             <input name="imgs" id="image-upload" type="file" accept="image/*" multiple hidden />
           </div>
-          <div class="author-bar">
-            <p>Posting as Jake Freeland</p>
+          <div class="options-author">
+            <p>Posting as {username}</p>
           </div>
         </section>
     </main>
 
     <footer id="included-footer"></footer>
 
+    <script src="/scripts/editor.js"></script>
     <script src="/scripts/markdown.js" type="module"></script>
   </body>
 </html>

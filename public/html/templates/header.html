@@ -1,20 +1,23 @@
 <nav>
-  <div class="nav-mobile">
+  <div class="nav-main">
     <div class="nav-logo">
-      <h1>{BLOG_NAME}</h1>
+      <h1>BLOG</h1>
     </div>
 
-    <button class="nav-menu">
-      <i class="fas fa-bars" onclick="toggleMenu()"></i>
-    </button>
+    <label class="menu-toggle" for="menuToggle"><i class="fas fa-bars"></i></label>
   </div>
 
-  <div class="nav-links" id="navLinks">
-    <ul>
+  <div class="nav-menu">
+    <input id="menuToggle" type="checkbox" hidden />
+    <ul class="nav-links">
       <li><a href="/html/blog.html">Home</a></li>
+      <hr>
       <li><a href="/html/posts.html">Posts</a></li>
+      <hr>
       <li><a href="/html/archive.html">Archive</a></li>
+      <hr>
       <li><a href="/html/projects.html">Projects</a></li>
+      <hr>
       <li><a href="/html/contact.html">Contact</a></li>
     </ul>
   </div>
