@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Blog Title</title>
+    <title>Blog - Post</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/styles/skeleton.css">
     <link rel="stylesheet" href="/styles/post.css">
-    <link rel="stylesheet" href="/styles/header-footer.css">
-    <link rel="stylesheet" href="/fonts/fontawesome-free-5.15.3-web/css/all.min.css">
     <link rel="stylesheet" href="/styles/markdown.css">
-    <script src="/scripts/navmenu-toggle.js"></script>
+    <link rel="stylesheet" href="/fonts/opensans/css/all.css">
+    <link rel="stylesheet" href="/fonts/fontawesome/css/all.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
       $(function(){ $("#included-header").load("/html/templates/header.html"); });
@@ -20,20 +20,17 @@
 
     <main>
       <section class="info">
-        <p><%= locals.author %></p>
-        <p><%= locals.date %></p>
-      </section>
-
-      <section class="content">
         <h1><%= locals.title %></h1>
-        <hr class="rounded">
-        <div class="content">
-          <%- locals.body -%>
-        </div>
+        <h5>By <a href="/users/<%= locals.author %>"><%= locals.author %></a> on <%= locals.date %></h5>
+        <hr>
       </section>
 
-      <section class="more">
-        <p><%= locals.tags %></p>
+      <section class="body markdown-themify">
+        <%- locals.body -%>
+      </section>
+
+      <section class="tags">
+        <h6><%= locals.tags %></h6>
       </section>
     </main>
 

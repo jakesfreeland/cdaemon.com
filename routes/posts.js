@@ -35,7 +35,7 @@ router.route("/:id")
 .get((req, res) => {
   db.getValueData("blog_posts", "post", "id", `${req.params.id}`)
   .then(data => {
-    const date = data[0].date;
+    const date = formatDate(data[0].date);
     const title = data[0].title;
     const body = data[0].body;
     const author = data[0].author;
@@ -110,6 +110,13 @@ async function getID() {
 function getDate() {
   // grab UTC date and convert to ISO format
   const date = new Date().toISOString().slice(0, 10);
+  return date;
+}
+
+function formatDate(dateObj) {
+  const options = { year: "numeric", month: "long", day: "numeric"}
+  const date = dateObj.toLocaleDateString(undefined, options);
+
   return date;
 }
 

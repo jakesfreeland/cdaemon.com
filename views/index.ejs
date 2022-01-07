@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Tech Friends - Blog</title>
+		<title>Verdaemon - Blog</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" href="/styles/style.css">
-		<link rel="stylesheet" href="/fonts/fontawesome-free-5.15.3-web/css/all.min.css">
-		<script src="/scripts/navmenu-toggle.js"></script>
+    <link rel="stylesheet" href="/styles/skeleton.css">
+    <link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" href="/fonts/opensans/css/all.css">
+    <link rel="stylesheet" href="/fonts/fontawesome/css/all.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 		<script>
 			$(function(){ $("#included-header").load("/html/templates/header.html"); });
@@ -18,74 +19,75 @@
 
 		<main>
 			<section class="content">
-				<h1>Home</h1>
-				<hr class="rounded">
 				<div class="intro">
-					<p>Welcome to {BLOG_NAME}</p>
+					<h1>Home</h1>
+					<hr>
+					<p>Welcome to Verdaemon</p>
 					<p>
 						This website is composed of casual ramblings about software from
 						two experienced sysadmins. If you liked one of our posts, check out our
-						<a href="/html/projects.html">projects</a>. Alternatively feel free to browse
-						the <a href="/html/archive.html">archives</a> to find a topic of interest.
+						<a href="/projects">projects</a>. Alternatively, feel free to browse
+						the <a href="/archive">archives</a> to find a topic of interest.
 					</p>
 				</div>
 
-				<div class="featured-posts">
+				<div>
 					<h2>Featured Posts</h2>
-					<div class="featured-post">
-						<div class="featured-left">
-							<img src="/images/tux.png">
+					<hr>
+					<div class="featured-posts">
+						<div class="featured-post">
+							<div class="featured-left">
+								<img src="/images/tux.png">
+							</div>
+							<div class="featured-right">
+								<h3>Featured Post</h3>
+								<p>post sneak peak!</p>
+							</div>
 						</div>
-						<div class="featured-right">
-							<h3>Featured Post</h3>
-							<p>post sneak peak!</p>
-						</div>
-					</div>
-					<div class="featured-post">
-						<div class="featured-left">
-							<img src="/images/tux.png">
-						</div>
-						<div class="featured-right">
-							<h3>Featured Post</h3>
-							<p>post sneak peak!</p>
+						<div class="featured-post">
+							<div class="featured-left">
+								<img src="/images/tux.png">
+							</div>
+							<div class="featured-right">
+								<h3>Featured Post</h3>
+								<p>post sneak peak!</p>
+							</div>
 						</div>
 					</div>
 				</div>
 
 				<div class="all-posts">
 					<h2>Posts By Category</h2>
-					<hr class="rounded">
+					<hr>
 					<ul>
-						<li><a href="sample-post-1.html">sample post 1</a></li>
-						<li><a href="sample-post-2.html">sample post 2</a></li>
-						<li><a href="path-to-post-3">post 3</a></li>
-						<li><a href="path-to-post-4">post 4</a></li>
+						<li><a href="">Linux</a></li>
+						<li><a href="">FreeBSD</a></li>
+						<li><a href="">Vim</a></li>
 					</ul>
 				</div>
 
 				<div class="support">
-					<h2>Support</h2>
-					<hr class="rounded">
-					<p>
-						If our writing has been of use and you want to give back, consider donating
-					</p>
+					<h2>Contributions</h2>
+					<hr>
+					<p>This website was created using:</p>
 					<ul>
-						<li>ETH</li>
-						<li>Monero</li>
-						<li>Paypal</li>
+						<li><a href="https://expressjs.com/">Express</a></li>
+						<li><a href="https://rsms.me/markdown-wasm/">markdown-wasm</a></li>
+						<li><a href="https://cure53.de/purify">DOMPurify</a></li>
+						<li><a href="https://fontawesome.com/">Font Awesome</a></li>
 					</ul>
 				</div>
 			</section>
 
 			<section class="sidebar">
 				<div class="archive">
-					<h4>Archive by Month</h4>
-					<hr class="rounded">
+					<h3>Archive by Month</h3>
+					<hr>
 					<ul>
-						<li><a href="december-2021-archive.html">December 2021</a></li>
-						<li><a href="november-2021-archive.html">November 2021</a></li>
-						<li><a href="october-2021-archive.html">October 2021</a></li>
-						<li><a href="september-2021-archive.html">September 2021</a></li>	
+						<li><a href="">December 2021</a></li>
+						<li><a href="">November 2021</a></li>
+						<li><a href="">October 2021</a></li>
+						<li><a href="">September 2021</a></li>	
 					</ul>
 				</div>
 			</section>

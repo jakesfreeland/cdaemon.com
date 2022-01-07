@@ -1,0 +1,31 @@
+.info h1 {
+    font-size: 2em;
+    padding-bottom: 0.2em;
+}
+
+.info a {
+    text-decoration: none;
+    color: #5a5a5a;
+}
+
+.info a:hover {
+    text-decoration: underline;
+}
+
+.info hr {
+    box-sizing: content-box;
+    overflow: hidden;
+    background: transparent;
+    border-bottom: 1px solid hsla(210,18%,87%,1);
+    height: .25em;
+    margin: 12px 0;
+    background-color: #d0d7de;
+    border: 0;
+}
+
+.tags h6 {
+    font-weight: 600;
+    font-size: .85em;
+    color: #57606a;
+    margin-top: 1em;
+}
