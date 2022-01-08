@@ -21,7 +21,7 @@ router.route("/new")
     uploadPost(req.body.title, req.body.body, req.body.author, req.body.tags)
     .then(id => {
       if (req.files !== null) {
-        uploadMedia(req.files.img, id);
+        uploadMedia(req.files.imgs, id);
       }
       res.redirect(`/posts/${id}`);
     })
@@ -78,16 +78,18 @@ async function uploadPost(title, body, author, tags) {
   return id;
 }
 
-function uploadMedia(img, id) {
+function uploadMedia(imgs, id) {
   let imgPath = path.resolve(__dirname, `../public/images/blog/${id}/`);
 
   if (!fs.existsSync(imgPath)) {
     fs.mkdirSync(imgPath);
   }
 
-  // mv is not async but returns promise
-  img.mv((imgPath + '/' + img.name))
-  .catch(err => console.log(err));
+  for (var i=0; i<imgs.length; ++i) {
+    // mv is not async but returns promise
+    imgs[i].mv((imgPath + '/' + imgs[i].name))
+    .catch(err => console.log(err));
+  }
 }
 
 async function getID() {
@@ -114,7 +116,7 @@ function getDate() {
 }
 
 function formatDate(dateObj) {
-  const options = { year: "numeric", month: "long", day: "numeric"}
+  const options = { year: "numeric", month: "long", day: "numeric"};
   const date = dateObj.toLocaleDateString(undefined, options);
 
   return date;

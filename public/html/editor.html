@@ -33,6 +33,9 @@
 
             <!-- author (ACCOUNT INTEGRATION)-->
             <input name="author" class="author" placeholder="Author" maxlength="32" hidden />
+
+            <!-- form-submitted images -->
+            <input name="imgs" id="image-upload" type="file" accept="image/*" multiple hidden />
           </form>
         </section>
 
@@ -53,7 +56,6 @@
           <div class="options-buttons">
             <button class="publish-btn" form="post-form">PUBLISH</button>
             <label for="image-upload"><i class="fas fa-file-image"></i></label>
-            <input name="imgs" id="image-upload" type="file" accept="image/*" multiple hidden />
           </div>
           <div class="options-author">
             <p>Posting as {username}</p>
