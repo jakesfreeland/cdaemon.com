@@ -1,4 +1,4 @@
-const express = require("express")
+const express = require("express");
 const app = express();
 const path = require("path");
 
@@ -26,6 +26,6 @@ app.use((req, res) => {
       res.type('txt').send('Page not found');
     }
   });
-})
+});
 
 app.listen(3000);

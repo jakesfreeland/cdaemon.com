@@ -21,7 +21,7 @@ router.route("/new")
     uploadPost(req.body.title, req.body.body, req.body.author, req.body.tags)
     .then(id => {
       if (req.files !== null) {
-        uploadMedia(req.files.imgs, id);
+        uploadMedia(req.files.media, id);
       }
       res.redirect(`/posts/${id}`);
     })
@@ -78,21 +78,21 @@ async function uploadPost(title, body, author, tags) {
   return id;
 }
 
-function uploadMedia(imgs, id) {
-  let imgPath = path.resolve(__dirname, `../public/images/blog/${id}/`);
+function uploadMedia(media, id) {
+  const mediaPath = path.resolve(__dirname, `../public/media/posts/${id}/`);
 
-  if (!fs.existsSync(imgPath)) {
-    fs.mkdirSync(imgPath);
+  if (!fs.existsSync(mediaPath)) {
+    fs.mkdirSync(mediaPath);
   }
 
-  if (imgs.length === undefined) {
+  if (media.length === undefined) {
     // mv is not async but returns promise
-    imgs.mv((imgPath + '/' + imgs.name))
+    media.mv((mediaPath + '/' + media.name))
     .catch(err => console.log(err));
   } else {
-    for (var i=0; i<imgs.length; ++i) {
+    for (var i=0; i<media.length; ++i) {
       // mv is not async but returns promise
-      imgs[i].mv((imgPath + '/' + imgs[i].name))
+      media[i].mv((mediaPath + '/' + media[i].name))
       .catch(err => console.log(err));
     }
   }

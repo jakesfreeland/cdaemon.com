@@ -29,12 +29,12 @@ a {
   align-items: center;
   flex: 1;
   background-color: #1a1a1a;
-  height: 150px;
+  height: 128px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
 }
 
 .featured-left {
-  width: 24%;
+  width: 90px;
 }
 
 .featured-left img {
@@ -73,14 +73,6 @@ a {
   .featured-posts {
     flex-direction: column;
     gap: 4px;
-  }
-
-  .featured-post {
-    height: 120px;
-  }
-
-  .featured-left {
-    width: 100px;
   }
 
   .archive h3 {
