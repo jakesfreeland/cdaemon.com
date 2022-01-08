@@ -23,7 +23,7 @@ router.route("/signup")
     const username = req.body.username.replace("\'", "\\\'");
     // req.body.password gets hashed, no escapements necessary
     const email = req.body.email.replace("\'", "\\\'");
-    if (email.match(".*@.*\..*")) {
+    if (email.match(".*@.*[.].*")) {
       createUser(username, req.body.password, email)
       .then(uid => {
         req.session.username = username;
