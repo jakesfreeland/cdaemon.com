@@ -45,7 +45,9 @@ router.route("/login")
 })
 .post((req, res) => {
   if (req.body.email && req.body.password) {
-    userLogin(req.body.email, req.body.password)
+    const email = req.body.email.replace("\'", "\\\'");
+    const password = req.body.password.replace("\'", "\\\'");
+    userLogin(email, password)
     .then(auth => {
       if (auth !== false) {
         req.session.username = auth.username;
