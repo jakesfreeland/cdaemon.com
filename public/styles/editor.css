@@ -38,7 +38,7 @@ textarea, input {
 
 .preview {
     background-color: #dcdcdc;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 .preview-expand {
@@ -58,12 +58,30 @@ textarea, input {
 .options {
     display: flex;
     justify-content: space-between;
-    text-align: end;
+    align-items: center;
+    gap: 16px;
+}
+
+.options-buttons {
+    display: flex;
+    gap: 4px;
 }
 
 .options button, .options label {
+    font-size: 14px;
+    text-align: center;
     border: none;
     background-color: #426e88;
     color: #fff;
-    padding: 0.6em 0.8em;
+    padding: 10px;
+}
+
+.options-author {
+    text-align: end;
+}
+
+@media(max-width: 500px) {
+    .options-buttons {
+        flex-direction: column;
+    }
 }

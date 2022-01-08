@@ -1,7 +1,7 @@
 main {
   display: flex;
   justify-content: space-between;
-  gap: 128px;
+  gap: 100px;
 }
 
 a {
