@@ -48,8 +48,8 @@ router.route("/login")
     userLogin(req.body.email, req.body.password)
     .then(auth => {
       if (auth !== false) {
+        req.session.username = auth.username;
         req.session.uid = auth.uid;
-        req.session.id = auth.username;
         res.redirect(`/users/${auth.uid}/`);
       } else {
         console.log("Incorrect Password")
