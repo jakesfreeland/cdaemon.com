@@ -20,9 +20,12 @@ router.route("/signup")
 })
 .post((req, res) => {
   if (req.body.username && req.body.password && req.body.email) {
-    createUser(req.body.username, req.body.password, req.body.email)
+    const username = req.body.username.replace("\'", "\\\'");
+    // req.body.password gets hashed, no escapements necessary
+    const email = req.body.email.replace("\'", "\\\'");
+    createUser(username, req.body.password, email)
     .then(uid => {
-      req.session.username = req.body.username;
+      req.session.username = username;
       req.session.uid = uid;
       res.redirect(`/users/${uid}/`);
     })
