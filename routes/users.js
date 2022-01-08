@@ -28,7 +28,7 @@ router.route("/signup")
     })
     .catch(err => console.log(err));
   } else {
-    console.log("Missing parameter");
+    console.log("Missing Parameter");
   }
 });
 
@@ -37,20 +37,17 @@ router.route("/login")
   res.sendFile(path.resolve(__dirname, "../public/html/login.html"));
 })
 .post((req, res) => {
-  if (req.body.id && req.body.password) {
-    db.getValueData("users", "user", "username", `${req.body.id}`)
-    .then(data => {
-      const stored_digest = data[0].password;
-      const uid = data[0].uid;
-      hashData(req.body.password, uid)
-      .then(fresh_digest => {
-        if (fresh_digest === stored_digest) {
-          req.session.id = req.body.username;
-          res.redirect(`/users/${req.body.uid}/`);
-        } else {
-          res.sendStatus(401);
-        }
-      })
+  if (req.body.email && req.body.password) {
+    userLogin(req.body.email, req.body.password)
+    .then(auth => {
+      if (auth !== false) {
+        req.session.uid = auth.uid;
+        req.session.id = auth.username;
+        res.redirect(`/users/${auth.uid}/`);
+      } else {
+        console.log("Incorrect Password")
+        res.sendStatus(401);
+      }
     })
     .catch(err => console.log(err));
   }
@@ -70,6 +67,18 @@ async function createUser(username, password, email) {
     [username, digest, email, uid]);
   
   return uid;
+}
+
+async function userLogin(email, password) {
+  const userData = (await db.getValueData("users", "user", "email", `${email}`))[0];
+  const stored_digest = userData.password;
+  const fresh_digest = await hashData(password, userData.uid);
+
+  if (stored_digest === fresh_digest) {
+    return userData;
+  } else {
+    return false;
+  }
 }
 
 async function getUID() {
