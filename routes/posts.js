@@ -85,10 +85,16 @@ function uploadMedia(imgs, id) {
     fs.mkdirSync(imgPath);
   }
 
-  for (var i=0; i<imgs.length; ++i) {
+  if (imgs.length === undefined) {
     // mv is not async but returns promise
-    imgs[i].mv((imgPath + '/' + imgs[i].name))
+    imgs.mv((imgPath + '/' + imgs.name))
     .catch(err => console.log(err));
+  } else {
+    for (var i=0; i<imgs.length; ++i) {
+      // mv is not async but returns promise
+      imgs[i].mv((imgPath + '/' + imgs[i].name))
+      .catch(err => console.log(err));
+    }
   }
 }
 
