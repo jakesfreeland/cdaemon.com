@@ -23,7 +23,7 @@ router.route("/new")
       if (req.files !== null) {
         uploadMedia(req.files.media, id);
       }
-      res.redirect(`/posts/${id}`);
+      res.redirect(`/posts/${id}/`);
     })
     .catch(err => console.log(err));
   } else {

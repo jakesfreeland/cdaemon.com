@@ -6,55 +6,49 @@ const crypto = require("crypto").webcrypto;
 const path = require("path");
 const db = require("../user_modules/db.cjs");
 
-// tell the server to use bodyparser to parse incoming requests
-// this will search through submitted form data
-router.use(bodyParser.urlencoded({ extended: true }))
+router.use(bodyParser.urlencoded({ extended: true }));
+router.use(cookieSession({
+  name: "session",
+  keys: ["YyKRyL3RfMNts3", "W8cE4d2eLmM8Xs"],
+  maxAge: 604800000,
+  // secure: true
+}));
 
-// when the user accesses /users/signup
 router.route("/signup")
-// in the case of a get request (normal browser behavior)
 .get((req, res) => {
   res.sendFile(path.resolve(__dirname, "../public/html/signup.html"));
 })
-// in the case of a post request (submission of form)
 .post((req, res) => {
-  if (req.body.username &&
-      req.body.password) {
-        const salt = genSalt();
-        hashData(req.body.password, salt)
-        .then(digest => 
-          db.sendData(
-            "users", "user",
-            ["username", "password", "salt"],
-            [req.body.username, digest, salt])
-        )
-        .then(() => res.redirect("/"))
-        .catch(err => console.log(err));
+  if (req.body.username && req.body.password && req.body.email) {
+    createUser(req.body.username, req.body.password, req.body.email)
+    .then(uid => {
+      req.session.username = req.body.username;
+      req.session.uid = uid;
+      res.redirect(`/users/${uid}/`);
+    })
+    .catch(err => console.log(err));
   } else {
     console.log("Missing parameter");
   }
 });
 
-// when the user accesses /users/login
 router.route("/login")
-// in the case of a get request
 .get((req, res) => {
   res.sendFile(path.resolve(__dirname, "../public/html/login.html"));
 })
-// in the case of a post request
 .post((req, res) => {
-  if (req.body.username && req.body.password) {
-    db.getValueData("users", "user", "username", `${req.body.username}`)
+  if (req.body.id && req.body.password) {
+    db.getValueData("users", "user", "username", `${req.body.id}`)
     .then(data => {
       const stored_digest = data[0].password;
-      const salt = data[0].salt;
-      hashData(req.body.password, salt)
+      const uid = data[0].uid;
+      hashData(req.body.password, uid)
       .then(fresh_digest => {
         if (fresh_digest === stored_digest) {
-          console.log("login success");
-          res.redirect(`/users/${req.body.username}`);
+          req.session.id = req.body.username;
+          res.redirect(`/users/${req.body.uid}/`);
         } else {
-          console.log("login failure");
+          res.sendStatus(401);
         }
       })
     })
@@ -62,10 +56,37 @@ router.route("/login")
   }
 });
 
-// functions used earlier
-function genSalt() {
-  const salt = Math.floor(Math.random() * 99999)
-  return salt;
+router.route("/:username")
+.get((req, res) => {
+  res.send(`User profile for ID: ${req.params.username}`);
+});
+
+async function createUser(username, password, email) {
+  const uid = await getUID();
+  const digest = await hashData(password, uid);
+
+  await db.sendData("users", "user",
+    ["username", "password", "email", "uid"],
+    [username, digest, email, uid]);
+  
+  return uid;
+}
+
+async function getUID() {
+  let idGen = "";
+  const charPool = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  for (var i=0; i<8; i++) {
+    // concatenate pseudo-random position in charPool
+    idGen += charPool.charAt(Math.floor(Math.random() * 62));
+  }
+
+  const ids = await db.getColumnData("users", "user", "uid");
+  // re-run getID() if idGen is present in database
+  if (ids.some(e => e.id === idGen)) {
+    return getUID();
+  } else {
+    return idGen;
+  }
 }
 
 async function hashData(data, salt=undefined) {
@@ -79,11 +100,4 @@ async function hashData(data, salt=undefined) {
   return hashHex;
 }
 
-// TODO LATER
-// router.route("/:username")
-// .get((req, res) => {
-//   res.send(`Get user with ID ${req.params.username}`);
-// })
-
-// this line is necessary for legacy library purposes
 module.exports = router;
