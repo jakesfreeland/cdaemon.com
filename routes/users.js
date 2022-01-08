@@ -20,13 +20,20 @@ router.route("/signup")
 })
 .post((req, res) => {
   if (req.body.username && req.body.password && req.body.email) {
-    createUser(req.body.username, req.body.password, req.body.email)
-    .then(uid => {
-      req.session.username = req.body.username;
-      req.session.uid = uid;
-      res.redirect(`/users/${uid}/`);
-    })
-    .catch(err => console.log(err));
+    const username = req.body.username.replace("\'", "\\\'");
+    // req.body.password gets hashed, no escapements necessary
+    const email = req.body.email.replace("\'", "\\\'");
+    if (email.match(".*@.*[.].*")) {
+      createUser(username, req.body.password, email)
+      .then(uid => {
+        req.session.username = username;
+        req.session.uid = uid;
+        res.redirect(`/users/${uid}/`);
+      })
+      .catch(err => console.log(err));
+    } else {
+      console.log("Invalid email string");
+    }
   } else {
     console.log("Missing Parameter");
   }
