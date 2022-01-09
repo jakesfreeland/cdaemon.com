@@ -16,7 +16,7 @@ router.use(cookieSession({
 
 router.get('/', (req, res) => {
   res.render("posts/posts");
-})
+});
 
 router.route("/editor")
 .get((req, res) => {
@@ -41,7 +41,7 @@ router.route("/editor")
   } else {
     console.log("Missing parameter");
   }
-})
+});
 
 router.route("/:id")
 .get((req, res) => {
@@ -78,7 +78,7 @@ router.route("/:id")
 })
 .delete((req, res) => {
   res.send(`delete post with ID ${req.params.id}`);
-})
+});
 
 async function uploadPost(title, body, author, tags) {
   const id = await getID();
@@ -99,12 +99,12 @@ function uploadMedia(media, id) {
 
   if (media.length === undefined) {
     // mv is not async but returns promise
-    media.mv((mediaPath + '/' + media.name))
+    media.mv(mediaPath + '/' + media.name)
     .catch(err => console.log(err));
   } else {
     for (var i=0; i<media.length; ++i) {
       // mv is not async but returns promise
-      media[i].mv((mediaPath + '/' + media[i].name))
+      media[i].mv(mediaPath + '/' + media[i].name)
       .catch(err => console.log(err));
     }
   }
