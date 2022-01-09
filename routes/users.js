@@ -27,7 +27,8 @@ router.route("/signup")
       .then(uid => {
         req.session.username = username;
         req.session.uid = uid;
-        res.redirect(`/users/${uid}/`);
+        res.redirect(req.session.return || `/users/${uid}/`);
+        req.session.return = null;
       })
       .catch(err => console.log(err));
     } else {
@@ -51,7 +52,8 @@ router.route("/login")
       if (auth !== false) {
         req.session.username = auth.username;
         req.session.uid = auth.uid;
-        res.redirect(`/users/${auth.uid}/`);
+        res.redirect(req.session.return || `/users/${auth.uid}/`);
+        req.session.return = null;
       } else {
         console.log("Incorrect Password")
         res.sendStatus(401);

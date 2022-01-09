@@ -15,17 +15,22 @@ router.use(cookieSession({
 }));
 
 router.get('/', (req, res) => {
-  res.render("posts/posts.ejs");
+  res.render("posts/posts");
 })
 
 router.route("/editor")
 .get((req, res) => {
-  res.render("posts/editor");
+  if (req.session.uid !== undefined) {
+    res.render("posts/editor", { author: req.session.username });
+  } else {
+    req.session.return = "/posts/editor";
+    res.redirect("/users/login");
+  }
 })
 .post((req, res) => {
   if (req.body.title && req.body.body) {
-    // FIND AUTHOR FROM COOKIE
-    uploadPost(req.body.title, req.body.body, req.body.author, req.body.tags)
+    const author = req.session.username;
+    uploadPost(req.body.title, req.body.body, author, req.body.tags)
     .then(id => {
       if (req.files !== null) {
         uploadMedia(req.files.media, id);
@@ -48,7 +53,7 @@ router.route("/:id")
     const author = data[0].author;
     const tags = data[0].tags;
 
-    res.render("posts/post.ejs", {
+    res.render("posts/post", {
       date: date,
       title: title,
       body: body,
