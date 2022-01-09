@@ -3,7 +3,6 @@ const router = express.Router();
 const bodyParser = require("body-parser");
 const cookieSession = require("cookie-session");
 const crypto = require("crypto").webcrypto;
-const path = require("path");
 const db = require("../user_modules/db.cjs");
 
 router.use(bodyParser.urlencoded({ extended: true }));
@@ -16,7 +15,7 @@ router.use(cookieSession({
 
 router.route("/signup")
 .get((req, res) => {
-  res.sendFile(path.resolve(__dirname, "../public/html/signup.html"));
+  res.render("users/signup");
 })
 .post((req, res) => {
   if (req.body.username && req.body.password && req.body.email) {
@@ -41,7 +40,7 @@ router.route("/signup")
 
 router.route("/login")
 .get((req, res) => {
-  res.sendFile(path.resolve(__dirname, "../public/html/login.html"));
+  res.render("users/login");
 })
 .post((req, res) => {
   if (req.body.email && req.body.password) {

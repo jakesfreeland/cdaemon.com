@@ -1,19 +1,26 @@
 const express = require("express");
 const router = express.Router();
 const fileupload = require("express-fileupload");
+const cookieSession = require("cookie-session");
 const fs = require("fs");
 const path = require("path");
 const db = require("../user_modules/db.cjs");
 
 router.use(fileupload());
+router.use(cookieSession({
+  name: "session",
+  keys: ["YyKRyL3RfMNts3", "W8cE4d2eLmM8Xs"],
+  maxAge: 604800000,
+  // secure: true
+}));
 
 router.get('/', (req, res) => {
   res.render("posts/posts.ejs");
 })
 
-router.route("/new")
+router.route("/editor")
 .get((req, res) => {
-  res.sendFile(path.resolve(__dirname, "../public/html/editor.html"));
+  res.render("posts/editor");
 })
 .post((req, res) => {
   if (req.body.title && req.body.body) {
