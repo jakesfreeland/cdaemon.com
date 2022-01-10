@@ -37,11 +37,17 @@ tags.addEventListener("input", () => {
 });
 
 uploadInput.addEventListener("change", () => {
-  console.log(uploadMedia(uploadInput.files))
+  console.log(uploadMedia(uploadInput.files));
 })
 
 async function uploadMedia(media) {
-  if (media[0].type.includes("image")) {
+  let allAreImages = 1;
+  for (i=0; i<media.length; ++i) {
+    if (!media[i].type.includes("image")) {
+      allAreImages = 0;
+    }
+  }
+  if (allAreImages) {
     const formData = new FormData();
     formData.append("media", media[0]);
 
@@ -50,6 +56,7 @@ async function uploadMedia(media) {
       body: formData
     }).catch(err => console.log(err));
   } else {
-    alert("Oops! The file you uploaded was not an image. Upload an image instead.");
+    alert("Oops! At least one of the files you uploaded was not an image. Upload only images instead.");
   }
 }
+
