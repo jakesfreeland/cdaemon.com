@@ -30,6 +30,9 @@
 
             <!-- form-submitted body HTML -->
             <textarea name="body" id="body-html" hidden></textarea>
+
+            <!-- form-submitted banner -->
+            <input name="banner" id="banner-upload" type="file" accept="image/*" hidden />
           </form>
         </section>
 
@@ -48,6 +51,7 @@
 
         <section class="options">
           <div class="options-buttons">
+            <label for="banner-upload">Banner</label>
             <input name="media" id="media-upload" type="file" accept="image/*" multiple hidden />
             <label for="media-upload">img</label>
             <button class="publish-btn" form="post-form">Publish</button>

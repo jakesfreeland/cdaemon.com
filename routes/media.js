@@ -36,10 +36,8 @@ router.post('/', (req, res) => {
 })
 
 router.get("/:filename", (req, res) => {
-  const mediaPath = path.resolve(__dirname, `../public/media/temp/${req.session.uid}/${req.params.filename}`);
-  if (fs.existsSync(mediaPath)) {
-    res.sendFile(mediaPath)
-  }
-})
+  const mediaPath = path.resolve(__dirname, `../public/media/temp/${req.session.uid}/`);
+  console.log(`${mediaPath}/${req.params.filename}`)
+});
 
 module.exports = router;
