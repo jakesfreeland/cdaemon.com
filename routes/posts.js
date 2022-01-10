@@ -30,7 +30,7 @@ router.route("/editor")
 .post((req, res) => {
   if (req.body.title && req.body.body) {
     const author = req.session.username;
-    uploadPost(req.body.title, req.body.body, author, req.body.tags, req.body.banner)
+    uploadPost(req.body.title, req.body.body, author, req.body.tags)
     .then(id => {
       if (req.files !== null) {
         uploadMedia(req.files.media, id);
@@ -80,12 +80,12 @@ router.route("/:id")
   res.send(`delete post with ID ${req.params.id}`);
 });
 
-async function uploadPost(title, body, author, tags, banner) {
+async function uploadPost(title, body, author, tags) {
   const id = await getID();
   const date = getDate();
   await db.sendData("blog_posts", "post",
-    ["id", "date", "title", "body", "author", "tags", "banner"],
-    [id, date, title, body, author, tags, banner],
+    ["id", "date", "title", "body", "author", "tags"],
+    [id, date, title, body, author, tags],
     replace = true);
   return id;
 }
