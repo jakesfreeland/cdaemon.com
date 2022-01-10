@@ -11,6 +11,8 @@ const userRouter = require("./routes/users");
 app.use("/users", userRouter);
 const postRouter = require("./routes/posts");
 app.use("/posts", postRouter);
+const mediaRouter = require("./routes/media");
+app.use("/media", mediaRouter);
 
 app.use((req, res) => {
   res.status(404);

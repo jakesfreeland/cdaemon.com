@@ -19,21 +19,16 @@ router.route("/signup")
 })
 .post((req, res) => {
   if (req.body.username && req.body.password && req.body.email) {
-    const username = req.body.username.replace("\'", "\\\'");
-    // req.body.password gets hashed, no escapements necessary
-    const email = req.body.email.replace("\'", "\\\'");
-    if (email.match(".*@.*[.].*")) {
-      createUser(username, req.body.password, email)
-      .then(uid => {
+    createUser(req.body.username, req.body.password, req.body.email)
+    .then(uid => {
+      if (uid !== null) {
         req.session.username = username;
         req.session.uid = uid;
         res.redirect(req.session.return || `/users/${uid}/`);
         req.session.return = null;
-      })
-      .catch(err => console.log(err));
-    } else {
-      console.log("Invalid email string");
-    }
+      }
+    })
+    .catch(err => console.log(err));
   } else {
     console.log("Missing Parameter");
   }
@@ -45,21 +40,20 @@ router.route("/login")
 })
 .post((req, res) => {
   if (req.body.email && req.body.password) {
-    const email = req.body.email.replace("\'", "\\\'");
-    const password = req.body.password.replace("\'", "\\\'");
-    userLogin(email, password)
+    userLogin(req.body.email, req.body.password)
     .then(auth => {
-      if (auth !== false) {
+      if (auth !== null) {
         req.session.username = auth.username;
         req.session.uid = auth.uid;
         res.redirect(req.session.return || `/users/${auth.uid}/`);
         req.session.return = null;
       } else {
-        console.log("Incorrect Password")
         res.sendStatus(401);
       }
     })
     .catch(err => console.log(err));
+  } else {
+    console.log("Missing parameter");
   }
 });
 
@@ -69,17 +63,27 @@ router.route("/:username")
 });
 
 async function createUser(username, password, email) {
-  const uid = await getUID();
-  const digest = await hashData(password, uid);
+  if (email.match(".*@.*[.].*")) {
+    const uid = await getUID();
+    const digest = await hashData(password, uid);
 
-  await db.sendData("users", "user",
-    ["username", "password", "email", "uid"],
-    [username, digest, email, uid]);
-  
-  return uid;
+    username = username.replace("\'", "\\\'");
+    email = email.replace("\'", "\\\'");
+
+    await db.sendData("users", "user",
+      ["username", "password", "email", "uid"],
+      [username, digest, email, uid]);
+    return uid;
+  } else {
+    console.log("Invalid Email String");
+    return null;
+  }
 }
 
 async function userLogin(email, password) {
+  email = req.body.email.replace("\'", "\\\'");
+  password = req.body.password.replace("\'", "\\\'");
+
   const userData = (await db.getValueData("users", "user", "email", `${email}`))[0];
   const stored_digest = userData.password;
   const fresh_digest = await hashData(password, userData.uid);
@@ -87,7 +91,8 @@ async function userLogin(email, password) {
   if (stored_digest === fresh_digest) {
     return userData;
   } else {
-    return false;
+    console.log("Incorrect Password");
+    return null;
   }
 }
 

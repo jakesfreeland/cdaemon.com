@@ -10,7 +10,7 @@ const previewTitle = document.getElementById("title-preview");
 const previewBody = document.getElementById("body-preview");
 const previewTags = document.getElementById("tags-preview");
 
-const uploadInput = document.getElementById("img-upload");
+const uploadInput = document.getElementById("media-upload");
 
 previewBox.addEventListener("click", () => {
   if (expandPreview.style.display === "block") {
@@ -37,7 +37,7 @@ tags.addEventListener("input", () => {
 });
 
 uploadInput.addEventListener("change", () => {
-  uploadMedia(uploadInput.files);
+  console.log(uploadMedia(uploadInput.files))
 })
 
 async function uploadMedia(media) {
