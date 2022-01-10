@@ -33,6 +33,11 @@ async function uploadMedia(media, uid, banner=false) {
     fs.mkdirSync(uidPath);
   }
 
+  if (banner === true) {
+    media.mv(uidPath + '/' + "banner");
+    return 0;
+  }
+
   if (media.length === undefined) {
     // mv is not async but returns promise
     media.mv(uidPath + '/' + media.name)

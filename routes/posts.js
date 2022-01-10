@@ -31,18 +31,17 @@ router.route("/editor")
   }
 });
 
-router.route("/:id")
+router.route("/:pid")
 .get((req, res) => {
-  db.getValueData("blog_posts", "post", "id", `${req.params.id}`)
+  db.getValueData("blog_posts", "post", "id", `${req.params.pid}`)
   .then(data => {
     const date = formatDate(data[0].date);
     const title = data[0].title;
     const body = data[0].body;
     const author = data[0].author;
     const tags = data[0].tags;
-    const id = data[0].id;
 
-    req.session.pid = id;
+    req.session.pid = req.params.pid;
     res.render("posts/post", {
       date: date,
       title: title,

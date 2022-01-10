@@ -1,18 +1,22 @@
-.info h1 {
+img {
+    max-width: 100%;
+}
+
+.intro h1 {
     font-size: 2em;
     padding-bottom: 0.2em;
 }
 
-.info a {
+.intro a {
     text-decoration: none;
     color: #5a5a5a;
 }
 
-.info a:hover {
+.intro a:hover {
     text-decoration: underline;
 }
 
-.info hr {
+.intro hr {
     box-sizing: content-box;
     overflow: hidden;
     background: transparent;

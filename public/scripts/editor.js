@@ -62,7 +62,7 @@ async function uploadMedia(media, banner=false) {
     const formData = new FormData();
     for (i=0; i<media.length; ++i) {
       formData.append("media", media[i]);
-      fileNames.push(media[i].name);
+      fileNames.push(`![](/media/${media[i].name})`);
     }
     
     if (banner === true) {
@@ -82,13 +82,10 @@ async function uploadMedia(media, banner=false) {
 }
 
 async function insertTemplate(fileNames) {
-  let curPos = body.selectionStart;
-  for (var i=0; i<fileNames.length; ++i) {
-    let curText = body.value;
-    let template = `![](/media/${fileNames[i]})\n`;
-    body.value = curText.slice(0,curPos) + template + curText.slice(curPos);
-    curPos += template.length;
-  }
+  const curPos = body.selectionStart;
+  const curText = body.value;
+  const template = fileNames.join('\n');
+  body.value = curText.slice(0,curPos) + template + curText.slice(curPos);
 
   return 0;
 }
