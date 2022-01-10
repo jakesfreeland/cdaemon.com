@@ -11,6 +11,7 @@ const previewBody = document.getElementById("body-preview");
 const previewTags = document.getElementById("tags-preview");
 
 const uploadInput = document.getElementById("media-upload");
+const uploadBanner = document.getElementById("banner-upload");
 
 previewBox.addEventListener("click", () => {
   if (expandPreview.style.display === "block") {
@@ -37,8 +38,12 @@ tags.addEventListener("input", () => {
 });
 
 uploadInput.addEventListener("change", () => {
-  console.log(uploadMedia(uploadInput.files));
-})
+  uploadMedia(uploadInput.files);
+});
+
+uploadBanner.addEventListener("change", () => {
+  uploadMedia(uploadBanner.files);
+});
 
 async function uploadMedia(media) {
   let allAreImages = 1;
