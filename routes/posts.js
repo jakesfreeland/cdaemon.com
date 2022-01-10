@@ -40,7 +40,9 @@ router.route("/:id")
     const body = data[0].body;
     const author = data[0].author;
     const tags = data[0].tags;
+    const id = data[0].id;
 
+    req.session.pid = id;
     res.render("posts/post", {
       date: date,
       title: title,
@@ -80,14 +82,14 @@ async function uploadPost(title, body, author, tags) {
 
 function mvMedia(uid, pid) {
   const uidPath = path.resolve(__dirname, `../public/media/uid/${uid}/`);
-  const postPath = path.resolve(__dirname, `../public/media/posts/${pid}/`);
+  const pidPath = path.resolve(__dirname, `../public/media/posts/${pid}/`);
 
   if (fs.existsSync(uidPath)) {
-    fs.mkdirSync(postPath)
+    fs.mkdirSync(pidPath)
 
     const dir = fs.readdirSync(uidPath);
     for (var i=0; i<dir.length; ++i) {
-      fs.renameSync(`${uidPath}/${dir[i]}`, `${postPath}/${dir[i]}`);
+      fs.renameSync(`${uidPath}/${dir[i]}`, `${pidPath}/${dir[i]}`);
     }
     fs.rmdirSync(uidPath);
   } else {
