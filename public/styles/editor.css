@@ -81,7 +81,12 @@ textarea, input {
 }
 
 @media(max-width: 500px) {
-    .options-buttons {
+    .options {
         flex-direction: column;
+        align-items: start;
+    }
+
+    .options-author {
+        text-align: left;
     }
 }

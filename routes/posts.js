@@ -1,18 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const fileupload = require("express-fileupload");
-const cookieSession = require("cookie-session");
 const fs = require("fs");
 const path = require("path");
 const db = require("../user_modules/db.cjs");
-
-router.use(fileupload());
-router.use(cookieSession({
-  name: "session",
-  keys: ["YyKRyL3RfMNts3", "W8cE4d2eLmM8Xs"],
-  maxAge: 604800000,
-  // secure: true
-}));
 
 router.get('/', (req, res) => {
   res.render("posts/posts");
@@ -31,15 +21,13 @@ router.route("/editor")
   if (req.body.title && req.body.body) {
     const author = req.session.username;
     uploadPost(req.body.title, req.body.body, author, req.body.tags)
-    .then(id => {
-      if (req.files !== null) {
-        uploadMedia(req.files.media, id);
-      }
-      res.redirect(`/posts/${id}/`);
+    .then(pid => {
+      mvMedia(req.session.uid, pid);
+      res.redirect(`/posts/${pid}/`);
     })
     .catch(err => console.log(err));
   } else {
-    console.log("Missing parameter");
+    console.log("Missing Parameter");
   }
 });
 
@@ -90,23 +78,20 @@ async function uploadPost(title, body, author, tags) {
   return id;
 }
 
-function uploadMedia(media, id) {
-  const mediaPath = path.resolve(__dirname, `../public/media/posts/${id}/`);
+function mvMedia(uid, pid) {
+  const uidPath = path.resolve(__dirname, `../public/media/uid/${uid}/`);
+  const postPath = path.resolve(__dirname, `../public/media/posts/${pid}/`);
 
-  if (!fs.existsSync(mediaPath)) {
-    fs.mkdirSync(mediaPath);
-  }
+  if (fs.existsSync(uidPath)) {
+    fs.mkdirSync(postPath)
 
-  if (media.length === undefined) {
-    // mv is not async but returns promise
-    media.mv(mediaPath + '/' + media.name)
-    .catch(err => console.log(err));
-  } else {
-    for (var i=0; i<media.length; ++i) {
-      // mv is not async but returns promise
-      media[i].mv(mediaPath + '/' + media[i].name)
-      .catch(err => console.log(err));
+    const dir = fs.readdirSync(uidPath);
+    for (var i=0; i<dir.length; ++i) {
+      fs.renameSync(`${uidPath}/${dir[i]}`, `${postPath}/${dir[i]}`);
     }
+    fs.rmdirSync(uidPath);
+  } else {
+    return null;
   }
 }
 

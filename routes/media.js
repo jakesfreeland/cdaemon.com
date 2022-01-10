@@ -1,22 +1,26 @@
 const express = require("express");
 const router = express.Router();
 const fileupload = require("express-fileupload");
-const cookieSession = require("cookie-session");
 const fs = require("fs");
 const path = require("path");
-const db = require("../user_modules/db.cjs");
 
 router.use(fileupload());
-router.use(cookieSession({
-  name: "session",
-  keys: ["YyKRyL3RfMNts3", "W8cE4d2eLmM8Xs"],
-  maxAge: 604800000,
-  // secure: true
-}));
 
 router.post('/', (req, res) => {
-  const media = req.files.media;
+  uploadMedia(req.files.media, req.session.uid);
+})
+
+router.get("/:filename", (req, res) => {
   const mediaPath = path.resolve(__dirname, `../public/media/uid/${req.session.uid}/`);
+  if (fs.existsSync(mediaPath + '/' + req.params.filename)) {
+    res.sendFile(mediaPath + '/' + req.params.filename);
+  } else {
+    res.sendStatus(404);
+  }
+});
+
+async function uploadMedia(media, uid) {
+  const mediaPath = path.resolve(__dirname, `../public/media/uid/${uid}/`);
 
   if (!fs.existsSync(mediaPath)) {
     fs.mkdirSync(mediaPath);
@@ -33,15 +37,6 @@ router.post('/', (req, res) => {
       .catch(err => console.log(err));
     }
   }
-})
-
-router.get("/:filename", (req, res) => {
-  const mediaPath = path.resolve(__dirname, `../public/media/uid/${req.session.uid}/${req.params.filename}`);
-  if (fs.existsSync(mediaPath)) {
-    res.sendFile(mediaPath);
-  } else {
-    res.sendStatus(404);
-  }
-});
+}
 
 module.exports = router;

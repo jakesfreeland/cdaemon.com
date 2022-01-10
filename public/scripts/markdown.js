@@ -6,8 +6,10 @@ const bodyMarkDown = document.getElementById("body-md");
 const bodyHTML = document.getElementById("body-html");
 const bodyPreview = document.getElementById("body-preview");
 
-bodyMarkDown.addEventListener("input", () => {
+bodyMarkDown.addEventListener("input", () => parse());
+
+function parse() {
   let html = DOMPurify.sanitize(markdown.parse(bodyMarkDown.value));
   bodyHTML.value = html;
   bodyPreview.innerHTML = html;
-})
+}

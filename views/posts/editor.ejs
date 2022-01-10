@@ -20,7 +20,7 @@
 
     <main>
         <section class="content">
-          <form action="/posts/editor" method="post" enctype="multipart/form-data" id="post-form" autocomplete="off" spellcheck="true">
+          <form action="/posts/editor" method="post" id="post-form" autocomplete="off" spellcheck="true">
             <input name="title" class="title" placeholder="Title" maxlength="128" autofocus required />
             <hr class=rounded>
             <textarea id="body-md" class="body" placeholder="Body" required></textarea>
@@ -48,9 +48,9 @@
 
         <section class="options">
           <div class="options-buttons">
-            <input name="banner" id="banner-upload" type="file" accept="image/*" hidden />
+            <input name="banner" id="banner-upload" type="file" accept="image/*" autocomplete="off" hidden />
             <label for="banner-upload">Banner</label>
-            <input name="media" id="media-upload" type="file" accept="image/*" multiple hidden />
+            <input name="media" id="media-upload" type="file" accept="image/*" autocomplete="off" multiple hidden />
             <label for="media-upload">Image</label>
             <button class="publish-btn" form="post-form">Publish</button>
           </div>

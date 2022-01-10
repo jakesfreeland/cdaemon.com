@@ -1,17 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const bodyParser = require("body-parser");
-const cookieSession = require("cookie-session");
 const crypto = require("crypto").webcrypto;
 const db = require("../user_modules/db.cjs");
-
-router.use(bodyParser.urlencoded({ extended: true }));
-router.use(cookieSession({
-  name: "session",
-  keys: ["YyKRyL3RfMNts3", "W8cE4d2eLmM8Xs"],
-  maxAge: 604800000,
-  // secure: true
-}));
 
 router.route("/signup")
 .get((req, res) => {
@@ -22,7 +12,7 @@ router.route("/signup")
     createUser(req.body.username, req.body.password, req.body.email)
     .then(uid => {
       if (uid !== null) {
-        req.session.username = username;
+        req.session.username = req.body.username;
         req.session.uid = uid;
         res.redirect(req.session.return || `/users/${uid}/`);
         req.session.return = null;
@@ -64,11 +54,11 @@ router.route("/:username")
 
 async function createUser(username, password, email) {
   if (email.match(".*@.*[.].*")) {
-    const uid = await getUID();
-    const digest = await hashData(password, uid);
-
     username = username.replace("\'", "\\\'");
     email = email.replace("\'", "\\\'");
+
+    const uid = await getUID();
+    const digest = await hashData(password, uid);
 
     await db.sendData("users", "user",
       ["username", "password", "email", "uid"],
@@ -81,8 +71,8 @@ async function createUser(username, password, email) {
 }
 
 async function userLogin(email, password) {
-  email = req.body.email.replace("\'", "\\\'");
-  password = req.body.password.replace("\'", "\\\'");
+  email = email.replace("\'", "\\\'");
+  password = password.replace("\'", "\\\'");
 
   const userData = (await db.getValueData("users", "user", "email", `${email}`))[0];
   const stored_digest = userData.password;
