@@ -42,10 +42,21 @@ uploadInput.addEventListener("change", () => {
 });
 
 uploadBanner.addEventListener("change", () => {
-  uploadMedia(uploadBanner.files);
+  uploadMedia(uploadBanner.files, isBanner=true);
 });
 
-async function uploadMedia(media) {
+async function uploadMedia(media, isBanner=false) {
+  if isBanner {
+    let extension = "";
+    for (i=media[0].name.length; i>=0; --i) {
+      if media[0].name[i] == "." {
+        break;
+      } else {
+        extension = media[0].name[i] + extension;
+      }
+    }
+    media[0].name = "BANNER" + extension;
+  }
   let allAreImages = 1;
   for (i=0; i<media.length; ++i) {
     if (!media[i].type.includes("image")) {
