@@ -30,6 +30,9 @@
 
             <!-- form-submitted body HTML -->
             <textarea name="body" id="body-html" hidden></textarea>
+
+            <!-- form-submitted banner -->
+            <input name="banner" class="banner" maxlength="256" hidden>
           </form>
         </section>
 
@@ -40,6 +43,7 @@
             <i id="retract-caret" class="fas fa-caret-up" style="display: none"></i>
           </div>
           <div class="preview-content markdown-themify" hidden>
+            <img id="banner-preview" src="">
             <h1 id="title-preview"></h1>
             <p id="body-preview"></p>
             <h6 id="tags-preview"></h6>

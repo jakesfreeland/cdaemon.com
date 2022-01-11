@@ -7,11 +7,7 @@ const path = require("path");
 router.use(fileupload());
 
 router.post('/', (req, res) => {
-  if (req.body.banner) {
-    uploadMedia(req.files.media, req.session.uid, banner=true);
-  } else {
-    uploadMedia(req.files.media, req.session.uid);
-  }
+  uploadMedia(req.files.media, req.session.uid);
 })
 
 router.get("/:filename", (req, res) => {
@@ -26,16 +22,11 @@ router.get("/:filename", (req, res) => {
   }
 });
 
-async function uploadMedia(media, uid, banner=false) {
+async function uploadMedia(media, uid) {
   const uidPath = path.resolve(__dirname, `../public/media/uid/${uid}/`);
 
   if (!fs.existsSync(uidPath)) {
     fs.mkdirSync(uidPath);
-  }
-
-  if (banner === true) {
-    media.mv(uidPath + '/' + "banner");
-    return 0;
   }
 
   if (media.length === undefined) {

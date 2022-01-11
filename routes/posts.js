@@ -20,7 +20,7 @@ router.route("/editor")
 .post((req, res) => {
   if (req.body.title && req.body.body) {
     const author = req.session.username;
-    uploadPost(req.body.title, req.body.body, author, req.body.tags)
+    uploadPost(req.body.title, req.body.body, author, req.body.tags, req.body.banner)
     .then(pid => {
       mvMedia(req.session.uid, pid);
       res.redirect(`/posts/${pid}/`);
@@ -40,6 +40,7 @@ router.route("/:pid")
     const body = data[0].body;
     const author = data[0].author;
     const tags = data[0].tags;
+    const banner = data[0].banner;
 
     req.session.pid = req.params.pid;
     res.render("posts/post", {
@@ -47,7 +48,8 @@ router.route("/:pid")
       title: title,
       body: body,
       author: author,
-      tags: tags
+      tags: tags,
+      banner: banner
     });
   })
   .catch(err => {
@@ -69,12 +71,12 @@ router.route("/:pid")
   res.send(`delete post with ID ${req.params.id}`);
 });
 
-async function uploadPost(title, body, author, tags) {
+async function uploadPost(title, body, author, tags, banner) {
   const id = await getID();
   const date = getDate();
   await db.sendData("blog_posts", "post",
-    ["id", "date", "title", "body", "author", "tags"],
-    [id, date, title, body, author, tags],
+    ["id", "date", "title", "body", "author", "tags", "banner"],
+    [id, date, title, body, author, tags, banner],
     replace = true);
   return id;
 }

@@ -6,9 +6,11 @@ const previewContent = document.querySelector(".preview-content")
 const title = document.querySelector(".title");
 const body = document.querySelector(".body");
 const tags = document.querySelector(".tags");
+const banner = document.querySelector(".banner");
 const previewTitle = document.getElementById("title-preview");
 const previewBody = document.getElementById("body-preview");
 const previewTags = document.getElementById("tags-preview");
+const previewBanner = document.getElementById("banner-preview");
 
 const uploadInput = document.getElementById("media-upload");
 const uploadBanner = document.getElementById("banner-upload");
@@ -39,19 +41,28 @@ tags.addEventListener("input", () => {
 
 uploadInput.addEventListener("change", () => {
   uploadMedia(uploadInput.files)
-  .then(fileNames => { if (fileNames !== null) return insertTemplate(fileNames); })
-  .then(() => body.dispatchEvent(new Event("input")))
-  .catch(err => console.log(err));
+  .then(insertTemplate)
+  .then(mdNames => {
+    const curText = body.value;
+    const curPos = body.selectionStart;
+    body.value = curText.slice(0,curPos) + mdNames + curText.slice(curPos);
+    return body.dispatchEvent(new Event("input"));
+  })
+  .then(() => uploadInput.value = "")
+  .catch(alert);
 });
 
 uploadBanner.addEventListener("change", () => {
-  uploadMedia(uploadBanner.files, banner=true);
+  uploadMedia(uploadBanner.files)
+  .then(fileNames => {
+    banner.value = fileNames[0];
+    previewBanner.src = `/media/${fileNames[0]}`
+  })
+  .catch(alert);
 });
 
-async function uploadMedia(media, banner=false) {
-  let fileNames = [];
+async function uploadMedia(media) {
   let allAreImages = 1;
-
   for (i=0; i<media.length; ++i) {
     if (!media[i].type.includes("image")) {
       allAreImages = 0;
@@ -60,32 +71,29 @@ async function uploadMedia(media, banner=false) {
 
   if (allAreImages) {
     const formData = new FormData();
+    let fileNames = [];
+
     for (i=0; i<media.length; ++i) {
       formData.append("media", media[i]);
-      fileNames.push(`![](/media/${media[i].name})`);
-    }
-    
-    if (banner === true) {
-      formData.append("banner", true);
+      fileNames.push(media[i].name);
     }
 
     fetch("/media", {
       method: "POST",
       body: formData
-    }).catch(err => console.log(err));
+    }).catch(console.log);
 
     return fileNames;
   } else {
-    alert("Oops! At least one of the files you uploaded was not an image. Upload only images instead.");
-    return null;
+    throw "Oops! At least one of the files you uploaded was not an image. Upload only images instead.";
   }
 }
 
 async function insertTemplate(fileNames) {
-  const curPos = body.selectionStart;
-  const curText = body.value;
-  const template = fileNames.join('\n');
-  body.value = curText.slice(0,curPos) + template + curText.slice(curPos);
+  for (var i=0; i<fileNames.length; ++i) {
+    fileNames[i] = `![](/media/${fileNames[i]})`;
+  }
+  const mdNames = fileNames.join('\n');
 
-  return 0;
+  return mdNames;
 }
