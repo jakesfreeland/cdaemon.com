@@ -55,6 +55,21 @@ textarea, input {
     border-radius: 10px;
 }
 
+.preview-content img {
+    max-width: 100%;
+    max-height: 256px;
+}
+
+.title-preview {
+    border-bottom: none !important;
+}
+
+.banner-preview {
+    object-fit: cover;
+    max-height: 256px;
+    width: 100%;
+}
+
 .options {
     display: flex;
     justify-content: space-between;

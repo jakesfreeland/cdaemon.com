@@ -1,10 +1,15 @@
-img {
-    max-width: 100%;
+.intro img {
+    object-fit: cover;
+    max-height: 256px;
+    width: 100%;
 }
 
 .intro h1 {
     font-size: 2em;
-    padding-bottom: 0.2em;
+}
+
+.intro h5 {
+    margin-bottom: 8px;
 }
 
 .intro a {
@@ -22,9 +27,14 @@ img {
     background: transparent;
     border-bottom: 1px solid hsla(210,18%,87%,1);
     height: .25em;
-    margin: 12px 0;
+    margin: 8px 0;
     background-color: #d0d7de;
     border: 0;
+}
+
+.body img {
+    max-width: 100%;
+    max-height: 256px;
 }
 
 .tags h6 {
