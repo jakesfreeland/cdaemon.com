@@ -37,10 +37,11 @@ nav {
   margin: 16px 16px 32px 16px;
 }
 
-.nav-logo h1 {
+.nav-logo a {
   font-family: "opensans-bold";
   color: #fff;
   font-size: 3em;
+  text-decoration: none;
 }
 
 .menu-toggle {
