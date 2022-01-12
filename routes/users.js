@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const crypto = require("crypto").webcrypto;
+const db = require("../user_modules/db.cjs");
 
 router.route("/signup")
 .get((req, res) => {

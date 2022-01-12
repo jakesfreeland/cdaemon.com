@@ -11,13 +11,49 @@
       $(function(){ $("#included-header").load("/html/templates/header.html"); });
       $(function(){ $("#included-footer").load("/html/templates/footer.html"); });
     </script>
+    <style>
+      h1 {
+        margin-bottom: 16px;
+      }
+
+      a {
+        color: #5a5a5a;
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+    </style>
   </head>
 
   <body>
     <header id="included-header"></header>
 
     <main>
-      <!-- content goes here -->
+      <h1>Post Archive</h1>
+      <table>
+        <tr>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Published</th>
+          <th>Tags</th>
+        </tr>
+        <% for (var i=0; i<posts.length; ++i) { %>
+            <tr>
+              <td><a href="/posts/<%= posts[i].pid %>"><%= posts[i].title %></a></td>
+              <td><%= posts[i].author %></td>
+              <td><%= `${posts[i].date}`.slice(0, 15) %></td>
+              <td><%= posts[i].tags %></td>
+            </tr>
+        <% }; %>
+      </table>
     </main>
 
     <footer id="included-footer"></footer>

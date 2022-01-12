@@ -2,13 +2,22 @@ const express = require("express");
 const router = express.Router();
 const fs = require("fs");
 const path = require("path");
+const db = require("../user_modules/db.cjs");
 
 router.get('/', (req, res) => {
-  res.render("posts/posts");
+  db.getData("blog_posts", "post")
+  .then(posts => {
+    res.render("posts/posts", { posts: posts });
+  })
+  .catch(console.log);
 });
 
 router.get("/archive", (req, res) => {
-  res.render("posts/archive");
+  db.getData("blog_posts", "post")
+  .then(posts => {
+    res.render("posts/archive", { posts: posts });
+  })
+  .catch(console.log);
 });
 
 router.route("/editor")
@@ -38,39 +47,21 @@ router.route("/editor")
 router.route("/:pid")
 .get((req, res) => {
   db.getValueData("blog_posts", "post", "pid", `${req.params.pid}`)
-  .then(data => {
-    const date = formatDate(data[0].date);
-    const title = data[0].title;
-    const body = data[0].body;
-    const author = data[0].author;
-    const uid = data[0].uid;
-    const tags = data[0].tags;
-    const banner = data[0].banner;
-
+  .then(post => {
     req.session.pid = req.params.pid;
     res.render("posts/post", {
-      date: date,
-      title: title,
-      body: body,
-      author: author,
-      uid: uid,
-      tags: tags,
-      banner: banner
+      date: formatDate(post[0].date),
+      title: post[0].title,
+      body: post[0].body,
+      author: post[0].author,
+      uid: post[0].uid,
+      tags: post[0].tags,
+      banner: post[0].banner
     });
   })
   .catch(err => {
     res.status(404);
-    res.format({
-      html: () => {
-        res.render("http/404.ejs", { url: `Post with id ${req.url}` });
-      },
-      json: () => {
-        res.json({ error: 'Page not found' });
-      },
-      default: () => {
-        res.type('txt').send('Page not found');
-      }
-    });
+    res.render("http/404.ejs", { url: `Post with id ${req.url}` });
   })
 })
 .delete((req, res) => {
