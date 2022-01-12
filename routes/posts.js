@@ -8,6 +8,10 @@ router.get('/', (req, res) => {
   res.render("posts/posts");
 });
 
+router.get("/archive", (req, res) => {
+  res.render("posts/archive");
+});
+
 router.route("/editor")
 .get((req, res) => {
   if (req.session.uid !== undefined) {

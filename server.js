@@ -15,8 +15,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static("public"));
 
 app.get('/', (req, res) => {
-  res.render("index.ejs");
-})
+  res.render("index");
+});
+
+app.get("/projects", (req, res) => {
+  res.render("projects");
+});
+
+app.get("/contact", (req, res) => {
+  res.render("contact");
+});
 
 const userRouter = require("./routes/users");
 app.use("/users", userRouter);
@@ -29,7 +37,7 @@ app.use((req, res) => {
   res.status(404);
   res.format({
     html: () => {
-      res.render("http/404.ejs", { url: req.url });
+      res.render("http/404", { url: req.url });
     },
     json: () => {
       res.json({ error: 'Page not found' });
