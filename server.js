@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const cookieSession = require("cookie-session");
 const bodyParser = require("body-parser");
+const db = require("./user_modules/db.cjs");
 
 app.set("view engine", "ejs");
 
@@ -34,7 +35,6 @@ app.use("/users", userRouter);
 const postRouter = require("./routes/posts");
 app.use("/posts", postRouter);
 const mediaRouter = require("./routes/media");
-const db = require("./user_modules/db.cjs");
 app.use("/media", mediaRouter);
 
 app.use((req, res) => {
