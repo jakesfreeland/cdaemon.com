@@ -1,7 +1,8 @@
 .intro img {
+    width: 100%;
     object-fit: cover;
     max-height: 256px;
-    width: 100%;
+    border-radius: 8px;
 }
 
 .intro h1 {
@@ -9,7 +10,7 @@
 }
 
 .intro h5 {
-    margin-bottom: 8px;
+    margin-bottom: 16px;
 }
 
 .intro a {
