@@ -11,8 +11,8 @@ router.post('/', (req, res) => {
 })
 
 router.get("/:filename", (req, res) => {
-  const uidPath = path.resolve(__dirname, `../media/uid/${req.session.uid}/`);
-  const pidPath = path.resolve(__dirname, `../media/posts/${req.session.pid}/`);
+  const uidPath = path.resolve(__dirname, `../public/media/uid/${req.session.uid}/`);
+  const pidPath = path.resolve(__dirname, `../public/media/posts/${req.session.pid}/`);
   if (fs.existsSync(uidPath + '/' + req.params.filename)) {
     res.sendFile(uidPath + '/' + req.params.filename);
   } else if (fs.existsSync(pidPath + '/' + req.params.filename)) {
@@ -23,7 +23,7 @@ router.get("/:filename", (req, res) => {
 });
 
 async function uploadMedia(media, uid) {
-  const uidPath = path.resolve(__dirname, `../media/uid/${uid}/`);
+  const uidPath = path.resolve(__dirname, `../public/media/uid/${uid}/`);
 
   if (!fs.existsSync(uidPath)) {
     fs.mkdirSync(uidPath);

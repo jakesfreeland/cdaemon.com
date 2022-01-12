@@ -29,16 +29,17 @@ a {
   align-items: center;
   flex: 1;
   background-color: #1a1a1a;
-  height: 128px;
+  min-height: 128px;
+  max-height: 128px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
 }
 
 .featured-left {
   width: 90px;
+  overflow: hidden;
 }
 
 .featured-left img {
-  height: 100%;
   width: 100%;
   object-fit: cover;
   margin: 8px;

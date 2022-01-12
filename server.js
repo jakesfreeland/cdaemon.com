@@ -15,7 +15,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static("public"));
 
 app.get('/', (req, res) => {
-  res.render("index");
+  db.getOrderedData("blog_posts", "post", "date", "desc", "2")
+  .then(posts => {
+    res.render("index", { post0: posts[0], post1: posts[1] });
+  })
 });
 
 app.get("/projects", (req, res) => {
@@ -31,6 +34,7 @@ app.use("/users", userRouter);
 const postRouter = require("./routes/posts");
 app.use("/posts", postRouter);
 const mediaRouter = require("./routes/media");
+const db = require("./user_modules/db.cjs");
 app.use("/media", mediaRouter);
 
 app.use((req, res) => {

@@ -52,5 +52,14 @@ module.exports = {
     } finally {
       if (conn) conn.close();
     }
+  },
+
+  getOrderedData: async function getOrderedData(database, table, column, order, limit) {
+    try {
+      var conn = await pool.getConnection();
+      return await conn.query(`SELECT * FROM ${database}.${table} ORDER BY ${column} ${order} LIMIT ${limit}`);
+    } finally {
+      if (conn) conn.close();
+    }
   }
 }

@@ -89,8 +89,8 @@ async function uploadPost(title, body, author, uid, tags, banner) {
 }
 
 function mvMedia(uid, pid) {
-  const uidPath = path.resolve(__dirname, `../media/uid/${uid}/`);
-  const pidPath = path.resolve(__dirname, `../media/posts/${pid}/`);
+  const uidPath = path.resolve(__dirname, `../public/media/uid/${uid}/`);
+  const pidPath = path.resolve(__dirname, `../public/media/posts/${pid}/`);
 
   if (fs.existsSync(uidPath)) {
     fs.mkdirSync(pidPath)

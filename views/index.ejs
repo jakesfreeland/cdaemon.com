@@ -27,7 +27,7 @@
 						This website is composed of casual ramblings about software from
 						two experienced sysadmins. If you liked one of our posts, check out our
 						<a href="/projects">projects</a>. Alternatively, feel free to browse
-						the <a href="/archive">archives</a> to find a topic of interest.
+						the <a href="/posts/archive">archives</a> to find a topic of interest.
 					</p>
 				</div>
 
@@ -37,20 +37,20 @@
 					<div class="featured-posts">
 						<div class="featured-post">
 							<div class="featured-left">
-								<img src="/media/tux.png">
+								<img src="/media/posts/<%= locals.post0.pid %>/<%= locals.post0.banner %>">
 							</div>
 							<div class="featured-right">
-								<h3>Featured Post</h3>
-								<p>post sneak peak!</p>
+								<h3><a href="/posts/<%= locals.post0.pid %>/"><%= locals.post0.title %></a></h3>
+								<p>By <%= locals.post0.author %></p>
 							</div>
 						</div>
 						<div class="featured-post">
 							<div class="featured-left">
-								<img src="/media/tux.png">
+								<img src="/media/posts/<%= locals.post1.pid %>/<%= locals.post1.banner %>">
 							</div>
 							<div class="featured-right">
-								<h3>Featured Post</h3>
-								<p>post sneak peak!</p>
+								<h3><a href="/posts/<%= locals.post1.pid %>/"><%= locals.post1.title %></a></h3>
+								<p>By <%= locals.post1.author %></p>
 							</div>
 						</div>
 					</div>
