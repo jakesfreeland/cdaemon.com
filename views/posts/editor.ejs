@@ -20,10 +20,10 @@
 
     <main>
         <section class="content">
-          <form action="/posts/editor" method="post" id="post-form" autocomplete="off" spellcheck="true">
-            <input name="title" class="title" placeholder="Title" maxlength="128" autofocus required />
+          <form action="/posts/editor" method="post" id="publish-form" autocomplete="off" spellcheck="true">
+            <input name="title" class="title" placeholder="Title" maxlength="128" autofocus />
             <hr class=rounded>
-            <textarea id="body-md" class="body" placeholder="Body" required></textarea>
+            <textarea id="body-md" class="body" placeholder="Body"></textarea>
             <hr class="rounded">
             <input name="tags" class="tags" placeholder="Tags" maxlength="64" />
             <hr class="rounded">
@@ -32,7 +32,7 @@
             <textarea name="body" id="body-html" hidden></textarea>
 
             <!-- form-submitted banner -->
-            <input name="banner" class="banner" maxlength="256" hidden>
+            <input name="banner" class="banner" maxlength="256" hidden />
           </form>
         </section>
 
@@ -45,7 +45,7 @@
           <div class="preview-content markdown-themify" hidden>
             <h1 id="title-preview" class="title-preview"></h1>
             <img id="banner-preview" class="banner-preview" src="">
-            <hr>
+            <hr class="hr-preview">
             <p id="body-preview"></p>
             <h6 id="tags-preview"></h6>
           </div>
@@ -53,15 +53,19 @@
 
         <section class="options">
           <div class="options-buttons">
-            <input name="banner" id="banner-upload" type="file" accept="image/*" autocomplete="off" hidden />
+            <input id="banner-upload" type="file" accept="image/*" autocomplete="off" hidden />
             <label for="banner-upload">Banner</label>
-            <input name="media" id="media-upload" type="file" accept="image/*" autocomplete="off" multiple hidden />
+            <input id="media-upload" type="file" accept="image/*" autocomplete="off" multiple hidden />
             <label for="media-upload">Image</label>
-            <button class="publish-btn" form="post-form">Publish</button>
+            <button id="publish-btn">Publish</button>
           </div>
           <div class="options-author">
             <p>Posting as <%= locals.author %></p>
           </div>
+        </section>
+
+        <section class="error-box">
+          <p class="error-msg"></p>
         </section>
     </main>
 

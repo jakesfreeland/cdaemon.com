@@ -14,6 +14,10 @@ const previewBanner = document.getElementById("banner-preview");
 
 const uploadInput = document.getElementById("media-upload");
 const uploadBanner = document.getElementById("banner-upload");
+const publishBtn = document.getElementById("publish-btn");
+const publishForm = document.getElementById("publish-form");
+
+const errMsg = document.querySelector(".error-msg");
 
 previewBox.addEventListener("click", () => {
   if (expandPreview.style.display === "block") {
@@ -60,6 +64,14 @@ uploadBanner.addEventListener("change", () => {
   })
   .catch(alert);
 });
+
+publishBtn.addEventListener("click", () => {
+  if (title.value && body.value && banner.value) {
+    publishForm.submit();
+  } else {
+    errMsg.textContent = "A title, body, and banner are required to publish!";
+  }
+})
 
 async function uploadMedia(media) {
   let allAreImages = 1;

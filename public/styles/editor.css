@@ -70,6 +70,10 @@ textarea, input {
     width: 100%;
 }
 
+.hr-preview {
+    margin: 16px 0 !important;
+}
+
 .options {
     display: flex;
     justify-content: space-between;
@@ -93,6 +97,12 @@ textarea, input {
 
 .options-author {
     text-align: end;
+}
+
+.error-msg {
+    color: red;
+    font-weight: bold;
+    font-size: 0.8em;
 }
 
 @media(max-width: 500px) {
