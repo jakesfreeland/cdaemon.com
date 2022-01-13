@@ -8,7 +8,10 @@ router.route("/:tag")
 .get((req, res) => {
   getTaggedPosts(req.params.tag)
   .then(posts => res.render("tags/tag", { posts: posts }))
-  .catch(console.log)
+  .catch(err => {
+    res.status(404);
+    res.render("http/404.ejs", { url: `Tag ${req.url}` });
+  })
 })
 
 async function getTaggedPosts(tag) {

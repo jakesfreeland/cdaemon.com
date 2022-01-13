@@ -83,5 +83,14 @@ module.exports = {
     } finally {
       if (conn) conn.close();
     }
+  },
+
+  showTables: async function showTables(database) {
+    try {
+      var conn = await pool.getConnection();
+      return await conn.query(`SHOW TABLES FROM ${database}`);
+    } finally {
+      if (conn) conn.close();
+    }
   }
 }

@@ -18,8 +18,12 @@ app.use(express.static("public"));
 app.get('/', (req, res) => {
   db.getOrderedLimitData("blog_posts", "post", "date", "desc", "2")
   .then(posts => {
-    res.render("index", { post0: posts[0], post1: posts[1] });
+    db.showTables("blog_tags")
+    .then(tables => {
+      res.render("index", { post0: posts[0], post1: posts[1], tags: tables});
+    })
   })
+  .catch(console.log)
 });
 
 app.get("/projects", (req, res) => {
@@ -41,17 +45,7 @@ app.use("/tags", tagsRouter);
 
 app.use((req, res) => {
   res.status(404);
-  res.format({
-    html: () => {
-      res.render("http/404", { url: req.url });
-    },
-    json: () => {
-      res.json({ error: 'Page not found' });
-    },
-    default: () => {
-      res.type('txt').send('Page not found');
-    }
-  });
+  res.render("http/404", { url: req.url });
 });
 
 app.listen(3000);

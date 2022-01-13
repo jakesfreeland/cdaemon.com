@@ -12,7 +12,7 @@ router.post('/', (req, res) => {
 
 router.get("/:filename", (req, res) => {
   const uidPath = path.resolve(__dirname, `../public/media/uid/${req.session.uid}/`);
-  const pidPath = path.resolve(__dirname, `../public/media/posts/${req.session.pid}/`);
+  const pidPath = path.resolve(__dirname, `../public/media/pid/${req.session.pid}/`);
   if (fs.existsSync(uidPath + '/' + req.params.filename)) {
     res.sendFile(uidPath + '/' + req.params.filename);
   } else if (fs.existsSync(pidPath + '/' + req.params.filename)) {
