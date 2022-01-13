@@ -35,6 +35,7 @@ router.route("/editor")
     const uid = req.session.uid;
     uploadPost(req.body.title, req.body.body, author, uid, req.body.tags, req.body.banner)
     .then(pid => {
+      uploadTags(req.body.tags, pid);
       mvMedia(req.session.uid, pid);
       res.redirect(`/posts/${pid}/`);
     })
@@ -76,6 +77,10 @@ async function uploadPost(title, body, author, uid, tags, banner) {
     [pid, date, title, body, author, uid, tags, banner],
     replace = true);
   return pid;
+}
+
+async function uploadTags(tags, pid) {
+  // do database stuff here
 }
 
 function mvMedia(uid, pid) {
