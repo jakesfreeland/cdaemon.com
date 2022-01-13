@@ -4,7 +4,7 @@ const db = require("../user_modules/db.cjs");
 
 router.get("/:tag", (req, res) => {
   getTaggedPosts(req.params.tag)
-  .then(posts => res.render("tags/tag", { posts: posts }))
+  .then(posts => res.render("tags/tag", { tag: req.params.tag, posts: posts }))
   .catch(err => {
     res.status(404);
     res.render("http/404.ejs", { url: `Tag ${req.url}` });

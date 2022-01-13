@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
   .then(posts => {
     db.showTables("blog_tags")
     .then(tables => {
-      res.render("index", { post0: posts[0], post1: posts[1], tags: tables});
+      res.render("index", { posts: posts, tags: tables });
     })
   })
   .catch(console.log)

@@ -7,10 +7,10 @@ const title = document.querySelector(".title");
 const body = document.querySelector(".body");
 const tags = document.querySelector(".tags");
 const banner = document.querySelector(".banner");
+const previewIntro = document.querySelector(".intro");
 const previewTitle = document.getElementById("title-preview");
 const previewBody = document.getElementById("body-preview");
 const previewTags = document.getElementById("tags-preview");
-const previewBanner = document.getElementById("banner-preview");
 
 const uploadInput = document.getElementById("media-upload");
 const uploadBanner = document.getElementById("banner-upload");
@@ -60,7 +60,7 @@ uploadBanner.addEventListener("change", () => {
   uploadMedia(uploadBanner.files)
   .then(fileNames => {
     banner.value = fileNames[0];
-    previewBanner.src = `/media/${fileNames[0]}`
+    previewIntro.style.backgroundImage = `url(/media/${fileNames[0]})`;
   })
   .catch(alert);
 });

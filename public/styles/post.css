@@ -4,11 +4,11 @@
     align-items: flex-end;
     height: 256px;
     border-radius: 8px;
-    background-color: #000;
+    background-color: #fff;
     background-repeat: no-repeat;
     background-position: center;
     background-size: 100%;
-    color: #ffffff;
+    color: #fff;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
     margin-bottom: 16px;
     transition: all 0.4s ease-out;

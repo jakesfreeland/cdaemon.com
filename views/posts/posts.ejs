@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Verdaemon</title>
+    <title>Posts - Verdaemon</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/styles/skeleton.css">
     <link rel="stylesheet" href="/fonts/opensans/css/all.css">
@@ -11,13 +11,32 @@
       $(function(){ $("#included-header").load("/html/templates/header.html"); });
       $(function(){ $("#included-footer").load("/html/templates/footer.html"); });
     </script>
+    <style>
+      h1 {
+        font-family: "opensans-bold";
+        margin-bottom: 16px;
+      }
+
+      ul {
+        list-style-position: inside;
+      }
+
+      a {
+        color: #5a5a5a;
+      }
+    </style>
   </head>
 
   <body>
     <header id="included-header"></header>
 
     <main>
-      <!-- content goes here -->
+      <h1>Posts By Category</h1>
+      <ul>
+        <% for (var i=0; i<tags.length; ++i) { %>
+          <li><a href="/tags/<%= tags[i].Tables_in_blog_tags %>"><%= tags[i].Tables_in_blog_tags %></a></li>
+        <% } %>
+      </ul>
     </main>
 
     <footer id="included-footer"></footer>

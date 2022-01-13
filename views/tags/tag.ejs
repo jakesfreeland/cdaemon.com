@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= locals.title %> - Verdaemon</title>
+    <title><%= tag %> - Verdaemon</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/styles/skeleton.css">
     <link rel="stylesheet" href="/fonts/opensans/css/all.css">
@@ -11,16 +11,79 @@
       $(function(){ $("#included-header").load("/html/templates/header.html"); });
       $(function(){ $("#included-footer").load("/html/templates/footer.html"); });
     </script>
+    <style>
+      main {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      h1 {
+        font-family: "opensans-bold";
+        margin-bottom: 16px;
+      }
+
+      .post-box {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background-color: #1a1a1a;
+        height: 64px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+      }
+
+      .post-left {
+        height: 64px;
+        min-width: 64px;
+        max-width: 64px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+      }
+
+      .post-left img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+      }
+
+      .post-right {
+        margin: 10px;
+        color: #fff;
+      }
+
+      .post-right a {
+        font-family: "opensans-semibold";
+        font-size: 1.3em;
+        color: #fff;
+        text-decoration: none;
+      }
+
+      .post-right a:hover {
+        color: #5a5a5a;
+      }
+
+      .post-right p {
+        font-size: 0.8em;
+      }
+    </style>
   </head>
 
   <body>
     <header id="included-header"></header>
 
     <main>
+      <h1>Tag: <%= tag %></h1>
       <% for (var i=0; i<posts.length; ++i) {%>
         <div class="post-box">
-          <h2><%= posts[i].title %></li></h2>
-          <p>By <%= posts[i].author %></p>
+          <div class="post-left">
+            <img src="/media/pid/<%= posts[i].pid %>/<%= posts[i].banner %>">
+          </div>
+          <div class="post-right">
+            <a href="/posts/<%= posts[i].pid %>/"><%= posts[i].title %></a>
+            <p>By <%= posts[i].author %></p>
+          </div>
         </div>
       <% } %>
     </main>

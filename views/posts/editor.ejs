@@ -23,9 +23,9 @@
           <form action="/posts/editor" method="post" id="publish-form" autocomplete="off" spellcheck="true">
             <input name="title" class="title" placeholder="Title" maxlength="128" autofocus />
             <hr class=rounded>
-            <textarea id="body-md" class="body" placeholder="Body"></textarea>
+            <textarea id="body-md" class="body" placeholder="Body (markdown supported)"></textarea>
             <hr class="rounded">
-            <input name="tags" class="tags" placeholder="Tags" maxlength="64" />
+            <input name="tags" class="tags" placeholder="Tags (comma seperated)" maxlength="64" />
             <hr class="rounded">
 
             <!-- form-submitted body HTML -->
@@ -43,10 +43,10 @@
             <i id="retract-caret" class="fas fa-caret-up" style="display: none"></i>
           </div>
           <div class="preview-content markdown-themify" hidden>
-            <h1 id="title-preview" class="title-preview"></h1>
-            <img id="banner-preview" class="banner-preview" src="">
-            <hr class="hr-preview">
-            <p id="body-preview"></p>
+            <div class="intro">
+              <h1 id="title-preview" class="title-preview"></h1>
+            </div>
+            <p id="body-preview" class="body-preview"></p>
             <h6 id="tags-preview"></h6>
           </div>
         </section>

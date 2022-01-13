@@ -5,9 +5,9 @@ const path = require("path");
 const db = require("../user_modules/db.cjs");
 
 router.get('/', (req, res) => {
-  db.getData("blog_posts", "post")
-  .then(posts => {
-    res.render("posts/posts", { posts: posts });
+  db.showTables("blog_tags")
+  .then(tables => {
+    res.render("posts/posts", { tags: tables });
   })
   .catch(console.log);
 });
@@ -72,6 +72,7 @@ router.route("/:pid")
 async function uploadPost(title, body, author, uid, tags, banner) {
   const pid = await getID();
   const date = getDate();
+  tags = tags.toLowerCase();
   await db.sendData("blog_posts", "post",
     ["pid", "date", "title", "body", "author", "uid", "tags", "banner"],
     [pid, date, title, body, author, uid, tags, banner],

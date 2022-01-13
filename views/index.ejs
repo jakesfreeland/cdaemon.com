@@ -32,27 +32,19 @@
 				</div>
 
 				<div>
-					<h2>Featured Posts</h2>
-					<hr>
+					<h3 class="featured-header">Featured Posts</h3>
 					<div class="featured-posts">
-						<div class="featured-post">
-							<div class="featured-left">
-								<img src="/media/pid/<%= post0.pid %>/<%= post0.banner %>">
+						<% for (var i=0; i<2; ++i) { %>
+							<div class="featured-post">
+								<div class="featured-top">
+									<a href="/posts/<%= posts[i].pid %>/"><img src="/media/pid/<%= posts[i].pid %>/<%= posts[i].banner %>"></a>
+								</div>
+								<div class="featured-bottom">
+									<h1><a href="/posts/<%= posts[i].pid %>/"><%= posts[i].title %></a></h1>
+									<p>By <a href="/users/<%= posts[i].uid %>/"><%= posts[i].author %></a></p>
+								</div>
 							</div>
-							<div class="featured-right">
-								<a href="/posts/<%= post0.pid %>/"><%= post0.title %></a>
-								<p>By <%= post0.author %></p>
-							</div>
-						</div>
-						<div class="featured-post">
-							<div class="featured-left">
-								<img src="/media/pid/<%= post1.pid %>/<%= post1.banner %>">
-							</div>
-							<div class="featured-right">
-								<a href="/posts/<%= post1.pid %>/"><%= post1.title %></a>
-								<p>By <%= post1.author %></p>
-							</div>
-						</div>
+						<% } %>
 					</div>
 				</div>
 
