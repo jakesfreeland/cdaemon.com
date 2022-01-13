@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static("public"));
 
 app.get('/', (req, res) => {
-  db.getOrderedData("blog_posts", "post", "date", "desc", "2")
+  db.getOrderedLimitData("blog_posts", "post", "date", "desc", "2")
   .then(posts => {
     res.render("index", { post0: posts[0], post1: posts[1] });
   })
@@ -36,6 +36,8 @@ const postRouter = require("./routes/posts");
 app.use("/posts", postRouter);
 const mediaRouter = require("./routes/media");
 app.use("/media", mediaRouter);
+const tagsRouter = require("./routes/tags");
+app.use("/tags", tagsRouter);
 
 app.use((req, res) => {
   res.status(404);

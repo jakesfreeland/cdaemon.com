@@ -8,6 +8,10 @@ a {
   color: #5a5a5a;
 }
 
+ul {
+  list-style-position: inside;
+}
+
 .content {
   display: flex;
   flex-direction: column;
@@ -71,17 +75,13 @@ a {
   font-size: 0.8em;
 }
 
-.all-posts ul, .support ul {
-  list-style-position: inside;
-}
-
 .sidebar {
   display: flex;
   flex-direction: column;
   min-width: max-content;
 }
 
-.archive ul {
+.by-tag ul {
   list-style: none;
 }
 
@@ -97,11 +97,11 @@ a {
     gap: 4px;
   }
 
-  .archive h3 {
+  .by-tag h3 {
     font-size: 1.5em;
   }
 
-  .archive ul {
+  .by-tag ul {
     list-style: disc;
     list-style-position: inside;
   }

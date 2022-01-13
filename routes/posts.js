@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
 });
 
 router.get("/archive", (req, res) => {
-  db.getData("blog_posts", "post")
+  db.getOrderedData("blog_posts", "post", "date", "desc")
   .then(posts => {
     res.render("posts/archive", { posts: posts });
   })

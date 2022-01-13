@@ -56,17 +56,7 @@
 					</div>
 				</div>
 
-				<div class="all-posts">
-					<h2>Posts By Category</h2>
-					<hr>
-					<ul>
-						<li><a href="">Linux</a></li>
-						<li><a href="">FreeBSD</a></li>
-						<li><a href="">Vim</a></li>
-					</ul>
-				</div>
-
-				<div class="support">
+				<div class="contrib">
 					<h2>Contributions</h2>
 					<hr>
 					<p>This website was created using:</p>
@@ -80,14 +70,13 @@
 			</section>
 
 			<section class="sidebar">
-				<div class="archive">
-					<h3>Archive by Month</h3>
+				<div class="by-tag">
+					<h3>Posts By Category</h3>
 					<hr>
 					<ul>
-						<li><a href="">December 2021</a></li>
-						<li><a href="">November 2021</a></li>
-						<li><a href="">October 2021</a></li>
-						<li><a href="">September 2021</a></li>	
+						<% for (var i=0; i<tags.length; ++i) {%>
+						<li><a href="/tags/<%= tags[i].name %>"></li>
+						<% } %>
 					</ul>
 				</div>
 			</section>

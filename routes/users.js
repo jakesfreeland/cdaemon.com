@@ -60,7 +60,7 @@ async function createUser(username, password, email) {
     const uid = await getUID();
     const digest = await hashData(password, uid);
 
-    await db.sendData("users", "user",
+    await db.sendData("blog_users", "user",
       ["username", "password", "email", "uid"],
       [username, digest, email, uid]);
     return uid;
@@ -74,7 +74,7 @@ async function userLogin(email, password) {
   email = email.replace("\'", "\\\'");
   password = password.replace("\'", "\\\'");
 
-  const userData = (await db.getValueData("users", "user", "email", `${email}`))[0];
+  const userData = (await db.getValueData("blog_users", "user", "email", `${email}`))[0];
   const stored_digest = userData.password;
   const fresh_digest = await hashData(password, userData.uid);
 
@@ -94,7 +94,7 @@ async function getUID() {
     idGen += charPool.charAt(Math.floor(Math.random() * 62));
   }
 
-  const ids = await db.getColumnData("users", "user", "uid");
+  const ids = await db.getColumnData("blog_users", "user", "uid");
   // re-run getID() if idGen is present in database
   if (ids.some(e => e.id === idGen)) {
     return getUID();

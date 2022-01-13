@@ -49,10 +49,10 @@
             <tr>
               <td><a href="/posts/<%= posts[i].pid %>"><%= posts[i].title %></a></td>
               <td><%= posts[i].author %></td>
-              <td><%= `${posts[i].date}`.slice(0, 15) %></td>
+              <td><%= posts[i].date.toLocaleDateString() %></td>
               <td><%= posts[i].tags %></td>
             </tr>
-        <% }; %>
+        <% } %>
       </table>
     </main>
 
