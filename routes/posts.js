@@ -80,7 +80,24 @@ async function uploadPost(title, body, author, uid, tags, banner) {
 }
 
 async function uploadTags(tags, pid) {
-  // do database stuff here
+  if (tags) {
+    tags = tags.split(',');
+
+    for (var i=0; i<tags.length; ++i) {
+      tags[i] = tags[i].trim();
+      try {
+        await db.createTable("blog_tags", tags[i], "pid", "char(8)");
+      } catch (err) {
+        console.log(err);
+      } finally {
+        await db.sendData("blog_tags", tags[i], "pid", pid, replace=true);
+      }
+    }
+
+    return tags;
+  } else {
+    return null;
+  }
 }
 
 function mvMedia(uid, pid) {

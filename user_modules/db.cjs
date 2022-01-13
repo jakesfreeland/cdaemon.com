@@ -9,11 +9,15 @@ let pool = mariadb.createPool({
 
 module.exports = {
   sendData: async function sendData(database, table, columns, data, replace=false) {
-    columns = columns.join(", ");
-    for (var i=0; i<data.length; ++i) {
-      data[i] = `'${data[i]}'`;
+    if (Array.isArray(columns) && Array.isArray(data)) {
+      columns = columns.join(", ");
+      for (var i=0; i<data.length; ++i) {
+        data[i] = `'${data[i]}'`;
+      }
+      data = data.join(", ");
+    } else {
+      data = `'${data}'`;
     }
-    data = data.join(", ");
 
     try {
       var conn = await pool.getConnection();
@@ -67,6 +71,15 @@ module.exports = {
     try {
       var conn = await pool.getConnection();
       return await conn.query(`SELECT * FROM ${database}.${table} ORDER BY ${column} ${order} LIMIT ${limit}`);
+    } finally {
+      if (conn) conn.close();
+    }
+  },
+
+  createTable: async function createTable(database, table, column, datatype) {
+    try {
+      var conn = await pool.getConnection();
+      return await conn.query(`CREATE TABLE IF NOT EXISTS ${database}.${table} (${column} ${datatype})`);
     } finally {
       if (conn) conn.close();
     }
