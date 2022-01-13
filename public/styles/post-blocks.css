@@ -1,0 +1,55 @@
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+h1 {
+  font-family: "opensans-bold";
+  margin-bottom: 16px;
+}
+
+.post-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #1a1a1a;
+  height: 64px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+}
+
+.post-left {
+  height: 64px;
+  min-width: 64px;
+  max-width: 64px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.post-left img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.post-right {
+  margin: 10px;
+  color: #fff;
+}
+
+.post-right a {
+  font-family: "opensans-semibold";
+  font-size: 1.3em;
+  color: #fff;
+  text-decoration: none;
+}
+
+.post-right a:hover {
+  color: #5a5a5a;
+}
+
+.post-right p {
+  font-size: 0.8em;
+}

@@ -23,11 +23,11 @@
 					<h1>Home</h1>
 					<hr>
 					<p>Welcome to Verdaemon</p>
+					<p>Casual ramblings about software from experienced sysadmins.</p>
 					<p>
-						This website is composed of casual ramblings about software from
-						two experienced sysadmins. If you liked one of our posts, check out our
-						<a href="/projects">projects</a>. Alternatively, feel free to browse
-						the <a href="/posts/archive">archives</a> to find a topic of interest.
+						If you like the content and want to contribute, <a href="/projects">projects</a>.
+						Alternatively, feel free to browse the <a href="/posts">posts by category</a>
+						to find a topic of interest.
 					</p>
 				</div>
 
@@ -37,11 +37,11 @@
 						<% for (var i=0; i<2; ++i) { %>
 							<div class="featured-post">
 								<div class="featured-top">
-									<a href="/posts/<%= posts[i].pid %>/"><img src="/media/pid/<%= posts[i].pid %>/<%= posts[i].banner %>"></a>
+									<a href="/posts/<%= posts[i].pid %>"><img src="/media/pid/<%= posts[i].pid %>/<%= posts[i].banner %>"></a>
 								</div>
 								<div class="featured-bottom">
-									<h1><a href="/posts/<%= posts[i].pid %>/"><%= posts[i].title %></a></h1>
-									<p>By <a href="/users/<%= posts[i].uid %>/"><%= posts[i].author %></a></p>
+									<h1><a href="/posts/<%= posts[i].pid %>"><%= posts[i].title %></a></h1>
+									<p>By <a href="/users/<%= posts[i].uid %>"><%= posts[i].author %></a></p>
 								</div>
 							</div>
 						<% } %>

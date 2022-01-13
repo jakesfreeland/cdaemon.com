@@ -47,7 +47,7 @@ router.route("/editor")
 
 router.route("/:pid")
 .get((req, res) => {
-  db.getValueData("blog_posts", "post", "pid", `${req.params.pid}`)
+  db.getValueData("blog_posts", "post", "pid", req.params.pid)
   .then(post => {
     req.session.pid = req.params.pid;
     res.render("posts/post", {

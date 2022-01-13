@@ -47,9 +47,14 @@ router.route("/login")
   }
 });
 
-router.route("/:username")
+router.route("/:uid")
 .get((req, res) => {
-  res.send(`User profile for ID: ${req.params.username}`);
+  db.getValueData("blog_posts", "post", "uid", req.params.uid)
+  .then(posts => { if (posts[0].author) res.render("users/user", { posts: posts }) })
+  .catch(err => {
+    res.status(404);
+    res.render("http/404", { url: `User with id: ${req.url}` });
+  });
 });
 
 async function createUser(username, password, email) {
