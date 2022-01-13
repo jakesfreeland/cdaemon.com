@@ -1,36 +1,42 @@
-.intro img {
+.intro {
     width: 100%;
-    object-fit: cover;
-    max-height: 256px;
+    display: flex;
+    align-items: flex-end;
+    height: 256px;
     border-radius: 8px;
+    background-color: #000;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
+    color: #ffffff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+    margin-bottom: 16px;
+    transition: all 0.4s ease-out;
+}
+
+.intro:hover, .intro:focus {
+    background-size: 104%;
+}
+
+.intro-text {
+    width: 100%;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 8px 16px 16px 16px;
 }
 
 .intro h1 {
     font-size: 2em;
 }
 
-.intro h5 {
-    margin-bottom: 16px;
-}
-
 .intro a {
     text-decoration: none;
-    color: #5a5a5a;
+    color: #fffff0;
 }
 
 .intro a:hover {
     text-decoration: underline;
-}
-
-.intro hr {
-    box-sizing: content-box;
-    overflow: hidden;
-    background: transparent;
-    border-bottom: 1px solid hsla(210,18%,87%,1);
-    height: .25em;
-    margin: 8px 0;
-    background-color: #d0d7de;
-    border: 0;
 }
 
 .body img {

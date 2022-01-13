@@ -19,11 +19,11 @@
     <header id="included-header"></header>
 
     <main>
-      <section class="intro">
-        <h1><%= locals.title %></h1>
-        <h5>By <a href="/users/<%= locals.uid %>"><%= locals.author %></a> on <%= locals.date %></h5>
-        <img src="/media/<%= locals.banner %>">
-        <hr>
+      <section class="intro" style="background-image: url('/media/<%= locals.banner %>');">
+        <div class="intro-text">
+          <h1><%= locals.title %></h1>
+          <h5>By <a href="/users/<%= locals.uid %>"><%= locals.author %></a> on <%= locals.date %></h5>
+        </div>
       </section>
 
       <section class="body markdown-themify">

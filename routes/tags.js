@@ -2,17 +2,14 @@ const express = require("express");
 const router = express.Router();
 const db = require("../user_modules/db.cjs");
 
-// YOU WILL NEED TO USE posts.js & tags.js & db.cjs & posts.ejs
-// create table in database tags for respective tag
-router.route("/:tag")
-.get((req, res) => {
+router.get("/:tag", (req, res) => {
   getTaggedPosts(req.params.tag)
   .then(posts => res.render("tags/tag", { posts: posts }))
   .catch(err => {
     res.status(404);
     res.render("http/404.ejs", { url: `Tag ${req.url}` });
-  })
-})
+  });
+});
 
 async function getTaggedPosts(tag) {
   const pids = await db.getData("blog_tags", tag);
