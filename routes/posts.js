@@ -102,7 +102,7 @@ async function uploadTags(tags, pid) {
 
 function mvMedia(uid, pid) {
   const uidPath = path.resolve(__dirname, `../public/media/uid/${uid}/`);
-  const pidPath = path.resolve(__dirname, `../public/media/posts/${pid}/`);
+  const pidPath = path.resolve(__dirname, `../public/media/pid/${pid}/`);
 
   if (fs.existsSync(uidPath)) {
     fs.mkdirSync(pidPath)
