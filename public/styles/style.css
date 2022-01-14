@@ -1,7 +1,7 @@
 main {
   display: flex;
   justify-content: space-between;
-  gap: 100px;
+  gap: 64px;
 }
 
 a {
@@ -37,7 +37,7 @@ ul {
   background-color: #1a1a1a;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
   overflow: hidden;
-  border-radius: 10px;
+  border-radius: 8px;
 }
 
 .featured-top {
@@ -64,6 +64,10 @@ ul {
   color: #d3d3d3;
 }
 
+.featured-bottom h1 {
+  margin-bottom: 4px;
+}
+
 .featured-bottom h1 a {
   font-family: "opensans-semibold";
   font-size: 0.9em;
@@ -83,15 +87,17 @@ ul {
   list-style: none;
 }
 
-@media(max-width: 1000px) {
+@media(max-width: 1200px) {
+  .featured-posts {
+    flex-direction: column;
+  }
+}
+
+@media(max-width: 800px) {
   main {
     flex-direction: column;
     justify-content: normal;
     gap: 16px;
-  }
-
-  .featured-posts {
-    flex-direction: column;
   }
 
   .by-tag h3 {
