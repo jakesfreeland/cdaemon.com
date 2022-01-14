@@ -38,6 +38,10 @@
     text-decoration: underline;
 }
 
+.body {
+    margin-bottom: 16px;
+}
+
 .body img {
     max-width: 100%;
     max-height: 256px;
@@ -48,6 +52,10 @@
     font-size: .85em;
     color: #57606a;
     margin-top: 1em;
+}
+
+.tags h6 a {
+    color: #57606a;
 }
 
 @media(max-width: 800px) {

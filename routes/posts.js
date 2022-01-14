@@ -51,13 +51,9 @@ router.route("/:pid")
   .then(post => {
     req.session.pid = req.params.pid;
     res.render("posts/post", {
+      post: post[0],
       date: formatDate(post[0].date),
-      title: post[0].title,
-      body: post[0].body,
-      author: post[0].author,
-      uid: post[0].uid,
-      tags: post[0].tags,
-      banner: post[0].banner
+      tags: post[0].tags.toLowerCase().split(',')
     });
   })
   .catch(err => {

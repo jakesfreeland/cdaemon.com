@@ -19,19 +19,25 @@
     <header id="included-header"></header>
 
     <main>
-      <section class="intro" style="background-image: url('/media/<%= locals.banner %>');">
+      <section class="intro" style="background-image: url('/media/<%= post.banner %>');">
         <div class="intro-text">
-          <h1><%= locals.title %></h1>
-          <h5>By <a href="/users/<%= locals.uid %>"><%= locals.author %></a> on <%= locals.date %></h5>
+          <h1><%= post.title %></h1>
+          <h5>By <a href="/users/<%= post.uid %>"><%= post.author %></a> on <%= date %></h5>
         </div>
       </section>
 
       <section class="body markdown-themify">
-        <%- locals.body -%>
+        <%- post.body -%>
       </section>
 
       <section class="tags">
-        <h6><%= locals.tags %></h6>
+        <hr>
+        <h6>
+          Tags:
+          <% for (var i=0; i<tags.length; ++i) { %>
+            <a href="/tags/<%= tags[i] %>"><%= tags[i] %></a>
+          <% } %>
+        </h6>
       </section>
     </main>
 
