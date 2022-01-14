@@ -61,11 +61,12 @@ ul {
 }
 
 .featured-bottom a:hover {
-  color: #fffff0;
+  color: #d3d3d3;
 }
 
 .featured-bottom h1 a {
   font-family: "opensans-semibold";
+  font-size: 0.9em;
 }
 
 .featured-bottom p {

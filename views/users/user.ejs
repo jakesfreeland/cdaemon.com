@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Log In - Verdaemon</title>
+    <title><%= posts[0].author %> - Verdaemon</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/styles/post-blocks.css">
     <link rel="stylesheet" href="/styles/skeleton.css">
@@ -18,15 +18,15 @@
     <header id="included-header"></header>
 
     <main>
-      <h1>Posts By <%= posts[0].author %> </h1>
+      <h1 class="intro">Posts By <%= posts[0].author %> </h1>
       <% for (var i=0; i<posts.length; ++i) {%>
         <div class="post-box">
           <div class="post-left">
-            <img src="/media/pid/<%= posts[i].pid %>/<%= posts[i].banner %>">
+            <a href="/posts/<%= posts[i].pid %>"><img src="/media/pid/<%= posts[i].pid %>/<%= posts[i].banner %>"></a>
           </div>
           <div class="post-right">
-            <a href="/posts/<%= posts[i].pid %>/"><%= posts[i].title %></a>
-            <p>By <%= posts[i].author %></p>
+            <h3><a href="/posts/<%= posts[i].pid %>/"><%= posts[i].title %></a></h3>
+            <p>By <a href="/users/<%= posts[i].uid %>"><%= posts[i].author %></a></p>
           </div>
         </div>
       <% } %>

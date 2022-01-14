@@ -4,50 +4,53 @@ main {
   gap: 8px;
 }
 
-h1 {
+.intro {
   font-family: "opensans-bold";
-  margin-bottom: 16px;
+  margin-bottom: 8px;
 }
 
 .post-box {
   display: flex;
   align-items: center;
   gap: 8px;
+  height: 100px;
   background-color: #1a1a1a;
-  height: 64px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
 }
 
 .post-left {
-  height: 64px;
-  min-width: 64px;
-  max-width: 64px;
+  min-width: 100px;
+  max-width: 100px;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   overflow: hidden;
 }
 
 .post-left img {
-  height: 100%;
   width: 100%;
   object-fit: cover;
 }
 
 .post-right {
-  margin: 10px;
   color: #fff;
+  width: 100%;
+  margin: 8px;
 }
 
 .post-right a {
-  font-family: "opensans-semibold";
-  font-size: 1.3em;
   color: #fff;
   text-decoration: none;
 }
 
 .post-right a:hover {
-  color: #5a5a5a;
+  color: lightgray;
+}
+
+.post-right h3 a {
+  font-family: "opensans-semibold";
+  font-size: 1em;
 }
 
 .post-right p {
