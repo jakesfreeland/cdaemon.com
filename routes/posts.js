@@ -23,7 +23,14 @@ router.get("/archive", (req, res) => {
 router.route("/editor")
 .get((req, res) => {
   if (req.session.uid !== undefined) {
-    res.render("posts/editor", { author: req.session.username });
+    db.getValueData("blog_users", "user", "uid", req.session.uid)
+    .then(userdata => {
+      if (userdata[0].admin)
+        res.render("posts/editor", { author: req.session.username });
+      else
+        res.send("not authorized");
+    })
+    .catch(console.log);
   } else {
     req.session.return = "/posts/editor";
     res.redirect("/users/login");
