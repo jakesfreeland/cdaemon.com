@@ -1,2 +1,2 @@
-$(function(){ $(header).load("/html/templates/header.html"); });
-$(function(){ $(footer).load("/html/templates/footer.html"); });
+$(function(){ $("#included-header").load("/html/templates/header.html"); });
+$(function(){ $("#included-footer").load("/html/templates/footer.html"); });

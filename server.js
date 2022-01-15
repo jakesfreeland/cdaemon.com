@@ -10,6 +10,7 @@ app.set("view engine", "ejs");
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
+      "script-src": ["'self'", "https://ajax.googleapis.com"],
       "img-src": '*' 
     }
   })
