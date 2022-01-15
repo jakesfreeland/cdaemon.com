@@ -1,11 +1,19 @@
 const express = require("express");
 const app = express();
+const helmet = require("helmet");
 const cookieSession = require("cookie-session");
 const bodyParser = require("body-parser");
 const db = require("./user_modules/db.cjs");
 
 app.set("view engine", "ejs");
 
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      "img-src": '*' 
+    }
+  })
+);
 app.use(cookieSession({
   name: "session",
   keys: ["YyKRyL3RfMNts3", "W8cE4d2eLmM8Xs"],
