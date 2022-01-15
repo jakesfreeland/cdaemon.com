@@ -92,5 +92,14 @@ module.exports = {
     } finally {
       if (conn) conn.close();
     }
+  },
+
+  dropValueData: async function dropTable(database, table, column, value) {
+    try {
+      var conn = await pool.getConnection();
+      return await conn.query(`DELETE FROM ${database}.${table} WHERE ${column}='${value}'`);
+    } finally {
+      if (conn) conn.close();
+    }
   }
 }

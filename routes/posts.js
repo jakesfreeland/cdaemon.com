@@ -1,4 +1,5 @@
 const express = require("express");
+const req = require("express/lib/request");
 const router = express.Router();
 const fs = require("fs");
 const path = require("path");
@@ -28,7 +29,7 @@ router.route("/editor")
       if (userdata[0].admin)
         res.render("posts/editor", { author: req.session.username });
       else
-        res.send("not authorized");
+        res.sendStatus(403);
     })
     .catch(console.log);
   } else {
@@ -69,7 +70,12 @@ router.route("/:pid")
   })
 })
 .delete((req, res) => {
-  res.send(`delete post with ID ${req.params.pid}`);
+  db.getValueData("blog_posts", "post", "pid", req.params.pid)
+  .then(post => deletePost(post, req.session.uid))
+  .then(() => res.redirect("back"))
+  .catch(err => {
+    res.sendStatus(403);
+  });
 });
 
 async function uploadPost(title, body, author, uid, tags, banner) {
@@ -149,6 +155,22 @@ function formatDate(dateObj) {
   const date = dateObj.toLocaleDateString(undefined, options);
 
   return date;
+}
+
+async function deletePost(post, uid) {
+  if (post[0].uid === uid) {
+    const tags = post[0].tags.split(',');
+
+    for (var i=0; i<tags.length; ++i)
+      db.dropValueData("blog_tags", tags[i], "pid", post[0].pid);
+    
+    db.dropValueData("blog_posts", "post", "pid", post[0].pid);
+    fs.rmSync(path.resolve(__dirname, `../public/media/pid/${post[0].pid}`), { recursive: true });
+    
+    return "post deleted";
+  } else {
+    throw "forbidden";
+  }
 }
 
 module.exports = router;

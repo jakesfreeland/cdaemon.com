@@ -14,7 +14,7 @@ router.route("/signup")
       if (uid !== null) {
         req.session.username = req.body.username;
         req.session.uid = uid;
-        res.redirect(req.session.return || `/users/${uid}/`);
+        res.redirect(req.session.return || '/');
         req.session.return = null;
       }
     })
@@ -35,7 +35,7 @@ router.route("/login")
       if (auth !== null) {
         req.session.username = auth.username;
         req.session.uid = auth.uid;
-        res.redirect(req.session.return || `/users/${auth.uid}/`);
+        res.redirect(req.session.return || '/');
         req.session.return = null;
       } else {
         res.sendStatus(401);
@@ -50,10 +50,10 @@ router.route("/login")
 router.route("/:uid")
 .get((req, res) => {
   db.getValueData("blog_posts", "post", "uid", req.params.uid)
-  .then(posts => { if (posts[0].author) res.render("users/user", { posts: posts }) })
+  .then(posts => { if (posts[0].author) res.render("users/user", { posts: posts, uid: req.session.uid }) })
   .catch(err => {
     res.status(404);
-    res.render("http/404", { url: `User with id: ${req.url}` });
+    res.render("http/404", { url: `Posts by user id: ${req.url}` });
   });
 });
 

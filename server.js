@@ -20,8 +20,10 @@ app.get('/', (req, res) => {
   .then(posts => {
     db.showTables("blog_tags")
     .then(tables => {
-      res.render("index", { posts: posts, tags: tables });
+      if (posts[i])
+        res.render("index", { posts: posts, tags: tables });
     })
+    .catch(err => res.status(503).render("http/503"));
   })
   .catch(console.log)
 });

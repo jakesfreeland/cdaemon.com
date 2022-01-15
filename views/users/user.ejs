@@ -28,10 +28,24 @@
             <h3><a href="/posts/<%= posts[i].pid %>/"><%= posts[i].title %></a></h3>
             <p>By <a href="/users/<%= posts[i].uid %>"><%= posts[i].author %></a></p>
           </div>
+          <% if (posts[i].uid === uid) { %>
+            <div class="delete-post" id="<%= posts[i].pid %>" onclick="deletePost(this.id)">
+              <i class="far fa-trash-alt"></i>
+            </div>
+          <% } %>
         </div>
       <% } %>
     </main>
 
     <footer id="included-footer"></footer>
+
+    <% if (posts[0].uid === uid) { %>
+      <script>
+        async function deletePost(pid) {
+          fetch(`/posts/${pid}`, { method: "DELETE" })
+          .catch(console.log);
+        }
+      </script>
+    <% } %>
   </body>
 </html>
