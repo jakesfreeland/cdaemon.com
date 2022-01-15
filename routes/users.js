@@ -11,16 +11,14 @@ router.route("/signup")
   if (req.body.username && req.body.password && req.body.email) {
     createUser(req.body.username, req.body.password, req.body.email)
     .then(uid => {
-      if (uid !== null) {
-        req.session.username = req.body.username;
-        req.session.uid = uid;
-        res.redirect(req.session.return || '/');
-        req.session.return = null;
-      }
+      req.session.username = req.body.username;
+      req.session.uid = uid;
+      res.redirect(req.session.return || '/');
+      req.session.return = null;
     })
-    .catch(err => console.log(err));
+    .catch(err => res.send(err));
   } else {
-    console.log("Missing Parameter");
+    res.send("Missing Parameter");
   }
 });
 
@@ -32,18 +30,15 @@ router.route("/login")
   if (req.body.email && req.body.password) {
     userLogin(req.body.email, req.body.password)
     .then(auth => {
-      if (auth !== null) {
-        req.session.username = auth.username;
-        req.session.uid = auth.uid;
-        res.redirect(req.session.return || '/');
-        req.session.return = null;
-      } else {
-        res.sendStatus(401);
-      }
+      req.session.username = auth.username;
+      req.session.uid = auth.uid;
+      if (auth.admin) req.session.admin = 1;
+      res.redirect(req.session.return || '/');
+      req.session.return = null;
     })
-    .catch(err => console.log(err));
+    .catch(err => res.sendStatus(401));
   } else {
-    console.log("Missing parameter");
+    res.send("Missing parameter");
   }
 });
 
@@ -70,8 +65,7 @@ async function createUser(username, password, email) {
       [username, digest, email, uid]);
     return uid;
   } else {
-    console.log("Invalid Email String");
-    return null;
+    throw "Invalid Email String";
   }
 }
 
@@ -86,8 +80,7 @@ async function userLogin(email, password) {
   if (stored_digest === fresh_digest) {
     return userData;
   } else {
-    console.log("Incorrect Password");
-    return null;
+    throw "Incorrect Password";
   }
 }
 

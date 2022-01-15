@@ -43,6 +43,7 @@
       <script>
         async function deletePost(pid) {
           fetch(`/posts/${pid}`, { method: "DELETE" })
+          .then(res => location.reload())
           .catch(console.log);
         }
       </script>

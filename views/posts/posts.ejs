@@ -12,9 +12,24 @@
       $(function(){ $("#included-footer").load("/html/templates/footer.html"); });
     </script>
     <style>
+      .intro {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+      }
+
+      .create-post {
+        font-size: 14px;
+        border: none;
+        background-color: #426e88;
+        color: #fff;
+        padding: 8px;
+        margin-top: 6px;
+      }
+
       h1 {
         font-family: "opensans-bold";
-        margin-bottom: 16px;
       }
 
       ul {
@@ -24,6 +39,12 @@
       a {
         color: #5a5a5a;
       }
+
+      @media(max-width: 600px) {
+        h1 {
+          font-size: 1.8em;
+        }
+      }
     </style>
   </head>
 
@@ -31,7 +52,13 @@
     <header id="included-header"></header>
 
     <main>
-      <h1>Posts By Category</h1>
+      <div class="intro">
+        <h1>Posts By Category</h1>
+        <% if (admin) { %>
+          <a href="/posts/editor"><button class="create-post">Create Post</button></a>
+        <% } %>
+      </div>
+
       <ul>
         <% for (var i=0; i<tags.length; ++i) { %>
           <li><a href="/tags/<%= tags[i].Tables_in_blog_tags %>"><%= tags[i].Tables_in_blog_tags %></a></li>

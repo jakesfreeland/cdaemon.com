@@ -8,7 +8,7 @@ const db = require("../user_modules/db.cjs");
 router.get('/', (req, res) => {
   db.showTables("blog_tags")
   .then(tables => {
-    res.render("posts/posts", { tags: tables });
+    res.render("posts/posts", { tags: tables, admin: req.session.admin });
   })
   .catch(console.log);
 });
@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
 router.get("/archive", (req, res) => {
   db.getOrderedData("blog_posts", "post", "date", "desc")
   .then(posts => {
-    res.render("posts/archive", { posts: posts });
+    res.render("posts/archive", { posts: posts, admin: req.session.admin });
   })
   .catch(console.log);
 });
@@ -24,14 +24,11 @@ router.get("/archive", (req, res) => {
 router.route("/editor")
 .get((req, res) => {
   if (req.session.uid !== undefined) {
-    db.getValueData("blog_users", "user", "uid", req.session.uid)
-    .then(userdata => {
-      if (userdata[0].admin)
-        res.render("posts/editor", { author: req.session.username });
-      else
-        res.sendStatus(403);
-    })
-    .catch(console.log);
+    if (req.session.admin)
+      res.render("posts/editor", { author: req.session.username });
+    else
+      res.sendStatus(403);
+
   } else {
     req.session.return = "/posts/editor";
     res.redirect("/users/login");
@@ -162,7 +159,7 @@ async function deletePost(post, uid) {
     const tags = post[0].tags.split(',');
 
     for (var i=0; i<tags.length; ++i)
-      db.dropValueData("blog_tags", tags[i], "pid", post[0].pid);
+      await db.dropValueData("blog_tags", tags[i], "pid", post[0].pid);
     
     db.dropValueData("blog_posts", "post", "pid", post[0].pid);
     fs.rmSync(path.resolve(__dirname, `../public/media/pid/${post[0].pid}`), { recursive: true });

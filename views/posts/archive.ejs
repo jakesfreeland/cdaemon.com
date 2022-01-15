@@ -12,9 +12,20 @@
       $(function(){ $("#included-footer").load("/html/templates/footer.html"); });
     </script>
     <style>
-      h1 {
-        font-family: "opensans-bold";
+      .intro {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         margin-bottom: 16px;
+      }
+
+      .create-post {
+        font-size: 14px;
+        border: none;
+        background-color: #426e88;
+        color: #fff;
+        padding: 8px;
+        margin-top: 6px;
       }
 
       a {
@@ -31,6 +42,12 @@
         text-align: left;
         padding: 8px;
       }
+
+      @media(max-width: 600px) {
+        h1 {
+          font-size: 1.8em;
+        }
+      }
     </style>
   </head>
 
@@ -38,7 +55,13 @@
     <header id="included-header"></header>
 
     <main>
-      <h1>Post Archive</h1>
+      <div class="intro">
+        <h1>Post Archive</h1>
+        <% if (admin) { %>
+          <a href="/posts/editor"><button class="create-post">Create Post</button></a>
+        <% } %>
+      </div>
+
       <table>
         <tr>
           <th>Title</th>

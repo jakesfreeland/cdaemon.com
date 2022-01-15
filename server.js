@@ -16,16 +16,17 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static("public"));
 
 app.get('/', (req, res) => {
-  db.getOrderedLimitData("blog_posts", "post", "date", "desc", "2")
-  .then(posts => {
-    db.showTables("blog_tags")
-    .then(tables => {
-      if (posts[i])
-        res.render("index", { posts: posts, tags: tables });
-    })
-    .catch(err => res.status(503).render("http/503"));
+  const getPosts = db.getOrderedLimitData("blog_posts", "post", "date", "desc", "2");
+  const getTables = db.showTables("blog_tags");
+
+  Promise.all([getPosts, getTables])
+  .then(([posts, tables]) => {
+    if (posts[1].pid)
+      res.render("index", { posts: posts, tags: tables });
+    else
+      throw "posts not found";
   })
-  .catch(console.log)
+  .catch(err => res.status(503).render("http/503"));
 });
 
 app.get("/projects", (req, res) => {

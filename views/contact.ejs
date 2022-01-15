@@ -11,39 +11,65 @@
       $(function(){ $("#included-header").load("/html/templates/header.html"); });
       $(function(){ $("#included-footer").load("/html/templates/footer.html"); });
     </script>
+    <style>
+      main {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+      }
+
+      ul {
+        list-style-position: inside;
+      }
+
+      a {
+        color: #5a5a5a;
+      }
+
+      .info {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+    </style>
   </head>
 
   <body>
     <header id="included-header"></header>
 
     <main>
-      <h1>Jake Freeland</h1>
-      <div id="description">
-        <p>
-          [Description]
-        </p>
+      <div class="person">
+        <h1>Jake Freeland</h1>
+        <hr>
+        <div class="info">
+          <p>
+            [desc]
+          </p>
+          <ul>
+            <li>Email: jakesfreeland@gmail.com</li>
+            <li>Email: jake@technologyfriends.net</li>
+            <li>Eth: 424hgkj546ghk4hg6hg45k6</li>
+          </ul>
+        </div>
       </div>
-      <div id="contact-info">
-        <ul>
-          <li>email: jakesfreeland@gmail.com</li>
-          <li>bitcoin: 97xsiqdiuwhqwu36duiqhb</li>
-        </ul>
-      <div>
-      <h1>Eric Frederickson</h1>
-      <div id="description">
-        <p>
-          Hi, my name is Eric Frederickson. I'm currently a freshman compsci student
-          at the University of Minnesota, interested in Vim, Linux, C, teaching, and
-          everything in between. Feel free to contact me via the methods listed below,
-          and I will respond as soon as I am able.
-        </p>
+
+      <div class="person">
+        <h1>Eric Frederickson</h1>
+        <hr>
+        <div class="info">
+          <p>
+            Hi, my name is Eric Frederickson. I'm currently a freshman compsci student
+            at the University of Minnesota, interested in Vim, Linux, C, teaching, and
+            everything in between. Feel free to contact me via the methods listed below,
+            and I will respond as soon as I am able.
+          </p>
+          <ul>
+            <li>email: ericfrederickson68@gmail.com</li>
+            <li>btc: 2718bswnxsaojcsjawhqiuhw</li>
+          </ul>
+        </div>
       </div>
-      <div id="contact-info">
-        <ul>
-          <li>email: ericfrederickson68@gmail.com</li>
-          <li>bitcoin: 2718bswnxsaojcsjawhqiuhw</li>
-        </ul>
-      <div>
     </main>
 
     <footer id="included-footer"></footer>
