@@ -26,7 +26,7 @@
             <p>By <a href="/users/<%= posts[i].uid %>"><%= posts[i].author %></a></p>
           </div>
           <% if (posts[i].uid === uid) { %>
-            <div class="delete-post" id="<%= posts[i].pid %>" onclick="deletePost(this.id)">
+            <div class="delete-post" id="<%= posts[i].pid %>">
               <i class="far fa-trash-alt"></i>
             </div>
           <% } %>
@@ -36,14 +36,6 @@
 
     <footer id="included-footer"></footer>
 
-    <% if (posts[0].uid === uid) { %>
-      <script>
-        async function deletePost(pid) {
-          fetch(`/posts/${pid}`, { method: "DELETE" })
-          .then(res => location.reload())
-          .catch(console.log);
-        }
-      </script>
-    <% } %>
+    <script src="/scripts/user.js"></script>
   </body>
 </html>

@@ -35,7 +35,7 @@ router.route("/editor")
   }
 })
 .post((req, res) => {
-  if (req.body.title && req.body.body) {
+  if (req.body.title && req.body.body && req.body.banner) {
     const author = req.session.username;
     const uid = req.session.uid;
     uploadPost(req.body.title, req.body.body, author, uid, req.body.tags, req.body.banner)
@@ -69,7 +69,6 @@ router.route("/:pid")
 .delete((req, res) => {
   db.getValueData("blog_posts", "post", "pid", req.params.pid)
   .then(post => deletePost(post, req.session.uid))
-  .then(() => res.redirect("back"))
   .catch(err => {
     res.sendStatus(403);
   });
@@ -156,10 +155,12 @@ function formatDate(dateObj) {
 
 async function deletePost(post, uid) {
   if (post[0].uid === uid) {
-    const tags = post[0].tags.split(',');
+    if (post[0].tags) {
+      const tags = post[0].tags.split(',');
 
-    for (var i=0; i<tags.length; ++i)
-      await db.dropValueData("blog_tags", tags[i], "pid", post[0].pid);
+      for (var i=0; i<tags.length; ++i)
+        await db.dropValueData("blog_tags", tags[i], "pid", post[0].pid);
+    }
     
     db.dropValueData("blog_posts", "post", "pid", post[0].pid);
     fs.rmSync(path.resolve(__dirname, `../public/media/pid/${post[0].pid}`), { recursive: true });
