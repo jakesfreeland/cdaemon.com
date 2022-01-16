@@ -5,6 +5,7 @@ const cookieSession = require("cookie-session");
 const bodyParser = require("body-parser");
 const db = require("./user_modules/db.cjs");
 
+//app.set("trust proxy", true);
 app.set("view engine", "ejs");
 
 app.use(
@@ -19,7 +20,7 @@ app.use(cookieSession({
   name: "session",
   keys: ["YyKRyL3RfMNts3", "W8cE4d2eLmM8Xs"],
   maxAge: 604800000,
-  // secure: true
+  //secure: true
 }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static("public"));
