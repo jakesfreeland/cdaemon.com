@@ -2,3 +2,5 @@
 /node_modules/
 /public/media/uid/*
 /public/media/pid/*
+!/public/media/uid/.keep
+!/public/media/pid/.keep
