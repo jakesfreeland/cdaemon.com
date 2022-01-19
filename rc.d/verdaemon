@@ -1,0 +1,45 @@
+#!/bin/sh
+
+# PROVIDE: verdaemon
+# REQUIRE: networking
+# KEYWORD: shutdown
+
+. /etc/rc.subr
+  
+name="verdaemon"
+rcvar="${name}_enable"
+load_rc_config $name
+: ${verdaemon_enable:=NO}
+
+app_path="/usr/local/www/verdaemon.com/"
+user="www"
+pidfile="/var/run/${name}.pid"
+logfile="/var/log/${name}.log"
+
+start_precmd="${name}_prestart"
+start_cmd="${name}_start"
+stop_cmd="${name}_stop"
+
+verdaemon_prestart() {
+	PATH="$PATH:/usr/sbin:/usr/local/bin"
+	export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/lib:/usr/lib:/usr/local/lib"
+	export NODE_ENV="production"
+}
+
+verdaemon_start() {
+	daemon -o $logfile -P $pidfile -t "${name}d" -u $user \
+		npm run --prefix $app_path start &
+	echo "${name} server started"
+}
+
+verdaemon_stop() {
+	if [ ${verdaemon_pid:=$(check_pidfile $pidfile "daemon")} ]; then
+		pkill -P $verdaemon_pid
+		wait_for_pids $verdaemon_pid
+		echo "${name} stopped successfully"
+	else
+		echo "${name} is not active"
+	fi
+}
+
+run_rc_command "$1"
