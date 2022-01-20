@@ -103,7 +103,7 @@ async function uploadMedia(media) {
 
 async function insertTemplate(fileNames) {
   for (var i=0; i<fileNames.length; ++i) {
-    fileNames[i] = `![](/media/${fileNames[i]})`;
+    fileNames[i] = `![](/media/${encodeURIComponent(fileNames[i])})`;
   }
   const mdNames = fileNames.join('\n');
 
