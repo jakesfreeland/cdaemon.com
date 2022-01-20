@@ -13,8 +13,8 @@ load_rc_config $name
 
 app_path="/usr/local/www/verdaemon.com/"
 user="www"
-pidfile="/var/run/${name}.pid"
 logfile="/var/log/${name}.log"
+pidfile="/var/run/${name}.pid"
 
 start_precmd="${name}_prestart"
 start_cmd="${name}_start"
