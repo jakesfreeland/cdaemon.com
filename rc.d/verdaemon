@@ -9,11 +9,11 @@
 name="verdaemon"
 rcvar="${name}_enable"
 load_rc_config $name
-: ${verdaemon_enable:=NO}
+: ${verdaemon_enable:="NO"}
+: ${verdaemon_path:="/usr/local/www/${name}.com"}
+: ${verdaemon_log:="/var/log/${name}.log"}
 
-app_path="/usr/local/www/verdaemon.com/"
 user="www"
-logfile="/var/log/${name}.log"
 pidfile="/var/run/${name}.pid"
 
 start_precmd="${name}_prestart"
@@ -27,8 +27,8 @@ verdaemon_prestart() {
 }
 
 verdaemon_start() {
-	daemon -o $logfile -P $pidfile -t "${name}d" -u $user \
-		npm run --prefix $app_path start &
+	daemon -o $verdaemon_log -P $pidfile -t "${name}d" -u $user \
+		npm run --prefix $verdaemon_path start &
 	echo "${name} server started"
 }
 
