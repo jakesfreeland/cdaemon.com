@@ -21,24 +21,32 @@ start_cmd="${name}_start"
 stop_cmd="${name}_stop"
 
 verdaemon_prestart() {
-	PATH="$PATH:/usr/sbin:/usr/local/bin"
+	PATH="$PATH:/usr/sbin:/usr/bin:/usr/local/bin"
 	export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/lib:/usr/lib:/usr/local/lib"
 	export NODE_ENV="production"
 }
 
 verdaemon_start() {
-	daemon -o $verdaemon_log -P $pidfile -t "${name}d" -u $user \
-		npm run --prefix $verdaemon_path start &
-	echo "${name} server started"
+	if [ $(id -u) -eq 0 ]; then
+		daemon -o $verdaemon_log -P $pidfile -t "${name}d" -u $user \
+			npm run --prefix $verdaemon_path start &
+		echo "${name} server started"
+	else
+		echo "insufficient permissions"
+	fi
 }
 
 verdaemon_stop() {
-	if [ ${verdaemon_pid:=$(check_pidfile $pidfile "daemon")} ]; then
-		pkill -P $verdaemon_pid
-		wait_for_pids $verdaemon_pid
-		echo "${name} stopped successfully"
+	if [ $(id -u) -eq 0 ]; then
+		if [ ${verdaemon_pid:=$(check_pidfile $pidfile "daemon")} ]; then
+			pkill -P $verdaemon_pid
+			wait_for_pids $verdaemon_pid
+			echo "${name} stopped successfully"
+		else
+			echo "${name} is not active"
+		fi
 	else
-		echo "${name} is not active"
+		echo "insufficient permissions"
 	fi
 }
 
