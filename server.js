@@ -5,7 +5,7 @@ const cookieSession = require("cookie-session");
 const bodyParser = require("body-parser");
 const db = require("./user_modules/db.cjs");
 
-app.set("trust proxy", true);
+app.set("trust proxy", "loopback");
 app.set("view engine", "ejs");
 
 app.use(
