@@ -90,10 +90,10 @@ async function uploadMedia(media) {
       fileNames.push(media[i].name);
     }
 
-    fetch("/media", {
+    await fetch("/media", {
       method: "POST",
       body: formData
-    }).catch(console.log);
+    });
 
     return fileNames;
   } else {

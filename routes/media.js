@@ -7,8 +7,10 @@ const path = require("path");
 router.use(fileupload());
 
 router.post('/', (req, res) => {
-  uploadMedia(req.files.media, req.session.uid);
-})
+  uploadMedia(req.files.media, req.session.uid)
+  .then(() => res.sendStatus(200))
+  .catch(err => res.send(err));
+});
 
 router.get("/:filename", (req, res) => {
   const uidPath = path.resolve(__dirname, `../public/media/uid/${req.session.uid}/`);
