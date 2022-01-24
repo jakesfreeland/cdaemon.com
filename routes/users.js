@@ -43,6 +43,10 @@ router.route("/login")
   }
 });
 
+router.get("/uid", (req, res) => {
+  res.send({ uid: req.session.uid });
+});
+
 router.route("/:uid")
 .get((req, res) => {
   db.getValueData("blog_posts", "post", "uid", req.params.uid)
