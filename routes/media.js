@@ -12,9 +12,9 @@ router.post('/', (req, res) => {
   .catch(err => res.send(err));
 });
 
-router.get("/:id/:filename", (req, res) => {
-  const uidPath = path.resolve(__dirname, `../public/media/uid/${req.params.id}/`);
-  const pidPath = path.resolve(__dirname, `../public/media/pid/${req.params.id}/`);
+router.get("/:pid/:filename", (req, res) => {
+  const uidPath = path.resolve(__dirname, `../public/media/uid/${req.session.uid}/`);
+  const pidPath = path.resolve(__dirname, `../public/media/pid/${req.params.pid}/`);
   if (fs.existsSync(uidPath + '/' + req.params.filename)) {
     res.sendFile(uidPath + '/' + req.params.filename);
   } else if (fs.existsSync(pidPath + '/' + req.params.filename)) {

@@ -57,10 +57,10 @@ uploadInput.addEventListener("change", () => {
 });
 
 uploadBanner.addEventListener("change", () => {
-  Promise.all([uploadMedia(uploadBanner.files), getUID()])
-  .then(([fileNames, uid]) => {
+  Promise.all([uploadMedia(uploadBanner.files), getPID()])
+  .then(([fileNames, pid]) => {
     banner.value = fileNames[0];
-    previewIntro.style.backgroundImage = `url(/media/${uid}/${fileNames[0]})`;
+    previewIntro.style.backgroundImage = `url(/media/${pid}/${fileNames[0]})`;
   })
   .catch(alert);
 });
@@ -102,15 +102,15 @@ async function uploadMedia(media) {
 }
 
 async function insertTemplate(fileNames) {
-  const uid = await getUID();
+  const pid = await getPID();
   for (var i=0; i<fileNames.length; ++i) {
-    fileNames[i] = `![](/media/${uid}/${encodeURIComponent(fileNames[i])})`;
+    fileNames[i] = `![](/media/${pid}/${encodeURIComponent(fileNames[i])})`;
   }
   const mdNames = fileNames.join('\n');
 
   return mdNames;
 }
 
-async function getUID() {
-  return (await (await fetch("/users/uid")).json()).uid;
+async function getPID() {
+  return (await (await fetch("/posts/pid")).json()).pid;
 }
