@@ -1,6 +1,6 @@
 /.DS_Store
 /node_modules/
-/public/media/uid/*
+/public/media/tmp/*
 /public/media/pid/*
-!/public/media/uid/.keep
+!/public/media/tmp/.keep
 !/public/media/pid/.keep
