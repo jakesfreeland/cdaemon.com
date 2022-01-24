@@ -16,7 +16,7 @@
     <header id="included-header"></header>
 
     <main>
-      <section class="intro" style="background-image: url('/media/<%= post.banner %>');">
+      <section class="intro" style="background-image: url('/media/<%= post.pid %>/<%= post.banner %>');">
         <div class="intro-text">
           <h1><%= post.title %></h1>
           <h5>By <a href="/users/<%= post.uid %>"><%= post.author %></a> on <%= date %></h5>

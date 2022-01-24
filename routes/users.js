@@ -34,6 +34,7 @@ router.route("/login")
       req.session.uid = auth.uid;
       if (auth.admin) req.session.admin = 1;
       res.redirect(req.session.return || '/');
+      // THIS DOES NOT WORK?
       req.session.return = null;
     })
     .catch(err => res.sendStatus(401));

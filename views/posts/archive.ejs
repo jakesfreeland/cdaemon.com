@@ -72,7 +72,7 @@
         <% for (var i=0; i<posts.length; ++i) { %>
             <tr>
               <td><a href="/posts/<%= posts[i].pid %>"><%= posts[i].title %></a></td>
-              <td><%= posts[i].author %></td>
+              <td><a href="/users/<%= posts[i].uid %>"><%= posts[i].author %></a></td>
               <td><%= posts[i].date.toLocaleDateString() %></td>
               <td><%= posts[i].tags %></td>
             </tr>

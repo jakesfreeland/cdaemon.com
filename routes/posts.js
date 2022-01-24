@@ -1,5 +1,4 @@
 const express = require("express");
-const req = require("express/lib/request");
 const router = express.Router();
 const fs = require("fs");
 const path = require("path");
@@ -24,11 +23,16 @@ router.get("/archive", (req, res) => {
 router.route("/editor")
 .get((req, res) => {
   if (req.session.uid !== undefined) {
-    if (req.session.admin)
-      res.render("posts/editor", { author: req.session.username });
-    else
+    if (req.session.admin) {
+      getID()
+      .then(pid => {
+        req.session.pid = pid;
+        res.render("posts/editor", { author: req.session.username });
+      })
+      .catch(console.log);
+    } else {
       res.sendStatus(403);
-
+    }
   } else {
     req.session.return = "/posts/editor";
     res.redirect("/users/login");
@@ -36,13 +40,11 @@ router.route("/editor")
 })
 .post((req, res) => {
   if (req.body.title && req.body.body && req.body.banner) {
-    const author = req.session.username;
-    const uid = req.session.uid;
-    uploadPost(req.body.title, req.body.body, author, uid, req.body.tags, req.body.banner)
-    .then(pid => {
-      uploadTags(req.body.tags, pid);
-      mvMedia(req.session.uid, pid);
-      res.redirect(`/posts/${pid}/`);
+    uploadPost(req.body.title, req.body.body, req.body.tags, req.body.banner, req.session.username, req.session.uid, req.session.pid)
+    .then(() => {
+      uploadTags(req.body.tags, req.session.pid);
+      mvMedia(req.session.pid);
+      res.redirect(`/posts/${req.session.pid}`);
     })
     .catch(err => console.log(err));
   } else {
@@ -50,11 +52,14 @@ router.route("/editor")
   }
 });
 
+router.get("/pid", (req, res) => {
+  res.send({ pid: req.session.pid });
+});
+
 router.route("/:pid")
 .get((req, res) => {
   db.getValueData("blog_posts", "post", "pid", req.params.pid)
   .then(post => {
-    req.session.pid = req.params.pid;
     res.render("posts/post", {
       post: post[0],
       date: formatDate(post[0].date),
@@ -68,21 +73,23 @@ router.route("/:pid")
 })
 .delete((req, res) => {
   db.getValueData("blog_posts", "post", "pid", req.params.pid)
-  .then(post => deletePost(post, req.session.uid))
+  .then(post => {
+    deletePost(post, req.session.uid);
+    res.sendStatus(200);
+  })
   .catch(err => {
     res.sendStatus(403);
   });
 });
 
-async function uploadPost(title, body, author, uid, tags, banner) {
-  const pid = await getID();
+async function uploadPost(title, body, tags, banner, author, uid, pid) {
   const date = getDate();
   tags = tags.toLowerCase();
   await db.sendData("blog_posts", "post",
-    ["pid", "date", "title", "body", "author", "uid", "tags", "banner"],
-    [pid, date, title, body, author, uid, tags, banner],
+    ["title", "body", "tags", "banner", "author", "uid", "pid", "date"],
+    [title, body, tags, banner, author, uid, pid, date],
     replace = true);
-  return pid;
+  return;
 }
 
 async function uploadTags(tags, pid) {
@@ -106,18 +113,18 @@ async function uploadTags(tags, pid) {
   }
 }
 
-function mvMedia(uid, pid) {
-  const uidPath = path.resolve(__dirname, `../public/media/uid/${uid}/`);
+function mvMedia(pid) {
+  const tmpPath = path.resolve(__dirname, `../public/media/tmp/${pid}/`);
   const pidPath = path.resolve(__dirname, `../public/media/pid/${pid}/`);
 
-  if (fs.existsSync(uidPath)) {
+  if (fs.existsSync(tmpPath)) {
     fs.mkdirSync(pidPath)
 
-    const dir = fs.readdirSync(uidPath);
+    const dir = fs.readdirSync(tmpPath);
     for (var i=0; i<dir.length; ++i) {
-      fs.renameSync(`${uidPath}/${dir[i]}`, `${pidPath}/${dir[i]}`);
+      fs.renameSync(`${tmpPath}/${dir[i]}`, `${pidPath}/${dir[i]}`);
     }
-    fs.rmdirSync(uidPath);
+    fs.rmdirSync(tmpPath);
   } else {
     return null;
   }

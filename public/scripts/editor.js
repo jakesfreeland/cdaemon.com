@@ -57,10 +57,10 @@ uploadInput.addEventListener("change", () => {
 });
 
 uploadBanner.addEventListener("change", () => {
-  uploadMedia(uploadBanner.files)
-  .then(fileNames => {
+  Promise.all([uploadMedia(uploadBanner.files), getPID()])
+  .then(([fileNames, pid]) => {
     banner.value = fileNames[0];
-    previewIntro.style.backgroundImage = `url(/media/${fileNames[0]})`;
+    previewIntro.style.backgroundImage = `url(/media/${pid}/${fileNames[0]})`;
   })
   .catch(alert);
 });
@@ -102,10 +102,15 @@ async function uploadMedia(media) {
 }
 
 async function insertTemplate(fileNames) {
+  const pid = await getPID();
   for (var i=0; i<fileNames.length; ++i) {
-    fileNames[i] = `![](/media/${encodeURIComponent(fileNames[i])})`;
+    fileNames[i] = `![](/media/${pid}/${encodeURIComponent(fileNames[i])})`;
   }
   const mdNames = fileNames.join('\n');
 
   return mdNames;
+}
+
+async function getPID() {
+  return (await (await fetch("/posts/pid")).json()).pid;
 }
