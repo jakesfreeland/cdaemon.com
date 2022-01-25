@@ -1,9 +1,9 @@
 const mariadb = require("mariadb");
 
 let pool = mariadb.createPool({
-  host: "techfriends-blog.ckmannigxkgw.us-east-2.rds.amazonaws.com",
-  user: "admin",
-  password: "3R7zzN5dRBbfh9BrZeFP",
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
   connectionLimit: 5
 });
 
