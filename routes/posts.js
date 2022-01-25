@@ -22,7 +22,7 @@ router.get("/archive", (req, res) => {
 
 router.route("/editor")
 .get((req, res) => {
-  if (req.session.uid !== undefined) {
+  if (req.session.uid) {
     if (req.session.admin) {
       if (!req.session.pid) {
         getID()
@@ -36,7 +36,7 @@ router.route("/editor")
         res.render("posts/editor", { author: req.session.username });
       }
     } else {
-      res.sendStatus(403);
+      res.status(403).send("incorrect username or password");
     }
   } else {
     req.session.returnTo = "/posts/editor";
@@ -46,9 +46,10 @@ router.route("/editor")
 .post((req, res) => {
   if (req.body.title && req.body.body && req.body.banner) {
     uploadPost(req.body.title, req.body.body, req.body.tags, req.body.banner, req.session.username, req.session.uid, req.session.pid)
-    .then(() => {
-      uploadTags(req.body.tags, req.session.pid);
-      res.redirect(`/posts/${req.session.pid}`);
+    .then(pid => {
+      uploadTags(req.body.tags, pid);
+      req.session.pid = null;
+      res.redirect(`/posts/${pid}`);
     })
     .catch(err => console.log(err));
   } else {
@@ -93,7 +94,7 @@ async function uploadPost(title, body, tags, banner, author, uid, pid) {
     ["title", "body", "tags", "banner", "author", "uid", "pid", "date"],
     [title, body, tags, banner, author, uid, pid, date],
     replace = true);
-  return;
+  return pid;
 }
 
 async function uploadTags(tags, pid) {
