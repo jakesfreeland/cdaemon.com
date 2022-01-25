@@ -24,12 +24,17 @@ router.route("/editor")
 .get((req, res) => {
   if (req.session.uid !== undefined) {
     if (req.session.admin) {
-      getID()
-      .then(pid => {
-        req.session.pid = pid;
+      if (!req.session.pid) {
+        getID()
+        .then(pid => {
+          req.session.pid = pid;
+          // session variables expect a following response
+          res.render("posts/editor", { author: req.session.username });
+        })
+        .catch(console.log);
+      } else {
         res.render("posts/editor", { author: req.session.username });
-      })
-      .catch(console.log);
+      }
     } else {
       res.sendStatus(403);
     }
@@ -43,7 +48,6 @@ router.route("/editor")
     uploadPost(req.body.title, req.body.body, req.body.tags, req.body.banner, req.session.username, req.session.uid, req.session.pid)
     .then(() => {
       uploadTags(req.body.tags, req.session.pid);
-      mvMedia(req.session.uid, req.session.pid);
       res.redirect(`/posts/${req.session.pid}`);
     })
     .catch(err => console.log(err));
@@ -108,23 +112,6 @@ async function uploadTags(tags, pid) {
     }
 
     return tags;
-  } else {
-    return null;
-  }
-}
-
-function mvMedia(uid, pid) {
-  const uidPath = path.resolve(__dirname, `../public/media/uid/${uid}/`);
-  const pidPath = path.resolve(__dirname, `../public/media/pid/${pid}/`);
-
-  if (fs.existsSync(uidPath)) {
-    fs.mkdirSync(pidPath)
-
-    const dir = fs.readdirSync(uidPath);
-    for (var i=0; i<dir.length; ++i) {
-      fs.renameSync(`${uidPath}/${dir[i]}`, `${pidPath}/${dir[i]}`);
-    }
-    fs.rmdirSync(uidPath);
   } else {
     return null;
   }

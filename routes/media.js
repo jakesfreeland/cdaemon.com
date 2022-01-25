@@ -7,38 +7,34 @@ const path = require("path");
 router.use(fileupload());
 
 router.post('/', (req, res) => {
-  uploadMedia(req.files.media, req.session.uid)
+  uploadMedia(req.files.media, req.session.pid)
   .then(() => res.sendStatus(200))
   .catch(err => res.send(err));
 });
 
 router.get("/:pid/:filename", (req, res) => {
-  const uidPath = path.resolve(__dirname, `../public/media/uid/${req.session.uid}/`);
   const pidPath = path.resolve(__dirname, `../public/media/pid/${req.params.pid}/`);
-  if (fs.existsSync(uidPath + '/' + req.params.filename)) {
-    res.sendFile(uidPath + '/' + req.params.filename);
-  } else if (fs.existsSync(pidPath + '/' + req.params.filename)) {
+  if (fs.existsSync(pidPath + '/' + req.params.filename))
     res.sendFile(pidPath + '/' + req.params.filename);
-  } else {
+  else
     res.sendStatus(404);
-  }
 });
 
-async function uploadMedia(media, uid) {
-  const uidPath = path.resolve(__dirname, `../public/media/uid/${uid}/`);
+async function uploadMedia(media, pid) {
+  const pidPath = path.resolve(__dirname, `../public/media/pid/${pid}/`);
 
-  if (!fs.existsSync(uidPath)) {
-    fs.mkdirSync(uidPath);
+  if (!fs.existsSync(pidPath)) {
+    fs.mkdirSync(pidPath);
   }
 
   if (media.length === undefined) {
     // mv is not async but returns promise
-    media.mv(uidPath + '/' + media.name)
+    media.mv(pidPath + '/' + media.name)
     .catch(err => console.log(err));
   } else {
     for (var i=0; i<media.length; ++i) {
       // mv is not async but returns promise
-      media[i].mv(uidPath + '/' + media[i].name)
+      media[i].mv(pidPath + '/' + media[i].name)
       .catch(err => console.log(err));
     }
   }
