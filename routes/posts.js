@@ -34,7 +34,7 @@ router.route("/editor")
       res.sendStatus(403);
     }
   } else {
-    req.session.return = "/posts/editor";
+    req.session.returnTo = "/posts/editor";
     res.redirect("/users/login");
   }
 })

@@ -13,8 +13,13 @@ router.route("/signup")
     .then(uid => {
       req.session.username = req.body.username;
       req.session.uid = uid;
-      res.redirect(req.session.return || '/');
-      req.session.return = null;
+      if (req.session.returnTo) {
+        const returnTo = req.session.returnTo;
+        req.session.returnTo = null;
+        res.redirect(returnTo);
+      } else {
+        res.redirect('/');
+      }
     })
     .catch(err => res.send(err));
   } else {
@@ -33,9 +38,13 @@ router.route("/login")
       req.session.username = auth.username;
       req.session.uid = auth.uid;
       if (auth.admin) req.session.admin = 1;
-      res.redirect(req.session.return || '/');
-      // THIS DOES NOT WORK?
-      req.session.return = null;
+      if (req.session.returnTo) {
+        const returnTo = req.session.returnTo;
+        req.session.returnTo = null;
+        res.redirect(returnTo);
+      } else {
+        res.redirect('/');
+      }
     })
     .catch(err => res.sendStatus(401));
   } else {
