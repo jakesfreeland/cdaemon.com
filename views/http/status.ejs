@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>404 (Not Found) - Verdaemon</title>
+    <title><%= locals.code || "Error" %> - Verdaemon</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/styles/skeleton.css">
     <link rel="stylesheet" href="/fonts/opensans/css/all.css">
@@ -14,8 +14,7 @@
     <header id="included-header"></header>
 
     <main>
-      <p>Oops! That's an error 404.</p>
-      <p><%= locals.url || "Page" %> not found!</p>
+      <p><%= locals.message || "Something went wrong. Try again later." %></p>
     </main>
 
     <footer id="included-footer"></footer>

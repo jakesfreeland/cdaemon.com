@@ -62,7 +62,10 @@ router.route("/:uid")
   .then(posts => { if (posts[0].author) res.render("users/user", { posts: posts, uid: req.session.uid }) })
   .catch(err => {
     res.status(404);
-    res.render("http/404", { url: `Posts by user id: ${req.url}` });
+    res.render("http/status", {
+      code: "404",
+      message: `No posts by user with id: ${req.url} found.`
+    });
   });
 });
 

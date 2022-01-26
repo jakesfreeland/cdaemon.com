@@ -37,7 +37,13 @@ app.get('/', (req, res) => {
     else
       throw "posts not found";
   })
-  .catch(err => res.status(503).render("http/503"));
+  .catch(err => {
+    res.status(503);
+    res.render("http/status", {
+      code: "503",
+      message: "Verdaemon is currently down for maintenance. Try again later."
+    });
+  });
 });
 
 app.get("/projects", (req, res) => {
@@ -59,7 +65,10 @@ app.use("/tags", tagsRouter);
 
 app.use((req, res) => {
   res.status(404);
-  res.render("http/404", { url: req.url });
+  res.render("http/status", {
+    code: "404", 
+    message: `Error 404. ${req.url} not found.`
+  });
 });
 
 app.listen(3000);

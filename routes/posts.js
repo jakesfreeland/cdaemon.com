@@ -73,7 +73,10 @@ router.route("/:pid")
   })
   .catch(err => {
     res.status(404);
-    res.render("http/404.ejs", { url: `Post with id ${req.url}` });
+    res.render("http/status", {
+      code: "404",
+      message: `Post with id: ${req.url} not found.`
+    });
   })
 })
 .delete((req, res) => {
