@@ -8,12 +8,10 @@
     <link rel="stylesheet" href="/styles/markdown.css">
     <link rel="stylesheet" href="/fonts/opensans/css/all.css">
     <link rel="stylesheet" href="/fonts/fontawesome/css/all.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="/scripts/skeleton.js"></script>
   </head>
 
   <body>
-    <header id="included-header"></header>
+    <header><%- include("../partials/header") -%></header>
 
     <main>
       <section class="intro" style="background-image: url('/media/<%= post.pid %>/<%= post.banner %>');">
@@ -38,6 +36,6 @@
       </section>
     </main>
 
-    <footer id="included-footer"></footer>
+    <footer><%- include("../partials/footer") -%></footer>
   </body>
 </html>
