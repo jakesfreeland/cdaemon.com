@@ -1,5 +1,5 @@
 {
-  "name": "blog.technologyfriends.net",
+  "name": "verdaemon.com",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -8,15 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jakesfreeland/blog.technologyfriends.net.git"
+    "url": "git+https://github.com/jakesfreeland/verdaemon.com.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Jake Freeland",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jakesfreeland/blog.technologyfriends.net/issues"
+    "url": "https://github.com/jakesfreeland/verdaemon.com/issues"
   },
-  "homepage": "https://github.com/jakesfreeland/blog.technologyfriends.net#readme",
+  "homepage": "https://github.com/jakesfreeland/verdaemon.com#readme",
   "dependencies": {
     "body-parser": "^1.19.1",
     "cookie-session": "^2.0.0",
