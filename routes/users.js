@@ -3,29 +3,36 @@ const router = express.Router();
 const crypto = require("crypto").webcrypto;
 const db = require("../user_modules/db.cjs");
 
-router.route("/signup")
-.get((req, res) => {
-  res.render("users/signup");
-})
-.post((req, res) => {
-  if (req.body.username && req.body.password && req.body.email) {
-    createUser(req.body.username, req.body.password, req.body.email)
-    .then(uid => {
-      req.session.username = req.body.username;
-      req.session.uid = uid;
-      if (req.session.returnTo) {
-        const returnTo = req.session.returnTo;
-        req.session.returnTo = null;
-        res.redirect(returnTo);
-      } else {
-        res.redirect('/');
-      }
-    })
-    .catch(err => res.send(err));
-  } else {
-    res.send("Missing Parameter");
-  }
-});
+/* 
+ * TODO: user signup is functional but incomplete.
+ * Any user could sign up and be able to post.
+ * This is not intentional behavior.
+ * Come back when post comments are implemented.
+ */
+
+// router.route("/signup")
+// .get((req, res) => {
+//   res.render("users/signup");
+// })
+// .post((req, res) => {
+//   if (req.body.username && req.body.password && req.body.email) {
+//     createUser(req.body.username, req.body.password, req.body.email)
+//     .then(uid => {
+//       req.session.username = req.body.username;
+//       req.session.uid = uid;
+//       if (req.session.returnTo) {
+//         const returnTo = req.session.returnTo;
+//         req.session.returnTo = null;
+//         res.redirect(returnTo);
+//       } else {
+//         res.redirect('/');
+//       }
+//     })
+//     .catch(err => res.send(err));
+//   } else {
+//     res.send("Missing Parameter");
+//   }
+// });
 
 router.route("/login")
 .get((req, res) => {
@@ -59,7 +66,10 @@ router.get("/uid", (req, res) => {
 router.route("/:uid")
 .get((req, res) => {
   db.getValueData("blog_posts", "post", "uid", req.params.uid)
-  .then(posts => { if (posts[0].author) res.render("users/user", { posts: posts, uid: req.session.uid }) })
+  .then(posts => {
+    if (posts[0].author)
+      res.render("users/user", { posts: posts, uid: req.session.uid, admin: req.session.admin })
+  })
   .catch(err => {
     res.status(404);
     res.render("http/status", {

@@ -7,7 +7,7 @@ const db = require("../user_modules/db.cjs");
 router.get('/', (req, res) => {
   db.showTables("blog_tags")
   .then(tables => {
-    res.render("posts/posts", { tags: tables, admin: req.session.admin });
+    res.render("posts/posts", { tags: tables, uid: req.session.admin });
   })
   .catch(console.log);
 });
@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
 router.get("/archive", (req, res) => {
   db.getOrderedData("blog_posts", "post", "date", "desc")
   .then(posts => {
-    res.render("posts/archive", { posts: posts, admin: req.session.admin });
+    res.render("posts/archive", { posts: posts, uid: req.session.uid });
   })
   .catch(console.log);
 });
@@ -23,20 +23,16 @@ router.get("/archive", (req, res) => {
 router.route("/editor")
 .get((req, res) => {
   if (req.session.uid) {
-    if (req.session.admin) {
-      if (!req.session.pid) {
-        getID()
-        .then(pid => {
-          req.session.pid = pid;
-          // session variables expect a following response
-          res.render("posts/editor", { author: req.session.username });
-        })
-        .catch(console.log);
-      } else {
+    if (!req.session.pid) {
+      getID()
+      .then(pid => {
+        req.session.pid = pid;
+        // session variables expect a following response
         res.render("posts/editor", { author: req.session.username });
-      }
+      })
+      .catch(console.log);
     } else {
-      res.status(403).send("incorrect username or password");
+      res.render("posts/editor", { author: req.session.username });
     }
   } else {
     req.session.returnTo = "/posts/editor";
