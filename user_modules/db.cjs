@@ -1,5 +1,5 @@
 require('dotenv').config();
-const mariadb = require("mariadb");
+const mariadb = require(`mariadb`);
 
 let pool = mariadb.createPool({
   host: process.env.DB_HOST,
@@ -12,12 +12,13 @@ module.exports = {
   sendData: async function sendData(database, table, columns, data, replace=false) {
     if (Array.isArray(columns) && Array.isArray(data)) {
       columns = columns.join(", ");
+
       for (var i=0; i<data.length; ++i) {
-        data[i] = `'${data[i]}'`;
+        data[i] = pool.escape(data[i]);
       }
       data = data.join(", ");
     } else {
-      data = `'${data}'`;
+      data = pool.escape(data);
     }
 
     try {
@@ -53,7 +54,16 @@ module.exports = {
   getValueData: async function getValueData(database, table, column, value) {
     try {
       var conn = await pool.getConnection();
-      return await conn.query(`SELECT * FROM ${database}.${table} WHERE ${column}="${value}"`);
+      return await conn.query(`SELECT * FROM ${database}.${table} WHERE ${column}=?`, [value]);
+    } finally {
+      if (conn) conn.close();
+    }
+  },
+
+  dropValueData: async function dropValueData(database, table, column, value) {
+    try {
+      var conn = await pool.getConnection();
+      return await conn.query(`DELETE FROM ${database}.${table} WHERE ${column}=?`, [value]);
     } finally {
       if (conn) conn.close();
     }
@@ -95,10 +105,19 @@ module.exports = {
     }
   },
 
-  dropValueData: async function dropTable(database, table, column, value) {
+  getTableCount: async function getTableCount(database, table) {
     try {
       var conn = await pool.getConnection();
-      return await conn.query(`DELETE FROM ${database}.${table} WHERE ${column}='${value}'`);
+      return await conn.query(`SELECT COUNT(*) FROM ${database}.${table}`);
+    } finally {
+      if (conn) conn.close();
+    }
+  },
+
+  dropTable: async function dropTable(database, table) {
+    try {
+      var conn = await pool.getConnection();
+      return await conn.query(`DROP TABLE ${database}.${table}`);
     } finally {
       if (conn) conn.close();
     }

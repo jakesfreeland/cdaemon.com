@@ -7,7 +7,7 @@ router.get("/:tag", (req, res) => {
   .then(posts => res.render("tags/tag", { tag: req.params.tag, posts: posts }))
   .catch(err => {
     res.status(404);
-    res.render("http/404.ejs", { url: `Tag ${req.url}` });
+    res.render("http/status.ejs", { message: `No posts with tag: ${req.url}` });
   });
 });
 

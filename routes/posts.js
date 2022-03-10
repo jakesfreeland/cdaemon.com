@@ -63,6 +63,7 @@ router.route("/editor/:pid")
     .then(post => { 
       let author, uid;
 
+      /* check if post already exists */
       if (post[0]) {
         if (post[0].uid == req.session.uid || req.session.admin) {
           author = post[0].author;
@@ -95,7 +96,8 @@ router.route("/:pid")
   .then(post => {
     res.render("posts/post", {
       title: post[0].title,
-      body: markdown.parse(post[0].body),
+      /* sanitization to mitigate XSS */
+      body: DOMPurify.sanitize(markdown.parse(post[0].body)),
       tags: post[0].tags.split(','),
       banner: post[0].banner,
       author: post[0].author,
@@ -110,7 +112,7 @@ router.route("/:pid")
       code: "404",
       message: `Post with id: ${req.url} not found.`
     });
-  })
+  });
 })
 .delete((req, res) => {
   db.getValueData("blog_posts", "post", "pid", req.params.pid)
@@ -125,12 +127,7 @@ router.route("/:pid")
 async function uploadPost(title, body, tags, banner, author, uid, pid) {
   const date = getDate();
 
-  /* DOM sanitization to mitigate XSS */
-  title = DOMPurify.sanitize(title);
-  body = DOMPurify.sanitize(body);
-  tags = DOMPurify.sanitize(tags).toLowerCase();
-  banner = DOMPurify.sanitize(banner);
-
+  tags = tags.toLowerCase();
   await db.sendData("blog_posts", "post",
     ["title", "body", "tags", "banner", "author", "uid", "pid", "date"],
     [title, body, tags, banner, author, uid, pid, date],
@@ -146,11 +143,11 @@ async function uploadTags(tags, pid) {
     tags = tags.split(',');
 
     for (var i=0; i<tags.length; ++i) {
-      tags[i] = tags[i].trim();
+      /* sanitization to escape SQL injection */
+      tags[i] = `\`${tags[i].trim()}\``;
+
       try {
         await db.createTable("blog_tags", tags[i], "pid", "char(8)");
-      } catch (err) {
-        console.log(err);
       } finally {
         await db.sendData("blog_tags", tags[i], "pid", pid, replace=true);
       }
@@ -193,18 +190,26 @@ function formatDate(dateObj) {
 }
 
 async function deletePost(post, uid, admin) {
+  var count;
+
   if (post[0].uid === uid || admin) {
     if (post[0].tags) {
       const tags = post[0].tags.split(',');
 
-      for (var i=0; i<tags.length; ++i)
-        await db.dropValueData("blog_tags", tags[i], "pid", post[0].pid);
+      for (var i=0; i<tags.length; ++i) {
+        await db.dropValueData("blog_tags", `\`${tags[i]}\``, "pid", post[0].pid);
+        
+        /* delete tag if no subposts are found */
+        count = (await db.getTableCount("blog_tags", `\`${tags[i]}\``))[0]["COUNT(*)"];
+        if (count == 0)
+          db.dropTable("blog_tags", `\`${tags[i]}\``);
+      }
     }
     
     db.dropValueData("blog_posts", "post", "pid", post[0].pid);
     fs.rmSync(path.resolve(__dirname, `../public/media/pid/${post[0].pid}`), { recursive: true });
-    
-    return "post deleted";
+
+    return "deleted";
   } else {
     throw "forbidden";
   }

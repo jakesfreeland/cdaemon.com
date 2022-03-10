@@ -10,29 +10,29 @@ const db = require("../user_modules/db.cjs");
  * Come back when/if post comments are implemented.
  */
 
-// router.route("/signup")
-// .get((req, res) => {
-//   res.render("users/signup");
-// })
-// .post((req, res) => {
-//   if (req.body.username && req.body.password && req.body.email) {
-//     createUser(req.body.username, req.body.password, req.body.email)
-//     .then(uid => {
-//       req.session.username = req.body.username;
-//       req.session.uid = uid;
-//       if (req.session.returnTo) {
-//         const returnTo = req.session.returnTo;
-//         req.session.returnTo = null;
-//         res.redirect(returnTo);
-//       } else {
-//         res.redirect('/');
-//       }
-//     })
-//     .catch(err => res.send(err));
-//   } else {
-//     res.send("Missing Parameter");
-//   }
-// });
+router.route("/signup")
+.get((req, res) => {
+  res.render("users/signup");
+})
+.post((req, res) => {
+  if (req.body.username && req.body.password && req.body.email) {
+    createUser(req.body.username, req.body.password, req.body.email)
+    .then(uid => {
+      req.session.username = req.body.username;
+      req.session.uid = uid;
+      if (req.session.returnTo) {
+        const returnTo = req.session.returnTo;
+        req.session.returnTo = null;
+        res.redirect(returnTo);
+      } else {
+        res.redirect('/');
+      }
+    })
+    .catch(err => res.send(err));
+  } else {
+    res.send("Missing Parameter");
+  }
+});
 
 router.route("/login")
 .get((req, res) => {
