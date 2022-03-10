@@ -143,7 +143,7 @@ async function uploadTags(tags, pid) {
     tags = tags.split(',');
 
     for (var i=0; i<tags.length; ++i) {
-      /* sanitization to escape SQL injection */
+      /* escape SQL injection by surrounding table name with backticks */
       tags[i] = `\`${tags[i].trim()}\``;
 
       try {
