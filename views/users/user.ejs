@@ -24,8 +24,9 @@
             <p>By <a href="/users/<%= posts[i].uid %>"><%= posts[i].author %></a></p>
           </div>
           <% if (posts[i].uid === uid || admin) { %>
-            <div class="delete-post" id="<%= posts[i].pid %>">
-              <i class="far fa-trash-alt"></i>
+            <div class="post-options">
+              <i class="fa-regular fa-pen-to-square edit-post" id="<%= posts[i].pid %>"></i>
+              <i class="far fa-trash-alt delete-post" id="<%= posts[i].pid %>"></i>
             </div>
           <% } %>
         </div>

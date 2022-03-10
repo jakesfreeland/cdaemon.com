@@ -5,3 +5,9 @@ document.querySelectorAll(".delete-post").forEach(post =>
     .catch(console.log);
   })
 );
+
+document.querySelectorAll(".edit-post").forEach(post => 
+  post.addEventListener("click", () => {
+    window.location.href = `/posts/editor/${post.id}`;
+  })
+);

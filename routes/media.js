@@ -6,8 +6,8 @@ const path = require("path");
 
 router.use(fileupload());
 
-router.post('/', (req, res) => {
-  uploadMedia(req.files.media, req.session.pid)
+router.post('/upload/:pid', (req, res) => {
+  uploadMedia(req.files.media, req.params.pid)
   .then(() => res.sendStatus(200))
   .catch(err => res.send(err));
 });

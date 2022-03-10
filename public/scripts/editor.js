@@ -90,7 +90,7 @@ async function uploadMedia(media) {
       fileNames.push(media[i].name);
     }
 
-    await fetch("/media", {
+    await fetch(`/media/upload/${getPID()}`, {
       method: "POST",
       body: formData
     });
@@ -102,7 +102,7 @@ async function uploadMedia(media) {
 }
 
 async function insertTemplate(fileNames) {
-  const pid = await getPID();
+  const pid = getPID();
   for (var i=0; i<fileNames.length; ++i) {
     fileNames[i] = `![](/media/${pid}/${encodeURIComponent(fileNames[i])})`;
   }
@@ -111,6 +111,6 @@ async function insertTemplate(fileNames) {
   return mdNames;
 }
 
-async function getPID() {
-  return (await (await fetch("/posts/pid")).json()).pid;
+function getPID() {
+  return window.location.pathname.split('/').pop();
 }

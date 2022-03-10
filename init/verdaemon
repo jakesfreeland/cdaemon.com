@@ -22,7 +22,7 @@ stop_cmd="${name}_stop"
 
 verdaemon_prestart() {
 	PATH="$PATH:/usr/sbin:/usr/bin:/usr/local/bin"
-	export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/lib:/usr/lib:/usr/local/lib"
+	LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/lib:/usr/lib:/usr/local/lib"
 	export NODE_ENV="production"
 }
 

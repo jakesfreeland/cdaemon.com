@@ -7,7 +7,7 @@ const db = require("../user_modules/db.cjs");
  * TODO: user signup is functional but incomplete.
  * Any user could sign up and be able to post.
  * This is not intentional behavior.
- * Come back when post comments are implemented.
+ * Come back when/if post comments are implemented.
  */
 
 // router.route("/signup")

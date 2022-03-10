@@ -15,19 +15,23 @@
 
     <main>
         <section class="content">
-          <form action="/posts/editor" method="post" id="publish-form" autocomplete="off" spellcheck="true">
-            <input name="title" class="title" placeholder="Title" maxlength="64" autofocus />
+          <form method="post" id="publish-form" autocomplete="off" spellcheck="true">
+
+            <!-- title -->
+            <input name="title" class="title" placeholder="Title" maxlength="64" autofocus <% if (locals.post) { %> value="<%= post[0].title %>" <% } %>/>
             <hr class=rounded>
-            <textarea id="body-md" class="body" placeholder="Body (markdown supported)"></textarea>
-            <hr class="rounded">
-            <input name="tags" class="tags" placeholder="Tags (comma seperated)" maxlength="64" />
+
+            <!-- body -->
+            <textarea name="body" id="body-md" class="body" placeholder="Body (markdown supported)"><% if (locals.post) { %><%= post[0].body %><% } %></textarea>
             <hr class="rounded">
 
-            <!-- form-submitted body HTML -->
-            <textarea name="body" id="body-html" hidden></textarea>
+            <!-- tags -->
+            <input name="tags" class="tags" placeholder="Tags (comma seperated)" maxlength="64" <% if (locals.post) { %> value="<%= post[0].tags %>" <% } %>/>
+            <hr class="rounded">
 
-            <!-- form-submitted banner -->
-            <input name="banner" class="banner" maxlength="256" hidden />
+            <!-- banner -->
+            <input name="banner" class="banner" maxlength="256" hidden <% if (locals.post) { %> value="<%= post[0].banner %>" <% } %>/>
+
           </form>
         </section>
 
@@ -38,7 +42,7 @@
             <i id="retract-caret" class="fas fa-caret-up" style="display: none"></i>
           </div>
           <div class="preview-content markdown-themify" hidden>
-            <div class="intro">
+            <div class="intro" <% if (locals.post) { %> style="background-image: url(/media/<%= post[0].pid %>/<%= post[0].banner %>);" <% } %>>
               <h1 id="title-preview" class="title-preview"></h1>
             </div>
             <p id="body-preview" class="body-preview"></p>

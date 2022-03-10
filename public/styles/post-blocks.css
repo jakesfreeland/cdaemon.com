@@ -62,7 +62,9 @@ main {
   font-size: 0.8em;
 }
 
-.delete-post {
+.post-options {
+  display: flex;
+  gap: 8px;
   color: #fff;
   margin-right: 16px;
 }

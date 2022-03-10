@@ -20,12 +20,15 @@
   "dependencies": {
     "body-parser": "^1.19.1",
     "cookie-session": "^2.0.0",
+    "dompurify": "^2.3.6",
     "dotenv": "^14.3.0",
     "ejs": "^3.1.6",
     "express": "^4.17.2",
     "express-fileupload": "^1.2.1",
     "helmet": "^5.0.1",
-    "mariadb": "^2.5.5"
+    "jsdom": "^19.0.0",
+    "mariadb": "^2.5.5",
+    "markdown-wasm": "^1.2.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
