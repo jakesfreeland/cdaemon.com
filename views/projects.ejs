@@ -21,7 +21,16 @@
         color: #5a5a5a;
       }
 
-      .info {
+      .subject a {
+        text-decoration: none;
+        font-family: "opensans-bold";
+      }
+
+      .subject a:hover {
+        text-decoration: underline;
+      }
+
+      .spaced-block {
         display: flex;
         flex-direction: column;
         gap: 8px;
@@ -33,43 +42,33 @@
     <header><%- include("partials/header") -%></header>
 
     <main>
-      <div class="project">
-        <h1>Wayland Compositor</h1>
+      <h1>Verdaemon Projects</h1>
+
+      <div>
+        <h2 class="subject"><a href="https://github.com/jakesfreeland/waytoi/">Waytoi</a></h2>
         <hr>
-
-        <div class="info">
-          <p>
-            Wayland is a fantastic protocol, and even in its early stages it seems
-            the clear replacement for the atavistic X protocol that is still commonplace
-            today. Unfortunately, applications that support Wayland tend to be less
-            stable and to have less extensive documentation than their time-tested X
-            counterparts. The goal of this project is to create a simple, high-quality,
-            well-documented Wayland compositor that will provide the Wayland community
-            with the tools it needs to realize its potential.
-          </p>
-
-          <div>
-            <h3>Goals</h3>
-            <p>
-              This project aims to accomplish the following:
-              <ul>
-                <li>Do this</li>
-                <li>Do this, but without doing that</li>
-                <li>Achieve this with these restrictions</li>
-                <li>Reach these users</li>
-              </ul>
-            </p>
-          </div>
-
-          <div>
-            <h3>Contributions</h3>
-            <p>
-              The Git repository for [name] can be found <a href="">here</a>.
-              Pull requests and contributions of any kind are greatly appreciated. Visit
-              our contact page to learn how to get in touch.
-            </p>
-          </div>
+        <div class="spaced-block">
+          <p>A modular Wayland compositor and tiling window manager</p>
         </div>
+      </div>
+
+      <div>
+        <h2 class="subject"><a href="https://github.com/jakesfreeland/verdaemon.com/">Verdaemon Web Blog</a></h2>
+        <hr>
+        <div class="spaced-block">
+          <p>
+            You're here now! Verdaemon has released a series of blog posts on how to replicate
+            this website's infrastructure <a href="/tags/verdaemon">here</a>.
+          </p>
+        </div>
+      </div>
+
+      <div>
+        <h2>Contributions</h2>
+        <p>
+          Pull requests and contributions of any kind are greatly appreciated.
+          Visit our contact page to get in touch.
+        </p>
       </div>
     </main>
 

@@ -21,7 +21,16 @@
         color: #5a5a5a;
       }
 
-      .info {
+      .subject a {
+        text-decoration: none;
+        font-family: "opensans-bold";
+      }
+
+      .subject a:hover {
+        text-decoration: underline;
+      }
+
+      .spaced-block {
         display: flex;
         flex-direction: column;
         gap: 8px;
@@ -34,34 +43,26 @@
     <header><%- include("partials/header") -%></header>
 
     <main>
-      <div class="person">
-        <h1>Jake Freeland</h1>
+      <h1>Contact Information</h1>
+
+      <div>
+        <h2 class="subject"><a href="/user/jakesfreeland">Jake Freeland</a></h2>
         <hr>
-        <div class="info">
-          <p>
-            [desc]
-          </p>
+        <div class="spaced-block">
+          <p>Lead developer and experienced sysadmin</p>
           <ul>
             <li>Email: jakesfreeland@gmail.com</li>
-            <li>Email: jake@technologyfriends.net</li>
-            <li>Eth: 424hgkj546ghk4hg6hg45k6</li>
+            <li>Business Inquiries: jake@technologyfriends.net</li>
           </ul>
         </div>
       </div>
 
-      <div class="person">
-        <h1>Eric Frederickson</h1>
+      <div>
+        <h2>Contributors</h2>
         <hr>
-        <div class="info">
-          <p>
-            Hi, my name is Eric Frederickson. I'm currently a freshman compsci student
-            at the University of Minnesota, interested in Vim, Linux, C, teaching, and
-            everything in between. Feel free to contact me via the methods listed below,
-            and I will respond as soon as I am able.
-          </p>
-          <ul>
-            <li>email: ericfrederickson68@gmail.com</li>
-            <li>btc: 2718bswnxsaojcsjawhqiuhw</li>
+        <div class="spaced-block">
+          <ul class="subject">
+            <li>Eric Frederickson &lt;ericfrederickson68@gmail.com&gt;</li>
           </ul>
         </div>
       </div>
