@@ -18,6 +18,7 @@
         <div class="intro-text">
           <h1><%= title %></h1>
           <h5>By <a href="/users/<%= username %>"><%= author %></a> on <%= date %></h5>
+          <% if (edit_date) { %> <h5>Edited on <%= edit_date %></h5> <% } %>
         </div>
       </section>
 

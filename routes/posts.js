@@ -31,11 +31,30 @@ router.route("/new")
   if (req.session.username) {
     getID()
     .then(pid => {
-      res.redirect(`/posts/editor/${pid}`);
+      res.redirect(`/posts/editor/new/${pid}`);
     })
     .catch(console.log);
   } else {
     res.redirect("/users/login");
+  }
+});
+
+router.route("/editor/new/:pid")
+.get((req, res) => { 
+  if (req.session.username) {
+    res.render("posts/editor", { author: req.session.firstname + " " + req.session.lastname });
+  } else {
+    res.redirect("/users/login");
+  }
+})
+.post((req, res) => {
+  if (req.body.title && req.body.body && req.body.banner && req.session.username) {
+    uploadPost(req.body.title, req.body.body, req.body.tags, req.params.pid,
+      req.body.banner, req.session.username, req.session.firstname, req.session.lastname)
+    .then(() => res.redirect(`/posts/${req.params.pid}`))
+    .catch(err => res.sendStatus(500));
+  } else {
+    res.sendStatus(400);
   }
 });
 
@@ -45,12 +64,15 @@ router.route("/editor/:pid")
     db.getValueData("blog_posts", "post", "pid", req.params.pid)
     .then(post => {
       if (post[0]) {
-        res.render("posts/editor", { author: post[0].firstname + " " + post[0].lastname, post: post });
+        if (post[0].username == req.session.username || req.session.admin)
+          res.render("posts/editor", { editor: req.session.firstname + " " + req.session.lastname, post: post });
+        else
+          res.status(403).redirect("http/status", { code: 403, message: "forbidden" });
       } else {
-        res.render("posts/editor", { author: req.session.firstname + " " + req.session.lastname });
+        res.status(404).render("http/status", { code: 404, message: "not found" });
       }
     })
-    .catch(console.log);
+    .catch(err => res.status(500).render("http/status", { code: 500, message: "internal server error" }));
   } else {
     res.redirect("/users/login");
   }
@@ -59,31 +81,18 @@ router.route("/editor/:pid")
   if (req.body.title && req.body.body && req.body.banner && req.session.username) {
     db.getValueData("blog_posts", "post", "pid", req.params.pid)
     .then(post => { 
-      let username, firstname, lastname;
-
-      /* check if post already exists */
-      if (post[0]) {
-        if (post[0].username == req.session.username || req.session.admin) {
-          username = post[0].username;
-          firstname = post[0].firstname;
-          lastname = post[0].lastname;
-        } else {
-          throw "forbidden";
-        }
+      if (post[0].username == req.session.username || req.session.admin) {
+        editPost(req.body.title, req.body.body, req.body.tags, req.params.pid, req.body.banner)
+        .then(() => res.redirect(`/posts/${req.params.pid}`))
+        .catch(console.log)
+        .catch(err => res.status(500).render("http/status", { code: 500, message: "internal server error" }));
       } else {
-        username = req.session.username;
-        firstname = req.session.firstname;
-        lastname = req.session.lastname;
+        res.status(403).redirect("http/status", { code: 403, message: "forbidden" });
       }
-
-      uploadPost(req.body.title, req.body.body, req.body.tags, req.body.banner,
-                 username, req.params.pid, firstname, lastname)
-      .then(() => res.redirect(`/posts/${req.params.pid}`))
-      .catch(err => res.sendStatus(500));
     })
-    .catch(err => res.sendStatus(403));
+    .catch(err => res.status(500).render("http/status", { code: 500, message: "internal server error" }));
   } else {
-    res.sendStatus(400);
+    res.status(400).render("http/status", { code: 400, message: "bad request" });
   }
 });
 
@@ -100,7 +109,8 @@ router.route("/:pid")
       author: post[0].firstname + " " + post[0].lastname,
       pid: post[0].pid,
       username: post[0].username,
-      date: formatDate(post[0].date)
+      date: formatDate(post[0].date),
+      edit_date: formatDate(post[0].edit_date)
     });
   })
   .catch(err => {
@@ -121,14 +131,26 @@ router.route("/:pid")
   .catch(err => res.sendStatus(404));
 });
 
-async function uploadPost(title, body, tags, banner, username, pid, firstname, lastname) {
+async function uploadPost(title, body, tags, pid, banner, username, firstname, lastname) {
   const date = getDate();
 
   tags = tags.toLowerCase();
-  await db.sendData("blog_posts", "post",
-    ["title", "body", "tags", "banner", "username", "pid", "date", "firstname", "lastname"],
-    [title, body, tags, banner, username, pid, date, firstname, lastname],
-    replace = true);
+  await db.insertData("blog_posts", "post",
+    ["title", "body", "date", "tags", "pid", "banner", "username", "firstname", "lastname"],
+    [title, body, date, tags, pid, banner, username, firstname, lastname])
+  
+  await uploadTags(tags, pid);
+
+  return;
+}
+
+async function editPost(title, body, tags, pid, banner) {
+  const editDate = getDate();
+
+  tags = tags.toLowerCase();
+  await db.updatePost("blog_posts", "post",
+    ["title", "body", "edit_date", "tags", "pid", "banner"],
+    [title, body, editDate, tags, pid, banner]);
   
   await uploadTags(tags, pid);
 
@@ -146,7 +168,7 @@ async function uploadTags(tags, pid) {
       try {
         await db.createTable("blog_tags", tags[i], "pid", "char(8)");
       } finally {
-        await db.sendData("blog_tags", tags[i], "pid", pid, replace=true);
+        await db.replaceData("blog_tags", tags[i], "pid", pid);
       }
     }
 
@@ -180,10 +202,14 @@ function getDate() {
 }
 
 function formatDate(dateObj) {
-  const options = { year: "numeric", month: "long", day: "numeric"};
-  const date = dateObj.toLocaleDateString(undefined, options);
+  if (dateObj == null) {
+    return null;
+  } else {
+    const options = { year: "numeric", month: "long", day: "numeric"};
+    const date = dateObj.toLocaleDateString(undefined, options);
 
-  return date;
+    return date;
+  }
 }
 
 async function deletePost(post, username, admin) {

@@ -9,7 +9,7 @@ let pool = mariadb.createPool({
 });
 
 module.exports = {
-  sendData: async function sendData(database, table, columns, data, replace=false) {
+  insertData: async function insertData(database, table, columns, data) {
     if (Array.isArray(columns) && Array.isArray(data)) {
       columns = columns.join(", ");
 
@@ -23,11 +23,27 @@ module.exports = {
 
     try {
       var conn = await pool.getConnection();
-      if (replace == false) {
-        return await conn.query(`INSERT INTO ${database}.${table} (${columns}) VALUES (${data})`);
-      } else {
-        return await conn.query(`REPLACE INTO ${database}.${table} (${columns}) VALUES (${data})`);
+      return await conn.query(`INSERT INTO ${database}.${table} (${columns}) VALUES (${data})`);
+    } finally {
+      if (conn) conn.close();
+    }
+  },
+
+  replaceData: async function replaceData(database, table, columns, data) {
+    if (Array.isArray(columns) && Array.isArray(data)) {
+      columns = columns.join(", ");
+
+      for (var i=0; i<data.length; ++i) {
+        data[i] = pool.escape(data[i]);
       }
+      data = data.join(", ");
+    } else {
+      data = pool.escape(data);
+    }
+
+    try {
+      var conn = await pool.getConnection();
+      return await conn.query(`REPLACE INTO ${database}.${table} (${columns}) VALUES (${data})`);
     } finally {
       if (conn) conn.close();
     }
@@ -118,6 +134,18 @@ module.exports = {
     try {
       var conn = await pool.getConnection();
       return await conn.query(`DROP TABLE ${database}.${table}`);
+    } finally {
+      if (conn) conn.close();
+    }
+  },
+
+  updatePost: async function updatePost(database, table, columns, data) {
+    try {
+      var conn = await pool.getConnection();
+      return await conn.query(`INSERT INTO ${database}.${table}
+                              (${columns[0], columns[1], columns[2], columns[3], columns[4], columns[5]}) VALUES (:title, :body, :edit_date, :tags, :pid, :banner) ON DUPLICATE KEY UPDATE ${columns[0]}=:title, ${columns[1]}=:body, ${columns[2]}=:edit_date, ${columns[3]}=:tags ${columns[4]}=:pid, ${columns[5]}=:banner`,
+                              {title: data[0], body: data[1], edit_date: data[2], tags: data[3],
+                               pid: data[4], banner: data[5]});
     } finally {
       if (conn) conn.close();
     }

@@ -59,7 +59,11 @@
             <button id="publish-btn">Publish</button>
           </div>
           <div class="options-author">
-            <p>Posting as <%= locals.author %></p>
+            <% if (locals.author) { %>
+              <p>Posting as <%= locals.author %></p>
+            <% } else if (locals.editor) { %>
+              <p>Posting as <%= locals.editor %></p>
+            <% } %>
           </div>
         </section>
 

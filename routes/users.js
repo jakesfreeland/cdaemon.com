@@ -72,7 +72,7 @@ router.route("/:username")
 async function createUser(firstname, lastname, username, email, password) {
   try {
     const digest = await hashData(password, username);
-    await db.sendData("blog_users", "user",
+    await db.insertData("blog_users", "user",
       ["firstname", "lastname", "username", "email", "password"],
       [firstname, lastname, username, email, digest]);
   } catch (err) {
