@@ -16,19 +16,18 @@ const db = require("../user_modules/db.cjs");
 // })
 // .post((req, res) => {
 //   if (req.body.username && req.body.password && req.body.email) {
-//     createUser(req.body.username, req.body.password, req.body.email)
-//     .then(uid => {
-//       req.session.username = req.body.username;
-//       req.session.uid = uid;
-//       if (req.session.returnTo) {
-//         const returnTo = req.session.returnTo;
-//         req.session.returnTo = null;
-//         res.redirect(returnTo);
-//       } else {
+//     if (req.body.email.match(".*@.*[.].*")) {
+//       createUser(req.body.firstname, req.body.lastname, req.body.username, req.body.email, req.body.password)
+//       .then(() => {
+//         req.session.username = req.body.username;
+//         req.session.firstname = req.body.firstname;
+//         req.session.lastname = req.body.lastname;
 //         res.redirect('/');
-//       }
-//     })
-//     .catch(err => res.send(err));
+//       })
+//       .catch(err => res.send(err));
+//     } else {
+//       res.send("Invalid email");
+//     }
 //   } else {
 //     res.send("Missing Parameter");
 //   }
@@ -43,99 +42,66 @@ router.route("/login")
     userLogin(req.body.email, req.body.password)
     .then(auth => {
       req.session.username = auth.username;
-      req.session.uid = auth.uid;
+      req.session.firstname = auth.firstname;
+      req.session.lastname = auth.lastname;
       if (auth.admin) req.session.admin = 1;
-      if (req.session.returnTo) {
-        const returnTo = req.session.returnTo;
-        req.session.returnTo = null;
-        res.redirect(returnTo);
-      } else {
-        res.redirect('/');
-      }
+      res.redirect('/');
     })
-    .catch(err => res.sendStatus(401));
+    .catch(err => res.send(err));
   } else {
     res.send("Missing parameter");
   }
 });
 
-router.get("/uid", (req, res) => {
-  res.send({ uid: req.session.uid });
-});
-
-router.route("/:uid")
+router.route("/:username")
 .get((req, res) => {
-  db.getValueData("blog_posts", "post", "uid", req.params.uid)
+  db.getValueData("blog_posts", "post", "username", req.params.username)
   .then(posts => {
-    if (posts[0].author)
-      res.render("users/user", { posts: posts, uid: req.session.uid, admin: req.session.admin })
+    if (posts[0].username)
+      res.render("users/user", { posts: posts, activeUser: req.session.username, admin: req.session.admin });
   })
   .catch(err => {
     res.status(404);
     res.render("http/status", {
       code: "404",
-      message: `No posts by user with id: ${req.url} found.`
+      message: `No posts by ${req.params.username} found.`
     });
   });
 });
 
-async function createUser(username, password, email) {
-  if (email.match(".*@.*[.].*")) {
-    username = username.replace("\'", "\\\'");
-    email = email.replace("\'", "\\\'");
-
-    const uid = await getUID();
-    const digest = await hashData(password, uid);
-
+async function createUser(firstname, lastname, username, email, password) {
+  try {
+    const digest = await hashData(password, username);
     await db.sendData("blog_users", "user",
-      ["username", "password", "email", "uid"],
-      [username, digest, email, uid]);
-    return uid;
-  } else {
-    throw "Invalid Email String";
+      ["firstname", "lastname", "username", "email", "password"],
+      [firstname, lastname, username, email, digest]);
+  } catch (err) {
+    throw "User with provided details already exists";
   }
+
+  return;
 }
 
 async function userLogin(email, password) {
-  email = email.replace("\'", "\\\'");
-  password = password.replace("\'", "\\\'");
+  try {
+    const userData = (await db.getValueData("blog_users", "user", "email", email))[0];
+    const stored_digest = userData.password;
+    const fresh_digest = await hashData(password, userData.username);
 
-  const userData = (await db.getValueData("blog_users", "user", "email", `${email}`))[0];
-  const stored_digest = userData.password;
-  const fresh_digest = await hashData(password, userData.uid);
-
-  if (stored_digest === fresh_digest) {
-    return userData;
-  } else {
-    throw "Incorrect Password";
+    if (stored_digest === fresh_digest)
+      return userData;
+  } catch (err) {
+    throw "incorrect username or password";
   }
 }
 
-async function getUID() {
-  let idGen = "";
-  const charPool = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  for (var i=0; i<8; i++) {
-    // concatenate pseudo-random position in charPool
-    idGen += charPool.charAt(Math.floor(Math.random() * 62));
-  }
-
-  const ids = await db.getColumnData("blog_users", "user", "uid");
-  // re-run getID() if idGen is present in database
-  if (ids.some(e => e.id === idGen)) {
-    return getUID();
-  } else {
-    return idGen;
-  }
-}
-
-async function hashData(data, salt=undefined) {
-  if (salt != undefined) {
-    data = data + salt;
-  }
+async function hashData(data, salt) {
+  data = data + salt;
   const encData = new TextEncoder().encode(data);
   const hashBuf = await crypto.subtle.digest("SHA-384", encData);
   const hashArr = Array.from(new Uint8Array(hashBuf));
   const hashHex = hashArr.map(b => b.toString(16).padStart(2, '0')).join('');
+
   return hashHex;
 }
 
