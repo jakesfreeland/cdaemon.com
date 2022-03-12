@@ -49,6 +49,26 @@ module.exports = {
     }
   },
 
+  updatePost: async function updatePost(database, table, columns, data, condition) {
+    var update;
+    if (Array.isArray(columns) && Array.isArray(data)) {
+      update = "";
+      for (var i=0; i<data.length; ++i)
+        update += `${columns[i]}=${pool.escape(data[i])},`;
+    } else {
+      update = `${columns}=${pool.escape(data)}`;
+    }
+
+    try {
+      var conn = await pool.getConnection();
+      return await conn.query(`UPDATE ${database}.${table}
+                               SET ${update.slice(0, -1)}
+                               WHERE ${condition[0]}=${pool.escape(condition[1])}`);
+    } finally {
+      if (conn) conn.close();
+    }
+  },
+
   getData: async function getData(database, table) {
     try {
       var conn = await pool.getConnection();
@@ -134,18 +154,6 @@ module.exports = {
     try {
       var conn = await pool.getConnection();
       return await conn.query(`DROP TABLE ${database}.${table}`);
-    } finally {
-      if (conn) conn.close();
-    }
-  },
-
-  updatePost: async function updatePost(database, table, columns, data) {
-    try {
-      var conn = await pool.getConnection();
-      return await conn.query(`INSERT INTO ${database}.${table}
-                              (${columns[0], columns[1], columns[2], columns[3], columns[4], columns[5]}) VALUES (:title, :body, :edit_date, :tags, :pid, :banner) ON DUPLICATE KEY UPDATE ${columns[0]}=:title, ${columns[1]}=:body, ${columns[2]}=:edit_date, ${columns[3]}=:tags ${columns[4]}=:pid, ${columns[5]}=:banner`,
-                              {title: data[0], body: data[1], edit_date: data[2], tags: data[3],
-                               pid: data[4], banner: data[5]});
     } finally {
       if (conn) conn.close();
     }

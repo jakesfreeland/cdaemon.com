@@ -137,7 +137,7 @@ async function uploadPost(title, body, tags, pid, banner, username, firstname, l
   tags = tags.toLowerCase();
   await db.insertData("blog_posts", "post",
     ["title", "body", "date", "tags", "pid", "banner", "username", "firstname", "lastname"],
-    [title, body, date, tags, pid, banner, username, firstname, lastname])
+    [title, body, date, tags, pid, banner, username, firstname, lastname]);
   
   await uploadTags(tags, pid);
 
@@ -149,8 +149,9 @@ async function editPost(title, body, tags, pid, banner) {
 
   tags = tags.toLowerCase();
   await db.updatePost("blog_posts", "post",
-    ["title", "body", "edit_date", "tags", "pid", "banner"],
-    [title, body, editDate, tags, pid, banner]);
+    ["title", "body", "edit_date", "tags", "banner"],
+    [title, body, editDate, tags, banner],
+    ["pid", pid]);
   
   await uploadTags(tags, pid);
 
@@ -168,6 +169,7 @@ async function uploadTags(tags, pid) {
       try {
         await db.createTable("blog_tags", tags[i], "pid", "char(8)");
       } finally {
+        /* this is bugged. no replace when posts are modified */
         await db.replaceData("blog_tags", tags[i], "pid", pid);
       }
     }
