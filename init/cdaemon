@@ -1,17 +1,17 @@
 #!/bin/sh
 
-# PROVIDE: verdaemon
+# PROVIDE: cdaemon
 # REQUIRE: networking
 # KEYWORD: shutdown
 
 . /etc/rc.subr
   
-name="verdaemon"
+name="cdaemon"
 rcvar="${name}_enable"
 load_rc_config $name
-: ${verdaemon_enable:="NO"}
-: ${verdaemon_path:="/usr/local/www/${name}.com"}
-: ${verdaemon_log:="/var/log/${name}.log"}
+: ${cdaemon_enable:="NO"}
+: ${cdaemon_path:="/usr/local/www/${name}.com"}
+: ${cdaemon_log:="/var/log/${name}.log"}
 
 user="www"
 pidfile="/var/run/${name}.pid"
@@ -20,27 +20,27 @@ start_precmd="${name}_prestart"
 start_cmd="${name}_start"
 stop_cmd="${name}_stop"
 
-verdaemon_prestart() {
+cdaemon_prestart() {
 	PATH="$PATH:/usr/sbin:/usr/bin:/usr/local/bin"
 	LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/lib:/usr/lib:/usr/local/lib"
 	export NODE_ENV="production"
 }
 
-verdaemon_start() {
+cdaemon_start() {
 	if [ $(id -u) -eq 0 ]; then
-		daemon -o $verdaemon_log -P $pidfile -t "${name}d" -u $user \
-			npm run --prefix $verdaemon_path start &
+		daemon -o $cdaemon_log -P $pidfile -t "${name}d" -u $user \
+			npm run --prefix $cdaemon_path start &
 		echo "${name} server started"
 	else
 		echo "insufficient permissions"
 	fi
 }
 
-verdaemon_stop() {
+cdaemon_stop() {
 	if [ $(id -u) -eq 0 ]; then
-		if [ ${verdaemon_pid:=$(check_pidfile $pidfile "daemon")} ]; then
-			pkill -P $verdaemon_pid
-			wait_for_pids $verdaemon_pid
+		if [ ${cdaemon_pid:=$(check_pidfile $pidfile "daemon")} ]; then
+			pkill -P $cdaemon_pid
+			wait_for_pids $cdaemon_pid
 			echo "${name} stopped successfully"
 		else
 			echo "${name} is not active"

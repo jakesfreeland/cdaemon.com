@@ -1,5 +1,5 @@
 {
-  "name": "verdaemon.com",
+  "name": "cdaemon.com",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -8,15 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jakesfreeland/verdaemon.com.git"
+    "url": "git+https://github.com/jakesfreeland/cdaemon.com.git"
   },
   "keywords": [],
   "author": "Jake Freeland",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jakesfreeland/verdaemon.com/issues"
+    "url": "https://github.com/jakesfreeland/cdaemon.com/issues"
   },
-  "homepage": "https://github.com/jakesfreeland/verdaemon.com#readme",
+  "homepage": "https://github.com/jakesfreeland/cdaemon.com#readme",
   "dependencies": {
     "body-parser": "^1.19.1",
     "cookie-session": "^2.0.0",

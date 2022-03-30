@@ -40,7 +40,7 @@ app.get('/', (req, res) => {
     res.status(503);
     res.render("http/status", {
       code: "503",
-      message: "Verdaemon is currently down for maintenance. Try again later."
+      message: "cdaemon is currently down for maintenance. Try again later."
     });
   });
 });
