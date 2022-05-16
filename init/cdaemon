@@ -21,8 +21,7 @@ start_cmd="${name}_start"
 stop_cmd="${name}_stop"
 
 cdaemon_prestart() {
-	PATH="$PATH:/usr/sbin:/usr/bin:/usr/local/bin"
-	LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/lib:/usr/lib:/usr/local/lib"
+	export LD_LIBRARY_PATH="/usr/local/lib"
 	export NODE_ENV="production"
 }
 
