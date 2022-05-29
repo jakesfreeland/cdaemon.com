@@ -60,9 +60,8 @@ router.route("/editor/new/:pid")
   }
 })
 .post((req, res) => {
-  if (req.body.title && req.body.body && req.body.banner && req.session.user.username) {
-    uploadPost(req.body.title, req.body.body, req.body.tags, req.params.pid,
-      req.body.banner, req.session.user.username, req.session.user.firstname, req.session.user.lastname)
+  if (req.body.title && req.body.body && req.body.banner && req.session.user) {
+    uploadPost(req.body.title, req.body.body, req.body.tags, req.params.pid, req.body.banner, req.session.user)
     .then(() => res.redirect(`/posts/${req.params.pid}`))
     .catch(err => res.sendStatus(500));
   } else {
@@ -146,13 +145,13 @@ router.route("/:pid")
   .catch(err => res.sendStatus(404));
 });
 
-async function uploadPost(title, body, tags, pid, banner, user) {
+async function uploadPost(title, body, tags, pid, banner, author) {
   const date = getDate();
 
   tags = tags.toLowerCase();
   await db.insertData("blog_posts", "post",
-    ["title", "body", "date", "tags", "pid", "banner", "user"],
-    [title, body, date, tags, pid, banner, user]);
+    ["title", "body", "date", "tags", "pid", "banner", "author"],
+    [title, body, date, tags, pid, banner, author]);
   
   await uploadTags(tags, pid);
 
@@ -230,19 +229,18 @@ function formatDate(dateObj) {
 }
 
 async function deletePost(post, username, admin) {
-  var count;
-
   if (post[0].username === username || admin) {
     if (post[0].tags) {
       const tags = post[0].tags.split(',');
 
       for (var i=0; i<tags.length; ++i) {
-        await db.dropValueData("blog_tags", `\`${tags[i]}\``, "pid", post[0].pid);
+        // await db.dropValueData("blog_tags", `\`${tags[i]}\``, "pid", post[0].pid);
         
         /* delete tag if no subposts are found */
-        count = (await db.getTableCount("blog_tags", `\`${tags[i]}\``))[0]["COUNT(*)"];
-        if (count == 0)
-          db.dropTable("blog_tags", `\`${tags[i]}\``);
+        let count = (await db.getTableCount("blog_tags", `\`${tags[i]}\``))//[0]["COUNT(*)"];
+        console.log(count);
+        // if (count == 0)
+        //   await db.dropTable("blog_tags", `\`${tags[i]}\``);
       }
     }
     
