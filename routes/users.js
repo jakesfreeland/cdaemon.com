@@ -15,22 +15,49 @@ const db = require("../user_modules/db.cjs");
 //   res.render("users/signup");
 // })
 // .post((req, res) => {
-//   if (req.body.username && req.body.password && req.body.email) {
-//     if (req.body.email.match(".*@.*[.].*")) {
-//       createUser(req.body.firstname, req.body.lastname, req.body.username, req.body.email, req.body.password)
-//       .then(() => {
-//         req.session.username = req.body.username;
-//         req.session.firstname = req.body.firstname;
-//         req.session.lastname = req.body.lastname;
-//         res.redirect('/');
-//       })
-//       .catch(err => res.send(err));
-//     } else {
-//       res.send("Invalid email");
-//     }
-//   } else {
-//     res.send("Missing Parameter");
+//   if (!req.body.username || !req.body.password || !req.body.email) {
+//     res.status(400);
+//     res.render("http/status", {
+//       code: "400",
+//       message: "Missing Parameter"
+//     });
+//     return;
 //   }
+
+//   if (!req.body.email.match(".*@.*[.].*")) {
+//     res.status(400);
+//     res.render("http/status", {
+//       code: "400",
+//       message: "Invalid Email"
+//     });
+//     return;
+//   }
+
+//   if (req.body.username == "signup" || req.body.username == "login") {
+//     res.status(400);
+//     res.render("http/status", {
+//       code: "400",
+//       message: "Username Not Allowed"
+//     });
+//     return;
+//   }
+
+//   createUser(req.body.firstname, req.body.lastname, req.body.username, req.body.email, req.body.password)
+//   .then(() => {
+//   req.session.user = {
+//     username: req.body.username,
+//     firstname: req.body.firstname,
+//     lastname: req.body.lastname,
+//   };
+//     res.redirect('/');
+//   })
+//   .catch(err => {
+//     res.status(400);
+//     res.render("http/status", {
+//       code: "400",
+//       message: `${err}`
+//     });
+//   });
 // });
 
 router.route("/login")
@@ -38,27 +65,45 @@ router.route("/login")
   res.render("users/login");
 })
 .post((req, res) => {
-  if (req.body.email && req.body.password) {
-    userLogin(req.body.email, req.body.password)
-    .then(auth => {
-      req.session.username = auth.username;
-      req.session.firstname = auth.firstname;
-      req.session.lastname = auth.lastname;
-      if (auth.admin) req.session.admin = 1;
-      res.redirect('/');
-    })
-    .catch(err => res.send(err));
-  } else {
-    res.send("Missing parameter");
+  if (!req.body.email || !req.body.password) {
+    res.status(400);
+    res.render("http/status", {
+      code: "400",
+      message: "Missing Parameter"
+    });
+    return;
   }
+
+  userLogin(req.body.email, req.body.password)
+  .then(auth => {
+    req.session.user = {
+      username: auth.username,
+      firstname: auth.firstname,
+      lastname: auth.lastname,
+      admin: auth.admin
+    };
+    res.redirect('/');
+  })
+  .catch(err => {
+    res.status(400);
+    res.render("http/status", {
+      code: "400",
+      message: `${err}`
+    });
+  });
 });
 
 router.route("/:username")
 .get((req, res) => {
   db.getValueData("blog_posts", "post", "username", req.params.username)
   .then(posts => {
-    if (posts[0].username)
-      res.render("users/user", { posts: posts, activeUser: req.session.username, admin: req.session.admin });
+    if (posts[0].pid) {
+      if (req.session.user) {
+        res.render("users/user", { posts: posts, activeUser: req.session.user.username, admin: req.session.user.admin });
+      } else {
+        res.render("users/user", { posts: posts, activeUser: null, admin: 0 });
+      }
+    }
   })
   .catch(err => {
     res.status(404);
@@ -76,7 +121,7 @@ async function createUser(firstname, lastname, username, email, password) {
       ["firstname", "lastname", "username", "email", "password"],
       [firstname, lastname, username, email, digest]);
   } catch (err) {
-    throw "User with provided details already exists";
+    throw "User with provided credentials already exists";
   }
 
   return;

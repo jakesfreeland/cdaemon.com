@@ -9,7 +9,7 @@ router.use(fileupload());
 router.post('/upload/:pid', (req, res) => {
   uploadMedia(req.files.media, req.params.pid)
   .then(() => res.sendStatus(200))
-  .catch(err => res.send(err));
+  .catch(() => res.sendStatus(500));
 });
 
 router.get("/:pid/:filename", (req, res) => {
@@ -30,12 +30,12 @@ async function uploadMedia(media, pid) {
   if (media.length === undefined) {
     // mv is not async but returns promise
     media.mv(pidPath + '/' + media.name)
-    .catch(err => console.log(err));
+    .catch(err => { throw err });
   } else {
     for (var i=0; i<media.length; ++i) {
       // mv is not async but returns promise
       media[i].mv(pidPath + '/' + media[i].name)
-      .catch(err => console.log(err));
+      .catch(err => { throw err });
     }
   }
 
