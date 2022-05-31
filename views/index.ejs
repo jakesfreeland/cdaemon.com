@@ -28,13 +28,14 @@
 					<h3 class="featured-header">Featured Posts</h3>
 					<div class="featured-posts">
 						<% for (var i=0; i<2; ++i) { %>
+							<% var author = JSON.parse(posts[i].author); %>
 							<div class="featured-post">
 								<div class="featured-top">
 									<a href="/posts/<%= posts[i].pid %>"><img src="/media/pid/<%= posts[i].pid %>/<%= posts[i].banner %>"></a>
 								</div>
 								<div class="featured-bottom">
 									<h1><a href="/posts/<%= posts[i].pid %>"><%= posts[i].title %></a></h1>
-									<p>By <a href="/users/<%= posts[i].username %>"><%= posts[i].firstname + " " + posts[i].lastname %></a></p>
+									<p>By <a href="/users/<%= author.username %>"><%= author.firstname + " " + author.lastname %></a></p>
 								</div>
 							</div>
 						<% } %>
@@ -60,7 +61,7 @@
 					<hr>
 					<ul>
 						<% for (var i=0; i<tags.length; ++i) { %>
-						<li><a href="/tags/<%= tags[i].Tables_in_blog_tags %>"><%= tags[i].Tables_in_blog_tags %></a></li>
+						<li><a href="/tags/<%= tags[i].name %>"><%= tags[i].name + ` (${tags[i].frequency})` %></a></li>
 						<% } %>
 					</ul>
 				</div>

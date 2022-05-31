@@ -95,23 +95,29 @@ router.route("/login")
 
 router.route("/:username")
 .get((req, res) => {
-  db.getValueData("blog_posts", "post", "username", req.params.username)
+  db.getJSONData("blog_posts", "posts", "author", req.params.username, "username")
   .then(posts => {
-    if (posts[0].pid) {
+    if (posts.length != 0) {
       if (req.session.user) {
-        res.render("users/user", { posts: posts, activeUser: req.session.user.username, admin: req.session.user.admin });
+        res.render("users/user", { posts: posts,
+                                   author: JSON.parse(posts[0].author),
+                                   userUsername: req.session.user.username,
+                                   admin: req.session.user.admin });
       } else {
-        res.render("users/user", { posts: posts, activeUser: null, admin: 0 });
+        res.render("users/user", { posts: posts,
+                                   author: JSON.parse(posts[0].author),
+                                   user: null,
+                                   admin: 0 });
       }
+    } else {
+      res.status(404);
+      res.render("http/status", {
+        code: "404",
+        message: `No posts by ${req.params.username} found.`
+      });
     }
   })
-  .catch(err => {
-    res.status(404);
-    res.render("http/status", {
-      code: "404",
-      message: `No posts by ${req.params.username} found.`
-    });
-  });
+  .catch(() => res.sendStatus(500));
 });
 
 async function createUser(firstname, lastname, username, email, password) {

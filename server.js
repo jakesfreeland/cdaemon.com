@@ -18,31 +18,29 @@ app.use(
 );
 app.use(cookieSession({
   name: "session",
-  keys: ["YyKRyL3RfMNts3", "W8cE4d2eLmM8Xs"],
+  keys: [process.env.COOKIE_KEY_0, process.env.COOKIE_KEY_1],
   maxAge: 604800000,
-  // secure: true
 }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static("public"));
 
 app.get('/', (req, res) => {
-  const getPosts = db.getOrderedLimitData("blog_posts", "post", "date", "desc", "2");
-  const getTables = db.showTables("blog_tags");
+  const getPosts = db.getOrderedLimitData("blog_posts", "posts", "date", "desc", "2");
+  const getTags = db.getData("blog_posts", "tags");
 
-  Promise.all([getPosts, getTables])
-  .then(([posts, tables]) => {
-    if (posts[1].pid)
-      res.render("index", { posts: posts, tags: tables });
-    else
-      throw "posts not found";
+  Promise.all([getPosts, getTags])
+  .then(([posts, tags]) => {
+    if (posts.length > 1) {
+      res.render("index", { posts: posts, tags: tags });
+    } else {
+      res.status(503);
+      res.render("http/status", {
+        code: "503",
+        message: "cdaemon is currently down for maintenance. Try again later."
+      });
+    }
   })
-  .catch(err => {
-    res.status(503);
-    res.render("http/status", {
-      code: "503",
-      message: "cdaemon is currently down for maintenance. Try again later."
-    });
-  });
+  .catch(() => res.sendStatus(500));
 });
 
 app.get("/projects", (req, res) => {

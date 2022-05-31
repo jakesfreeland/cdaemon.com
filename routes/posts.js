@@ -11,9 +11,9 @@ const window = new JSDOM('').window;
 const DOMPurify = createDOMPurify(window);
 
 router.get('/', (req, res) => {
-  db.showTables("blog_tags")
-  .then(tables => {
-    res.render("posts/posts", { tags: tables, user: req.session.user });
+  db.getData("blog_posts", "tags")
+  .then(tags => {
+    res.render("posts/posts", { tags: tags, user: req.session.user });
   })
   .catch(err => {
     res.status(500);
@@ -25,7 +25,7 @@ router.get('/', (req, res) => {
 });
 
 router.get("/archive", (req, res) => {
-  db.getOrderedData("blog_posts", "post", "date", "desc")
+  db.getOrderedData("blog_posts", "posts", "date", "desc")
   .then(posts => {
     res.render("posts/archive", { posts: posts, user: req.session.user });
   })
@@ -45,7 +45,7 @@ router.route("/new")
     .then(pid => {
       res.redirect(`/posts/editor/new/${pid}`);
     })
-    .catch(res.sendStatus(500));
+    .catch(() => res.sendStatus(500));
   } else {
     res.redirect("/users/login");
   }
@@ -63,7 +63,7 @@ router.route("/editor/new/:pid")
   if (req.body.title && req.body.body && req.body.banner && req.session.user) {
     uploadPost(req.body.title, req.body.body, req.body.tags, req.params.pid, req.body.banner, req.session.user)
     .then(() => res.redirect(`/posts/${req.params.pid}`))
-    .catch(err => res.sendStatus(500));
+    .catch(() => res.sendStatus(500));
   } else {
     res.sendStatus(400);
   }
@@ -72,43 +72,48 @@ router.route("/editor/new/:pid")
 router.route("/editor/:pid")
 .get((req, res) => { 
   if (req.session.user) {
-    db.getValueData("blog_posts", "post", "pid", req.params.pid)
+    db.getValueData("blog_posts", "posts", "pid", req.params.pid)
     .then(post => {
-      if (post[0]) {
-        if (post[0].username == req.session.user.username || req.session.user.admin)
-          res.render("posts/editor", { editor: req.session.user.firstname + " " + req.session.user.lastname, post: post });
-        else
-          res.status(403).redirect("http/status", { code: 403, message: "forbidden" });
-      } else {
+      if (post.length == 0) {
         res.status(404).render("http/status", { code: 404, message: "not found" });
       }
+
+      if (post[0].username == req.session.user.username || req.session.user.admin) {
+        res.render("posts/editor", { editor: req.session.user.firstname + " " + req.session.user.lastname, post: post });
+      } else {
+        res.sendStatus(403);
+      }
     })
-    .catch(err => res.status(500).render("http/status", { code: 500, message: "internal server error" }));
+    .catch(() => res.sendStatus(500));
   } else {
     res.redirect("/users/login");
   }
 })
 .post((req, res) => {
   if (req.body.title && req.body.body && req.body.banner && req.session.user) {
-    db.getValueData("blog_posts", "post", "pid", req.params.pid)
+    db.getValueData("blog_posts", "posts", "pid", req.params.pid)
     .then(post => { 
+      if (post.length == 0) {
+        res.status(404).render("http/status", { code: 404, message: "not found" });
+      }
+
       if (post[0].username == req.session.user.username || req.session.user.admin) {
         editPost(req.body.title, req.body.body, req.body.tags, req.params.pid, req.body.banner)
         .then(() => res.redirect(`/posts/${req.params.pid}`))
-        .catch(err => res.status(500).render("http/status", { code: 500, message: "internal server error" }));
+        .catch(() => res.sendStatus(500));
       } else {
-        res.status(403).redirect("http/status", { code: 403, message: "forbidden" });
+        res.sendStatus(403);
       }
     })
-    .catch(err => res.status(500).render("http/status", { code: 500, message: "internal server error" }));
+    .catch(() => res.sendStatus(500));
   } else {
-    res.status(400).render("http/status", { code: 400, message: "bad request" });
+    res.sendStatus(400);
   }
 });
 
 router.route("/:pid")
 .get((req, res) => {
-  db.getValueData("blog_posts", "post", "pid", req.params.pid)
+  db.getValueData("blog_posts", "posts", "pid", req.params.pid)
   .then(post => {
     res.render("posts/post", {
       title: post[0].title,
@@ -116,11 +121,10 @@ router.route("/:pid")
       body: DOMPurify.sanitize(markdown.parse(post[0].body)),
       tags: post[0].tags.split(','),
       banner: post[0].banner,
-      author: post[0].user.firstname + " " + post[0].user.lastname,
+      author: JSON.parse(post[0].author),
       pid: post[0].pid,
-      username: post[0].user.username,
       date: formatDate(post[0].date),
-      edit_date: formatDate(post[0].edit_date)
+      editDate: formatDate(post[0].editDate)
     });
   })
   .catch(err => {
@@ -132,66 +136,74 @@ router.route("/:pid")
   });
 })
 .delete((req, res) => {
-  db.getValueData("blog_posts", "post", "pid", req.params.pid)
+  db.getValueData("blog_posts", "posts", "pid", req.params.pid)
   .then(post => {
     if (req.session.user) {
       deletePost(post, req.session.user.username, req.session.user.admin)
       .then(() => res.sendStatus(200))
-      .catch(err => res.sendStatus(403));
+      .catch(() => res.sendStatus(403));
     } else {
       res.sendStatus(401);
     }
   })
-  .catch(err => res.sendStatus(404));
+  .catch(() => res.sendStatus(404));
 });
 
 async function uploadPost(title, body, tags, pid, banner, author) {
   const date = getDate();
 
-  tags = tags.toLowerCase();
-  await db.insertData("blog_posts", "post",
+  tags = await updateTags(tags);
+  await db.insertData("blog_posts", "posts",
     ["title", "body", "date", "tags", "pid", "banner", "author"],
     [title, body, date, tags, pid, banner, author]);
   
-  await uploadTags(tags, pid);
-
   return;
 }
 
 async function editPost(title, body, tags, pid, banner) {
   const editDate = getDate();
 
-  tags = tags.toLowerCase();
-  await db.updatePost("blog_posts", "post",
+  tags = await updateTags(tags);
+  await db.updateData("blog_posts", "posts",
     ["title", "body", "edit_date", "tags", "banner"],
     [title, body, editDate, tags, banner],
     ["pid", pid]);
-  
-  await uploadTags(tags, pid);
 
   return;
 }
 
-async function uploadTags(tags, pid) {
-  if (tags) {
-    tags = tags.split(',');
+async function updateTags(tags, drop=false) {
+  tags = tags.toLowerCase().split(',');
 
+  if (drop == false) {
     for (var i=0; i<tags.length; ++i) {
-      /* escape SQL injection by surrounding table name with backticks */
-      tags[i] = `\`${tags[i].trim()}\``;
+      tags[i] = tags[i].trim();
+      let tag = await db.getValueData("blog_posts", "tags", "name", tags[i]);
 
-      try {
-        await db.createTable("blog_tags", tags[i], "pid", "char(8)");
-      } finally {
-        /* this is bugged. no replace when posts are modified */
-        await db.replaceData("blog_tags", tags[i], "pid", pid);
+      if (tag.length == 0) {
+        await db.insertData("blog_posts", "tags", ["name", "frequency"], [tags[i], 1]);
+      } else {
+        await db.updateData("blog_posts", "tags", "frequency", `${tag[0].frequency + 1}`, ["name", tags[i]]);
       }
     }
+  } else if (drop == true) {
+    for (var i=0; i<tags.length; ++i) {
+      tags[i] = tags[i].trim();
+      let tag = await db.getValueData("blog_posts", "tags", "name", tags[i]);
 
-    return tags;
-  } else {
-    return null;
+      if (tag.length == 0) {
+        throw "cannot drop - tag does not exist"
+      }
+
+      if (tag[0].frequency == 1) {
+        await db.dropValueData("blog_posts", "tags", "name", tags[i]);
+      } else {
+        await db.updateData("blog_posts", "tags", "frequency", `${tag[0].frequency - 1}`, ["name", tags[i]]);
+      }
+    }
   }
+
+  return tags.join(',');
 }
 
 async function getID() {
@@ -202,9 +214,9 @@ async function getID() {
     idGen += charPool.charAt(Math.floor(Math.random() * 62));
   }
 
-  const ids = await db.getColumnData("blog_posts", "post", "pid");
+  const ids = await db.getColumnData("blog_posts", "posts", "pid");
   // re-run getID() if idGen is present in database
-  if (ids.some(e => e.id === idGen)) {
+  if (ids.some(e => e.pid === idGen)) {
     return getID();
   } else {
     return idGen;
@@ -230,22 +242,10 @@ function formatDate(dateObj) {
 
 async function deletePost(post, username, admin) {
   if (post[0].username === username || admin) {
-    if (post[0].tags) {
-      const tags = post[0].tags.split(',');
-
-      for (var i=0; i<tags.length; ++i) {
-        // await db.dropValueData("blog_tags", `\`${tags[i]}\``, "pid", post[0].pid);
-        
-        /* delete tag if no subposts are found */
-        let count = (await db.getTableCount("blog_tags", `\`${tags[i]}\``))//[0]["COUNT(*)"];
-        console.log(count);
-        // if (count == 0)
-        //   await db.dropTable("blog_tags", `\`${tags[i]}\``);
-      }
-    }
-    
-    db.dropValueData("blog_posts", "post", "pid", post[0].pid);
+    db.dropValueData("blog_posts", "posts", "pid", post[0].pid);
     fs.rmSync(path.resolve(__dirname, `../public/media/pid/${post[0].pid}`), { recursive: true });
+
+    updateTags(post[0].tags, true);
 
     return "deleted";
   } else {

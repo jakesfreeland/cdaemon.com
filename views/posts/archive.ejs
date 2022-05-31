@@ -68,9 +68,10 @@
           <th>Tags</th>
         </tr>
         <% for (var i=0; i<posts.length; ++i) { %>
+            <% var author = JSON.parse(posts[i].author); %>
             <tr>
               <td><a href="/posts/<%= posts[i].pid %>"><%= posts[i].title %></a></td>
-              <td><a href="/users/<%= posts[i].username %>"><%= posts[i].firstname + " " + posts[i].lastname %></a></td>
+              <td><a href="/users/<%= author.username %>"><%= author.firstname + " " + author.lastname %></a></td>
               <td><%= posts[i].date.toLocaleDateString() %></td>
               <td><%= posts[i].tags %></td>
             </tr>

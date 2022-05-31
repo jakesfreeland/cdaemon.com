@@ -29,41 +29,24 @@ module.exports = {
     }
   },
 
-  replaceData: async function replaceData(database, table, columns, data) {
-    if (Array.isArray(columns) && Array.isArray(data)) {
-      columns = columns.join(", ");
+  updateData: async function updateData(database, table, columns, data, condition) {
+    if (!Array.isArray(condition)) {
+      throw "condition is not an array";
+    }
 
-      for (var i=0; i<data.length; ++i) {
-        data[i] = pool.escape(data[i]);
+    if (Array.isArray(columns) && Array.isArray(data)) {
+      var update = "";
+      for (var i=0; i<data.length-1; ++i) {
+        update += `${columns[i]}=${pool.escape(data[i])}, `;
       }
-      data = data.join(", ");
-    } else {
-      data = pool.escape(data);
-    }
-
-    try {
-      var conn = await pool.getConnection();
-      return await conn.query(`REPLACE INTO ${database}.${table} (${columns}) VALUES (${data})`);
-    } finally {
-      if (conn) conn.close();
-    }
-  },
-
-  updatePost: async function updatePost(database, table, columns, data, condition) {
-    var update;
-    if (Array.isArray(columns) && Array.isArray(data)) {
-      update = "";
-      for (var i=0; i<data.length; ++i)
-        update += `${columns[i]}=${pool.escape(data[i])},`;
+      update += `${columns[i]}=${pool.escape(data[i])}`;
     } else {
       update = `${columns}=${pool.escape(data)}`;
     }
 
     try {
       var conn = await pool.getConnection();
-      return await conn.query(`UPDATE ${database}.${table}
-                               SET ${update.slice(0, -1)}
-                               WHERE ${condition[0]}=${pool.escape(condition[1])}`);
+      return await conn.query(`UPDATE ${database}.${table} SET ${update} WHERE ${condition[0]}=?`, condition[1]);
     } finally {
       if (conn) conn.close();
     }
@@ -105,6 +88,15 @@ module.exports = {
     }
   },
 
+  getArrayValueData: async function findInSet(database, table, column, value) {
+    try {
+      var conn = await pool.getConnection();
+      return await conn.query(`SELECT * FROM ${database}.${table} WHERE FIND_IN_SET(?, ${column});`, [value]);
+    } finally {
+      if (conn) conn.close();
+    }
+  },
+
   getOrderedData: async function getOrderedData(database, table, column, order) {
     try {
       var conn = await pool.getConnection();
@@ -123,39 +115,13 @@ module.exports = {
     }
   },
 
-  createTable: async function createTable(database, table, column, datatype) {
+  getJSONData: async function getJSONData(database, table, column, value, property) {
     try {
       var conn = await pool.getConnection();
-      return await conn.query(`CREATE TABLE IF NOT EXISTS ${database}.${table} (${column} ${datatype})`);
+      return await conn.query(`SELECT * FROM ${database}.${table} WHERE JSON_CONTAINS(${column}, ?, '$.${property}')`, [`"${value}"`]);
     } finally {
       if (conn) conn.close();
     }
   },
 
-  showTables: async function showTables(database) {
-    try {
-      var conn = await pool.getConnection();
-      return await conn.query(`SHOW TABLES FROM ${database}`);
-    } finally {
-      if (conn) conn.close();
-    }
-  },
-
-  getTableCount: async function getTableCount(database, table) {
-    try {
-      var conn = await pool.getConnection();
-      return await conn.query(`SELECT COUNT(*) FROM ${database}.${table}`);
-    } finally {
-      if (conn) conn.close();
-    }
-  },
-
-  dropTable: async function dropTable(database, table) {
-    try {
-      var conn = await pool.getConnection();
-      return await conn.query(`DROP TABLE ${database}.${table}`);
-    } finally {
-      if (conn) conn.close();
-    }
-  }
 }

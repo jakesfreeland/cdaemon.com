@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= posts[0].firstname + " " + posts[0].lastname %> - cdaemon</title>
+    <title><%= author.firstname + " " + author.lastname %> - cdaemon</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/styles/post-blocks.css">
     <link rel="stylesheet" href="/styles/skeleton.css">
@@ -13,7 +13,7 @@
     <header><%- include("../partials/header") -%></header>
 
     <main>
-      <h1 class="intro">Posts By <%= posts[0].firstname + " " + posts[0].lastname %> </h1>
+      <h1 class="intro">Posts By <%= author.firstname + " " + author.lastname %> </h1>
       <% for (var i=0; i<posts.length; ++i) {%>
         <div class="post-block">
           <div class="post-left">
@@ -21,9 +21,9 @@
           </div>
           <div class="post-right">
             <h3><a href="/posts/<%= posts[i].pid %>/"><%= posts[i].title %></a></h3>
-            <p>By <a href="/users/<%= posts[i].username %>"><%= posts[i].firstname + " " + posts[i].lastname %></a></p>
+            <p>By <a href="/users/<%= author.username %>"><%= author.firstname + " " + author.lastname %></a></p>
           </div>
-          <% if (posts[i].username === activeUser || admin) { %>
+          <% if (author.username === userUsername || admin) { %>
             <div class="post-options">
               <i class="fa-regular fa-pen-to-square edit-post" id="<%= posts[i].pid %>"></i>
               <i class="far fa-trash-alt delete-post" id="<%= posts[i].pid %>"></i>

@@ -15,13 +15,14 @@
     <main>
       <h1 class="intro">Tag: <%= tag %></h1>
       <% for (var i=0; i<posts.length; ++i) {%>
+        <% var author = JSON.parse(posts[i].author); %>
         <div class="post-block">
           <div class="post-left">
             <a href="/posts/<%= posts[i].pid %>"><img src="/media/pid/<%= posts[i].pid %>/<%= posts[i].banner %>"></a>
           </div>
           <div class="post-right">
             <h3><a href="/posts/<%= posts[i].pid %>/"><%= posts[i].title %></a></h3>
-            <p>By <a href="/users/<%= posts[i].username %>"><%= posts[i].firstname + " " + posts[i].lastname %></a></p>
+            <p>By <a href="/users/<%= author.username %>"><%= author.firstname + " " + author.lastname %></a></p>
           </div>
         </div>
       <% } %>

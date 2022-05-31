@@ -17,8 +17,8 @@
       <section class="intro" style="background-image: url('/media/<%= pid %>/<%= banner %>');">
         <div class="intro-text">
           <h1><%= title %></h1>
-          <h5>By <a href="/users/<%= username %>"><%= author %></a> on <%= date %></h5>
-          <% if (edit_date) { %> <h5>Edited on <%= edit_date %></h5> <% } %>
+          <h5>By <a href="/users/<%= author.username %>"><%= author.firstname + " " + author.lastname %></a> on <%= date %></h5>
+          <% if (editDate) { %> <h5>Edited on <%= editDate %></h5> <% } %>
         </div>
       </section>
 
