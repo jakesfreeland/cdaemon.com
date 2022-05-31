@@ -106,7 +106,7 @@ router.route("/:username")
       } else {
         res.render("users/user", { posts: posts,
                                    author: JSON.parse(posts[0].author),
-                                   user: null,
+                                   userUsername: null,
                                    admin: 0 });
       }
     } else {
