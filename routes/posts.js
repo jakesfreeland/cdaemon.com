@@ -72,14 +72,17 @@ router.route("/editor/new/:pid")
 router.route("/editor/:pid")
 .get((req, res) => { 
   if (req.session.user) {
-    db.getValueData("blog_posts", "posts", "pid", req.params.pid)
-    .then(post => {
+    const getPost = db.getValueData("blog_posts", "posts", "pid", req.params.pid);
+    const getTags = db.getValueData("blog_posts", "tags", "pid", req.params.pid);
+
+    Promise.all([getPost, getTags])
+    .then(([post, tags]) => {
       if (post.length == 0) {
         res.status(404).render("http/status", { code: 404, message: "not found" });
       }
 
       if (post[0].username == req.session.user.username || req.session.user.admin) {
-        res.render("posts/editor", { editor: req.session.user.firstname + " " + req.session.user.lastname, post: post });
+        res.render("posts/editor", { user: req.session.user, post: post, tags: tags });
       } else {
         res.sendStatus(403);
       }
@@ -118,6 +121,7 @@ router.route("/:pid")
 
   Promise.all([getPost, getTags])
   .then(([post, tags]) => {
+    console.log(post[0].editDate);
     res.render("posts/post", {
       title: post[0].title,
       /* sanitization to mitigate XSS */
@@ -127,7 +131,7 @@ router.route("/:pid")
       author: JSON.parse(post[0].author),
       pid: post[0].pid,
       date: formatDate(post[0].date),
-      editDate: formatDate(post[0].editDate)
+      editDate: formatDate(post[0].edit_date)
     });
   })
   .catch(err => {
@@ -155,7 +159,7 @@ router.route("/:pid")
 async function uploadPost(title, body, tags, pid, banner, author) {
   const date = getDate();
 
-  tags = await addTags(tags, pid);
+  await addTags(tags, pid);
   await db.insertData("blog_posts", "posts",
     ["title", "body", "date", "pid", "banner", "author"],
     [title, body, date, pid, banner, author]);
@@ -167,7 +171,7 @@ async function editPost(title, body, tags, pid, banner) {
   const editDate = getDate();
 
   await dropTags(pid);
-  tags = await addTags(tags, pid);
+  await addTags(tags, pid);
   await db.updateData("blog_posts", "posts",
     ["title", "body", "edit_date", "banner"],
     [title, body, editDate, banner],
@@ -184,7 +188,7 @@ async function addTags(tags, pid) {
     await db.insertData("blog_posts", "tags", ["tid", "pid"], [tags[i], pid]);
   }
 
-  return tags.join(',');
+  return;
 }
 
 async function dropTags(pid) {
