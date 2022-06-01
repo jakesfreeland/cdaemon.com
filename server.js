@@ -26,7 +26,7 @@ app.use(express.static("public"));
 
 app.get('/', (req, res) => {
   const getPosts = db.getOrderedLimitData("blog_posts", "posts", "date", "desc", "2");
-  const getTags = db.getData("blog_posts", "tags");
+  const getTags = db.getDistinct("blog_posts", "tags", "tid");
 
   Promise.all([getPosts, getTags])
   .then(([posts, tags]) => {

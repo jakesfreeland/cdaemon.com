@@ -11,7 +11,7 @@ const window = new JSDOM('').window;
 const DOMPurify = createDOMPurify(window);
 
 router.get('/', (req, res) => {
-  db.getData("blog_posts", "tags")
+  db.getDistinct("blog_posts", "tags", "tid")
   .then(tags => {
     res.render("posts/posts", { tags: tags, user: req.session.user });
   })
@@ -113,13 +113,16 @@ router.route("/editor/:pid")
 
 router.route("/:pid")
 .get((req, res) => {
-  db.getValueData("blog_posts", "posts", "pid", req.params.pid)
-  .then(post => {
+  const getPost = db.getValueData("blog_posts", "posts", "pid", req.params.pid);
+  const getTags = db.getValueData("blog_posts", "tags", "pid", req.params.pid);
+
+  Promise.all([getPost, getTags])
+  .then(([post, tags]) => {
     res.render("posts/post", {
       title: post[0].title,
       /* sanitization to mitigate XSS */
       body: DOMPurify.sanitize(markdown.parse(post[0].body)),
-      tags: post[0].tags.split(','),
+      tags: tags,
       banner: post[0].banner,
       author: JSON.parse(post[0].author),
       pid: post[0].pid,
@@ -152,10 +155,10 @@ router.route("/:pid")
 async function uploadPost(title, body, tags, pid, banner, author) {
   const date = getDate();
 
-  tags = await updateTags(tags);
+  tags = await addTags(tags, pid);
   await db.insertData("blog_posts", "posts",
-    ["title", "body", "date", "tags", "pid", "banner", "author"],
-    [title, body, date, tags, pid, banner, author]);
+    ["title", "body", "date", "pid", "banner", "author"],
+    [title, body, date, pid, banner, author]);
   
   return;
 }
@@ -163,47 +166,30 @@ async function uploadPost(title, body, tags, pid, banner, author) {
 async function editPost(title, body, tags, pid, banner) {
   const editDate = getDate();
 
-  tags = await updateTags(tags);
+  await dropTags(pid);
+  tags = await addTags(tags, pid);
   await db.updateData("blog_posts", "posts",
-    ["title", "body", "edit_date", "tags", "banner"],
-    [title, body, editDate, tags, banner],
+    ["title", "body", "edit_date", "banner"],
+    [title, body, editDate, banner],
     ["pid", pid]);
 
   return;
 }
 
-async function updateTags(tags, drop=false) {
+async function addTags(tags, pid) {
   tags = tags.toLowerCase().split(',');
 
-  if (drop == false) {
-    for (var i=0; i<tags.length; ++i) {
-      tags[i] = tags[i].trim();
-      let tag = await db.getValueData("blog_posts", "tags", "name", tags[i]);
-
-      if (tag.length == 0) {
-        await db.insertData("blog_posts", "tags", ["name", "frequency"], [tags[i], 1]);
-      } else {
-        await db.updateData("blog_posts", "tags", "frequency", `${tag[0].frequency + 1}`, ["name", tags[i]]);
-      }
-    }
-  } else if (drop == true) {
-    for (var i=0; i<tags.length; ++i) {
-      tags[i] = tags[i].trim();
-      let tag = await db.getValueData("blog_posts", "tags", "name", tags[i]);
-
-      if (tag.length == 0) {
-        throw "cannot drop - tag does not exist"
-      }
-
-      if (tag[0].frequency == 1) {
-        await db.dropValueData("blog_posts", "tags", "name", tags[i]);
-      } else {
-        await db.updateData("blog_posts", "tags", "frequency", `${tag[0].frequency - 1}`, ["name", tags[i]]);
-      }
-    }
+  for (var i=0; i<tags.length; ++i) {
+    tags[i] = tags[i].trim();
+    await db.insertData("blog_posts", "tags", ["tid", "pid"], [tags[i], pid]);
   }
 
   return tags.join(',');
+}
+
+async function dropTags(pid) {
+  await db.dropValueData("blog_posts", "tags", "pid", pid);
+  return;
 }
 
 async function getID() {
@@ -244,8 +230,7 @@ async function deletePost(post, username, admin) {
   if (post[0].username === username || admin) {
     db.dropValueData("blog_posts", "posts", "pid", post[0].pid);
     fs.rmSync(path.resolve(__dirname, `../public/media/pid/${post[0].pid}`), { recursive: true });
-
-    updateTags(post[0].tags, true);
+    dropTags(post[0].pid);
 
     return "deleted";
   } else {

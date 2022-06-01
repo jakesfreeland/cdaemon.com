@@ -88,15 +88,6 @@ module.exports = {
     }
   },
 
-  getArrayValueData: async function findInSet(database, table, column, value) {
-    try {
-      var conn = await pool.getConnection();
-      return await conn.query(`SELECT * FROM ${database}.${table} WHERE FIND_IN_SET(?, ${column});`, [value]);
-    } finally {
-      if (conn) conn.close();
-    }
-  },
-
   getOrderedData: async function getOrderedData(database, table, column, order) {
     try {
       var conn = await pool.getConnection();
@@ -123,5 +114,26 @@ module.exports = {
       if (conn) conn.close();
     }
   },
+
+  getInnerJoin: async function innerJoin(database1, table1, column1, database2, table2, column2, queryColumn, query) {
+    try {
+      var conn = await pool.getConnection();
+      return await conn.query(`SELECT ${database1}.${table1}.* FROM ${database1}.${table1}
+                               INNER JOIN ${database2}.${table2}
+                               ON ${database1}.${table1}.${column1} = ${database2}.${table2}.${column2}
+                               WHERE ${queryColumn}=?`, [query]);
+    } finally {
+      if (conn) conn.close();
+    }
+  },
+
+  getDistinct: async function getDistinct(database, table, column) {
+    try {
+      var conn = await pool.getConnection();
+      return await conn.query(`SELECT DISTINCT(${column}) FROM ${database}.${table}`);
+    } finally {
+      if (conn) conn.close();
+    }
+  }
 
 }
