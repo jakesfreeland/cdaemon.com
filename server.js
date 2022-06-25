@@ -1,6 +1,5 @@
 const express = require("express");
 const app = express();
-const helmet = require("helmet");
 const cookieSession = require("cookie-session");
 const bodyParser = require("body-parser");
 const db = require("./user_modules/db.cjs");
@@ -8,14 +7,6 @@ const db = require("./user_modules/db.cjs");
 app.set("trust proxy", "loopback");
 app.set("view engine", "ejs");
 
-app.use(
-  helmet.contentSecurityPolicy({
-    directives: {
-      "script-src": ["'self'", "'wasm-unsafe-eval'", "https://ajax.googleapis.com"],
-      "img-src": '*' 
-    }
-  })
-);
 app.use(cookieSession({
   name: "session",
   keys: [process.env.COOKIE_KEY_0, process.env.COOKIE_KEY_1],
