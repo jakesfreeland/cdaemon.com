@@ -19,7 +19,7 @@ app.use(
 app.use(cookieSession({
   name: "session",
   keys: [process.env.COOKIE_KEY_0, process.env.COOKIE_KEY_1],
-  maxAge: 604800000,
+  maxAge: 604800000
 }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static("public"));

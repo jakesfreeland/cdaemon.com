@@ -54,7 +54,7 @@ router.route("/new")
 router.route("/editor/new/:pid")
 .get((req, res) => { 
   if (req.session.user) {
-    res.render("posts/editor", { author: req.session.user.firstname + " " + req.session.user.lastname });
+    res.render("posts/editor", { author: req.session.user });
   } else {
     res.redirect("/users/login");
   }
@@ -82,7 +82,7 @@ router.route("/editor/:pid")
       }
 
       if (post[0].username == req.session.user.username || req.session.user.admin) {
-        res.render("posts/editor", { user: req.session.user, post: post, tags: tags });
+        res.render("posts/editor", { author: req.session.user, post: post, tags: tags });
       } else {
         res.sendStatus(403);
       }
@@ -121,7 +121,6 @@ router.route("/:pid")
 
   Promise.all([getPost, getTags])
   .then(([post, tags]) => {
-    console.log(post[0].editDate);
     res.render("posts/post", {
       title: post[0].title,
       /* sanitization to mitigate XSS */
