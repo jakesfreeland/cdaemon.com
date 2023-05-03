@@ -10,10 +10,10 @@ name="cdaemon"
 rcvar="${name}_enable"
 load_rc_config $name
 : ${cdaemon_enable:="NO"}
-: ${cdaemon_path:="/usr/local/www/${name}.com"}
+: ${cdaemon_path:="/usr/local/www/${name}"}
 : ${cdaemon_log:="/var/log/${name}.log"}
+: ${cdaemon_user:="www"}
 
-user="www"
 pidfile="/var/run/${name}.pid"
 
 start_precmd="${name}_prestart"
@@ -27,7 +27,7 @@ cdaemon_prestart() {
 
 cdaemon_start() {
 	if [ $(id -u) -eq 0 ]; then
-		daemon -o $cdaemon_log -P $pidfile -t "${name}d" -u $user \
+		daemon -o $cdaemon_log -P $pidfile -t "${name}d" -u $cdaemon_user \
 			npm run --prefix $cdaemon_path start &
 		echo "${name} server started"
 	else
