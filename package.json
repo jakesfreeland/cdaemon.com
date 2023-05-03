@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
-  "scripts": {
-    "devStart": "nodemon server.js"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jakesfreeland/cdaemon.com.git"
@@ -16,7 +13,7 @@
   "bugs": {
     "url": "https://github.com/jakesfreeland/cdaemon.com/issues"
   },
-  "homepage": "https://github.com/jakesfreeland/cdaemon.com#readme",
+  "homepage": "https://cdaemon.com",
   "dependencies": {
     "body-parser": "^1.19.1",
     "cookie-session": "^2.0.0",
