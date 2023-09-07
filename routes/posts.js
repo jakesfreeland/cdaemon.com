@@ -10,10 +10,10 @@ const db = require("../user_modules/db.cjs");
 const window = new JSDOM('').window;
 const DOMPurify = createDOMPurify(window);
 
-router.get('/', (req, res) => {
-  db.getDistinct("blog_posts", "tags", "tid")
-  .then(tags => {
-    res.render("posts/posts", { tags: tags, user: req.session.user });
+router.get("/", (req, res) => {
+  db.getOrderedData("blog_posts", "posts", "date", "desc")
+  .then(posts => {
+    res.render("posts/posts", { posts: posts, user: req.session.user });
   })
   .catch(err => {
     res.status(500);
@@ -24,10 +24,10 @@ router.get('/', (req, res) => {
   });
 });
 
-router.get("/archive", (req, res) => {
-  db.getOrderedData("blog_posts", "posts", "date", "desc")
-  .then(posts => {
-    res.render("posts/archive", { posts: posts, user: req.session.user });
+router.get('/tags', (req, res) => {
+  db.getDistinct("blog_posts", "tags", "tid")
+  .then(tags => {
+    res.render("posts/tags", { tags: tags, user: req.session.user });
   })
   .catch(err => {
     res.status(500);

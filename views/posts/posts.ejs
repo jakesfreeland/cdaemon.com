@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Posts - cdaemon</title>
+    <title>Archive - cdaemon</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/styles/skeleton.css">
     <link rel="stylesheet" href="/fonts/opensans/css/all.css">
@@ -26,12 +26,19 @@
         font-family: "opensans-bold";
       }
 
-      ul {
-        list-style-position: inside;
-      }
-
       a {
         color: #5a5a5a;
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
       }
 
       @media(max-width: 600px) {
@@ -47,17 +54,27 @@
 
     <main>
       <div class="intro">
-        <h1>Posts By Category</h1>
+        <h1>Post Archive</h1>
         <% if (user) { %>
           <a href="/posts/new"><button class="create-post">Create Post</button></a>
         <% } %>
       </div>
 
-      <ul>
-        <% for (var i=0; i<tags.length; ++i) { %>
-          <li><a href="/tags/<%= tags[i].tid %>"><%= tags[i].tid %></a></li>
+      <table>
+        <tr>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Published</th>
+        </tr>
+        <% for (var i=0; i<posts.length; ++i) { %>
+            <% var author = JSON.parse(posts[i].author); %>
+            <tr>
+              <td><a href="/posts/<%= posts[i].pid %>"><%= posts[i].title %></a></td>
+              <td><a href="/users/<%= author.username %>"><%= author.firstname + " " + author.lastname %></a></td>
+              <td><%= posts[i].date.toLocaleDateString() %></td>
+            </tr>
         <% } %>
-      </ul>
+      </table>
     </main>
 
     <footer><%- include("../partials/footer") -%></footer>
