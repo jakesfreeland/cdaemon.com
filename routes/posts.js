@@ -5,6 +5,7 @@ const path = require("path");
 const { JSDOM } = require('jsdom');
 const createDOMPurify = require('dompurify');
 const markdown = require("markdown-wasm");
+const hljs = require('highlight.js/lib/common');
 const db = require("../user_modules/db.cjs");
 
 const window = new JSDOM('').window;
@@ -124,7 +125,12 @@ router.route("/:pid")
     res.render("posts/post", {
       title: post[0].title,
       /* sanitization to mitigate XSS */
-      body: DOMPurify.sanitize(markdown.parse(post[0].body)),
+      body: DOMPurify.sanitize(
+        markdown.parse(post[0].body, {
+          onCodeBlock(lang, body) {
+            return hljs.highlightAuto(body.toString()).value;
+          },
+        })),
       tags: tags,
       banner: post[0].banner,
       author: JSON.parse(post[0].author),
