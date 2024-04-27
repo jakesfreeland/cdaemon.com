@@ -38,7 +38,7 @@ cdaemon_start() {
 cdaemon_stop() {
 	if [ $(id -u) -eq 0 ]; then
 		if [ ${cdaemon_pid:=$(check_pidfile $pidfile "daemon")} ]; then
-			pkill -P $cdaemon_pid
+			kill $cdaemon_pid
 			wait_for_pids $cdaemon_pid
 			echo "${name} stopped successfully"
 		else
